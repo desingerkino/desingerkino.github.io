@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>[Ваше имя] — художник по реквизиту</title>
+<meta name="description" content="Художник по реквизиту в кино с 2015 года. Реквизит, бутафория, игровые телефоны.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Geist:wght@400;500&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#e8ecef;
+  --ink:#12181f;
+  --tag:#f2c230;          /* цвет акцента: поменяйте здесь */
+  --muted:#3d4852;
+  --display:'Bricolage Grotesque','Geist',system-ui,sans-serif;
+  --body:'Geist',system-ui,sans-serif;
+  --mono:'Geist Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6}
+a{color:inherit;text-decoration:none}
+a:hover{text-decoration:underline}
+a:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.wrap{max-width:1280px;margin:0 auto;padding-inline:24px}
+
+header .wrap{padding-block:20px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 24px}
+.logo{font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:-.01em}
+nav{display:flex;flex-wrap:wrap;gap:4px 8px;font-size:15px}
+nav a{padding:10px 12px}
+
+.hero .wrap{padding-block:32px 64px;display:flex;flex-wrap:wrap;align-items:center;gap:48px}
+.hero-text{flex:1 1 420px;min-width:0;display:flex;flex-direction:column;gap:24px}
+.badge{align-self:flex-start;padding:4px 10px;background:var(--tag);font-family:var(--mono);font-size:13px;font-weight:500;text-transform:uppercase;letter-spacing:.08em}
+h1{margin:0;font-family:var(--display);font-weight:800;font-size:clamp(44px,7vw,92px);line-height:.98;letter-spacing:-.03em;text-wrap:balance}
+.lead{margin:0;max-width:520px;font-size:18px;color:var(--muted)}
+.buttons{display:flex;flex-wrap:wrap;gap:12px}
+.btn{display:inline-flex;align-items:center;min-height:48px;padding:0 22px;border-radius:4px;font-weight:500;border:1.5px solid var(--ink)}
+.btn.solid{background:var(--ink);color:#fff}
+
+.posters{flex:1 1 420px;min-width:0;display:flex;gap:14px;align-items:flex-end}
+.poster{flex:1 1 0;min-width:0;aspect-ratio:2/3;background:var(--ink);color:#fff;padding:14px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
+.poster.accent{background:var(--tag);color:var(--ink);margin-bottom:40px}
+.poster img{width:100%;height:100%;object-fit:cover;display:block}
+.poster small{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;opacity:.7}
+.poster b{font-family:var(--display);font-weight:800;font-size:clamp(18px,2.4vw,28px);line-height:1.05}
+/* Когда добавите настоящую картинку, уберите padding у .poster с картинкой */
+.poster.has-img{padding:0}
+
+.mq{background:var(--ink);color:var(--tag);padding:28px 0;overflow:hidden}
+.mq-track{display:flex;width:max-content;animation:mq 40s linear infinite}
+.mq:hover .mq-track{animation-play-state:paused}
+.mq-group{display:flex;align-items:center;flex-shrink:0}
+.mq-item{display:flex;align-items:center;gap:32px;padding-right:32px;white-space:nowrap;font-family:var(--display);font-weight:800;font-size:clamp(32px,5vw,56px);letter-spacing:-.02em}
+.mq-item i{display:inline-block;width:12px;height:12px;background:#fff}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+.work .wrap{padding-block:80px;display:flex;flex-wrap:wrap;gap:48px}
+h2{margin:0;font-family:var(--display);font-weight:800;line-height:1.05;letter-spacing:-.02em;text-wrap:balance}
+.work h2{flex:1 1 280px;min-width:0;font-size:clamp(32px,4vw,48px)}
+.cols{flex:2 1 480px;min-width:0;display:flex;flex-wrap:wrap;gap:24px}
+.col{flex:1 1 240px;min-width:0;border-top:3px solid var(--ink);padding-top:16px}
+.col h3{margin:0 0 8px;font-size:20px;font-weight:500}
+.col p{margin:0;color:var(--muted)}
+
+footer{background:var(--tag);padding:64px 0}
+footer .wrap{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:32px}
+footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:1;letter-spacing:-.03em}
+.contacts{display:flex;flex-direction:column;gap:4px;font-family:var(--mono);font-size:15px}
+
+.bf{animation:bf .9s cubic-bezier(.2,.7,.2,1) backwards}
+@keyframes bf{from{opacity:0;filter:blur(10px);transform:translateY(10px)}to{opacity:1;filter:blur(0);transform:none}}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .bf,.mq-track{animation:none}
+  .mq{overflow-x:auto}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <span class="logo">[Ваше имя]</span>
+    <nav aria-label="Разделы">
+      <a href="#projects">Проекты</a>
+      <a href="#work">Работа</a>
+      <a href="#contacts">Контакты</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-text">
+      <span class="badge bf" style="animation-delay:.05s">В кино с 2015 года</span>
+      <h1 class="bf" style="animation-delay:.15s">Художник по реквизиту</h1>
+      <p class="lead bf" style="animation-delay:.3s">Предметы, которые актёры держат в руках, и игровые телефоны, которые выглядят настоящими на экране. Бутафорию делаю вместе с проверенными мастерскими.</p>
+      <div class="buttons bf" style="animation-delay:.45s">
+        <a class="btn solid" href="#projects">Смотреть проекты</a>
+        <a class="btn" href="#contacts">Написать</a>
+      </div>
+    </div>
+
+    <!-- Постеры. Чтобы поставить настоящий: положите файл рядом с index.html (например cheburashka2.jpg),
+         замените содержимое блока на <img src="cheburashka2.jpg" alt="Постер фильма «Чебурашка 2»">
+         и добавьте к блоку класс has-img. -->
+    <div class="posters">
+      <div class="poster bf" style="animation-delay:.3s"><small>Постер</small><b>Чебурашка 2</b></div>
+      <div class="poster accent bf" style="animation-delay:.45s"><small>Постер</small><b>ЮЗЗЗ</b></div>
+      <div class="poster bf" style="animation-delay:.6s"><small>Постер</small><b>Ненормальный</b></div>
+    </div>
+  </div>
+</section>
+
+<section id="projects" class="mq" aria-label="Проекты">
+  <div class="mq-track">
+    <div class="mq-group" id="mq-group">
+      <span class="mq-item">Чебурашка 2<i></i></span>
+      <span class="mq-item">ЮЗЗЗ<i></i></span>
+      <span class="mq-item">Ненормальный<i></i></span>
+      <span class="mq-item">Happy-End<i></i></span>
+      <span class="mq-item">Чебурашка 2<i></i></span>
+      <span class="mq-item">ЮЗЗЗ<i></i></span>
+      <span class="mq-item">Ненормальный<i></i></span>
+      <span class="mq-item">Happy-End<i></i></span>
+    </div>
+  </div>
+</section>
+
+<section id="work" class="work">
+  <div class="wrap">
+    <h2>Что я делаю на площадке</h2>
+    <div class="cols">
+      <div class="col">
+        <h3>Игровые телефоны</h3>
+        <p>Экраны и интерфейсы айфонов для кадра: переписки, звонки, уведомления по сценарию.</p>
+      </div>
+      <div class="col">
+        <h3>Реквизит и бутафория</h3>
+        <p>Подбираю предметы и заказываю изготовление у проверенных бутафоров и в мастерских.</p>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer id="contacts">
+  <div class="wrap">
+    <h2>Есть проект? Давайте обсудим.</h2>
+    <div class="contacts">
+      <span>[почта]</span>
+      <span>[телефон]</span>
+      <span>[мессенджер]</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Копия ленты для бесшовной прокрутки
+  (function () {
+    var g = document.getElementById('mq-group');
+    if (!g) return;
+    var c = g.cloneNode(true);
+    c.removeAttribute('id');
+    c.setAttribute('aria-hidden', 'true');
+    g.parentNode.appendChild(c);
+  })();
+</script>
+</body>
+</html>
