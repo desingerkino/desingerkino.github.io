@@ -61,6 +61,9 @@ h1{margin:0;font-family:var(--display);font-weight:800;font-size:clamp(44px,7vw,
 .hero>.wrap{width:100%}
 .poster.has-burst{cursor:pointer}
 .poster.shaking{will-change:transform,filter;box-shadow:0 0 40px 6px rgba(255,160,30,.55)!important;z-index:4}
+.poster .juice{position:absolute;inset:0;width:100%;height:100%;z-index:6;pointer-events:none;border-radius:inherit;overflow:hidden}
+.poster .juice-drops{position:absolute;inset:0;z-index:7;pointer-events:none}
+.poster .juice-drops i{position:absolute;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:radial-gradient(circle at 35% 30%,#ffe29a,#ffa51f 55%,#f06a00);box-shadow:0 0 6px rgba(255,150,20,.5)}
 .poster .iris{position:absolute;inset:0;width:100%;height:100%;z-index:6;pointer-events:none;border-radius:inherit}
 .poster .cracks{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none;overflow:visible}
 .poster .cracks path{fill:none;stroke:#fff;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:100;stroke-dashoffset:100;filter:drop-shadow(0 0 1.5px rgba(0,0,0,.8));animation:crack .22s ease-out forwards;vector-effect:non-scaling-stroke}
@@ -420,93 +423,113 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
     });
   })();
 
-  // «Чебурашка 2» в шапке: по клику постер дрожит, закрывается кинозаслонкой (диафрагма) и открывается уже с «Чебурашкой 3»
+  // «Чебурашка 2/3» в шапке: по клику постер дрожит, брызгает апельсиновый сок, заливает постер и стекает вниз — под ним другой постер. Каждый клик меняет туда-обратно
   (function () {
     var host = document.querySelector('.poster.has-burst');
     if (!host) return;
     var img = host.querySelector('img');
     var reduceB = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var busy = false, done = false, NS = 'http://www.w3.org/2000/svg';
+    var busy = false, isTwo = true, NS = 'http://www.w3.org/2000/svg';
+    var PIC = {
+      2: { src: 'cheburashka2.webp', alt: 'Постер фильма «Чебурашка 2»', label: 'Чебурашка 2: нажми, чтобы увидеть другой постер' },
+      3: { src: 'cheburashka3.webp', alt: 'Постер фильма «Чебурашка 3»', label: 'Чебурашка 3: нажми, чтобы вернуть другой постер' }
+    };
+    function rnd(a, b) { return a + Math.random() * (b - a); }
     function swap() {
-      img.src = 'cheburashka3.webp'; img.alt = 'Постер фильма «Чебурашка 3»';
-      host.classList.remove('has-burst'); host.removeAttribute('tabindex'); host.removeAttribute('role'); host.removeAttribute('aria-label');
-      done = true;
-    }
-    function click() {
-      try {
-        var AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
-        var ac = new AC(), n = Math.floor(ac.sampleRate * 0.07), buf = ac.createBuffer(1, n, ac.sampleRate), d = buf.getChannelData(0);
-        for (var i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, 5);
-        var src = ac.createBufferSource(), g = ac.createGain(), f = ac.createBiquadFilter();
-        f.type = 'bandpass'; f.frequency.value = 1800; g.gain.value = 0.35;
-        src.buffer = buf; src.connect(f); f.connect(g); g.connect(ac.destination); src.start();
-        setTimeout(function () { ac.close(); }, 400);
-      } catch (e) {}
+      isTwo = !isTwo;
+      var p = PIC[isTwo ? 2 : 3];
+      img.src = p.src; img.alt = p.alt; host.setAttribute('aria-label', p.label);
     }
     function ease(t, p) { return t < .5 ? Math.pow(2 * t, p) / 2 : 1 - Math.pow(2 * (1 - t), p) / 2; }
-    function iris() {
-      var W = host.clientWidth, H = host.clientHeight, cx = W / 2, cy = H * 0.5;
-      var R0 = Math.hypot(W, H) * 0.56, SIDES = 7;
-      var svg = document.createElementNS(NS, 'svg');
-      svg.setAttribute('class', 'iris'); svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
-      var body = document.createElementNS(NS, 'path'); body.setAttribute('fill', '#0c1015'); body.setAttribute('fill-rule', 'evenodd');
-      var edges = document.createElementNS(NS, 'path'); edges.setAttribute('fill', 'none'); edges.setAttribute('stroke', 'rgba(255,255,255,.22)'); edges.setAttribute('stroke-width', '1');
-      var rim = document.createElementNS(NS, 'path'); rim.setAttribute('fill', 'none'); rim.setAttribute('stroke', 'rgba(245,201,40,.9)'); rim.setAttribute('stroke-width', '1.5');
-      var glint = document.createElementNS(NS, 'circle'); glint.setAttribute('cx', cx); glint.setAttribute('cy', cy); glint.setAttribute('r', 0); glint.setAttribute('fill', '#fff');
-      glint.style.filter = 'drop-shadow(0 0 8px #ffd44d) drop-shadow(0 0 18px #ffb21e)';
-      svg.appendChild(body); svg.appendChild(edges); svg.appendChild(rim); svg.appendChild(glint);
-      host.appendChild(svg);
-      function draw(p) { // p: 0 = открыто, 1 = закрыто
-        var r = R0 * Math.pow(1 - p, 1.15), rot = p * 1.1, pts = [], i, a;
-        for (i = 0; i < SIDES; i++) { a = rot + i * 2 * Math.PI / SIDES - Math.PI / 2; pts.push([cx + r * Math.cos(a), cy + r * Math.sin(a)]); }
-        var hole = 'M' + pts.map(function (q) { return q[0].toFixed(1) + ' ' + q[1].toFixed(1); }).join('L') + 'Z';
-        body.setAttribute('d', 'M0 0H' + W + 'V' + H + 'H0Z' + hole);
-        var e = '', L = Math.hypot(W, H);
-        for (i = 0; i < SIDES; i++) {
-          var A = pts[(i + SIDES - 1) % SIDES], B = pts[i], dx = B[0] - A[0], dy = B[1] - A[1], l = Math.hypot(dx, dy) || 1;
-          e += 'M' + B[0].toFixed(1) + ' ' + B[1].toFixed(1) + 'L' + (B[0] + dx / l * L).toFixed(1) + ' ' + (B[1] + dy / l * L).toFixed(1);
-        }
-        edges.setAttribute('d', e); rim.setAttribute('d', r > 1 ? hole : '');
-      }
-      draw(0);
-      return { svg: svg, draw: draw, glint: glint };
-    }
     function tween(ms, fn, cb) {
       var t0 = performance.now();
       (function f(now) { var t = Math.min(1, (now - t0) / ms); fn(t); if (t < 1) requestAnimationFrame(f); else if (cb) cb(); })(t0);
     }
+    function drops(W, H) {
+      var box = document.createElement('div'); box.className = 'juice-drops'; host.appendChild(box);
+      var n = 26, i;
+      for (i = 0; i < n; i++) {
+        var d = document.createElement('i'), s = rnd(5, 15), a = rnd(0, Math.PI * 2), r = rnd(W * .35, W * .95), dur = rnd(650, 1100);
+        d.style.cssText = 'width:' + s + 'px;height:' + s * rnd(1, 1.35) + 'px;left:' + (W / 2 - s / 2) + 'px;top:' + (H * .45 - s / 2) + 'px';
+        box.appendChild(d);
+        var dx = Math.cos(a) * r, dy = Math.sin(a) * r * .8;
+        d.animate([
+          { transform: 'translate(0,0) scale(.3)', opacity: 1 },
+          { transform: 'translate(' + (dx * .6) + 'px,' + (dy * .6 - 20) + 'px) scale(1)', opacity: 1, offset: .45 },
+          { transform: 'translate(' + dx + 'px,' + (dy + rnd(60, 150)) + 'px) scale(.7)', opacity: 0 }
+        ], { duration: dur, easing: 'cubic-bezier(.2,.7,.4,1)', fill: 'forwards' });
+      }
+      setTimeout(function () { if (box.parentNode) box.parentNode.removeChild(box); }, 1300);
+    }
+    function juice() {
+      var W = host.clientWidth, H = host.clientHeight, D = H * .2, C = 28, i;
+      var svg = document.createElementNS(NS, 'svg');
+      svg.setAttribute('class', 'juice'); svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+      svg.innerHTML = '<defs><linearGradient id="jg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffbe3a"/><stop offset=".5" stop-color="#ff9a12"/><stop offset="1" stop-color="#f06a00"/></linearGradient></defs>';
+      var body = document.createElementNS(NS, 'path'); body.setAttribute('fill', 'url(#jg)');
+      var edge = document.createElementNS(NS, 'path'); edge.setAttribute('fill', 'none'); edge.setAttribute('stroke', 'rgba(255,240,190,.9)'); edge.setAttribute('stroke-width', '3'); edge.setAttribute('stroke-linecap', 'round');
+      var shine = document.createElementNS(NS, 'path'); shine.setAttribute('fill', 'none'); shine.setAttribute('stroke', 'rgba(255,255,255,.28)'); shine.setAttribute('stroke-width', '10'); shine.setAttribute('stroke-linecap', 'round');
+      svg.appendChild(body); svg.appendChild(shine); svg.appendChild(edge); host.appendChild(svg);
+      function offsets() {
+        var o = [], k;
+        for (k = 0; k <= C; k++) o.push(Math.random() < .22 ? rnd(.6, 1) * D : rnd(0, .35) * D);
+        for (k = 1; k < C; k++) o[k] = (o[k - 1] * .25 + o[k] * .5 + o[k + 1] * .25); // сглаживаем соседей, но капли-языки остаются
+        return o;
+      }
+      function edgePath(p, o) {
+        var pts = [], k, x, y;
+        for (k = 0; k <= C; k++) { x = -6 + k * (W + 12) / C; y = -D - 24 + p * (H + 2 * D + 48) + o[k]; pts.push([x, y]); }
+        var d = 'M' + pts[0][0] + ' ' + pts[0][1].toFixed(1);
+        for (k = 1; k < C; k++) { d += 'Q' + pts[k][0].toFixed(1) + ' ' + pts[k][1].toFixed(1) + ' ' + ((pts[k][0] + pts[k + 1][0]) / 2).toFixed(1) + ' ' + ((pts[k][1] + pts[k + 1][1]) / 2).toFixed(1); }
+        d += 'L' + pts[C][0].toFixed(1) + ' ' + pts[C][1].toFixed(1);
+        return d;
+      }
+      return {
+        svg: svg,
+        cover: function (p, o) { // заливка сверху вниз
+          var e = edgePath(p, o);
+          body.setAttribute('d', e.replace(/^M/, 'M-6 -30L') + 'L' + (W + 6) + ' -30Z');
+          edge.setAttribute('d', e); shine.setAttribute('d', e); shine.setAttribute('transform', 'translate(0,-8)');
+        },
+        drain: function (p, o) { // сок стекает вниз и открывает постер
+          var e = edgePath(p, o);
+          body.setAttribute('d', e + 'L' + (W + 6) + ' ' + (H + 40) + 'L-6 ' + (H + 40) + 'Z');
+          edge.setAttribute('d', e); shine.setAttribute('d', e); shine.setAttribute('transform', 'translate(0,8)');
+        },
+        offsets: offsets
+      };
+    }
     function play() {
-      if (busy || done) return;
+      if (busy) return;
       if (reduceB) { swap(); return; }
       busy = true;
-      var ir = iris();
+      var W = host.clientWidth, H = host.clientHeight;
       host.classList.add('shaking');
-      // 1. дрожь
-      var N = 14, kf = [], k, t, s;
+      // 1. дрожь и «давление»
+      var N = 12, kf = [], k, t, s;
       for (k = 0; k <= N; k++) {
         t = k / N; s = k % 2 ? 1 : -1;
-        var amp = 0.6 + 3.2 * t;
-        kf.push({ transform: 'translate(' + (s * amp).toFixed(2) + 'px,-10px) rotate(' + (s * amp * 0.12).toFixed(2) + 'deg) scale(1.07)', offset: t });
+        var amp = 0.6 + 3.4 * t;
+        kf.push({ transform: 'translate(' + (s * amp).toFixed(2) + 'px,-10px) rotate(' + (s * amp * 0.12).toFixed(2) + 'deg) scale(' + (1.07 - 0.03 * t).toFixed(3) + ',' + (1.07 + 0.05 * t).toFixed(3) + ')', offset: t });
       }
       kf.push({ transform: 'translate(0,-10px) scale(1.07)', offset: 1 });
-      var shake = host.animate(kf, { duration: 520, easing: 'linear' });
+      var shake = host.animate(kf, { duration: 480, easing: 'linear' });
       shake.onfinish = function () {
-        // 2. заслонка закрывается
-        click();
-        tween(460, function (x) { ir.draw(ease(x, 3)); }, function () {
+        var j = juice(), o1 = j.offsets(), o2 = j.offsets();
+        drops(W, H);
+        j.cover(0, o1);
+        // 2. сок заливает постер сверху вниз
+        tween(620, function (x) { j.cover(ease(x, 2), o1); }, function () {
           swap();
-          // 3. блик в темноте
-          tween(260, function (x) {
-            ir.glint.setAttribute('r', (Math.sin(x * Math.PI) * 9).toFixed(2));
-          }, function () {
-            // 4. заслонка открывается — под ней «Чебурашка 3»
-            host.animate([{ transform: 'translateY(-10px) scale(1.14)' }, { transform: 'translateY(-10px) scale(1.07)' }], { duration: 700, easing: 'cubic-bezier(.2,.8,.2,1)' });
-            tween(700, function (x) { ir.draw(1 - ease(x, 2.2)); }, function () {
+          // 3. сок стекает — под ним другой постер
+          setTimeout(function () {
+            host.animate([{ transform: 'translateY(-10px) scale(1.12)' }, { transform: 'translateY(-10px) scale(1.07)' }], { duration: 900, easing: 'cubic-bezier(.2,.8,.2,1)' });
+            tween(1000, function (x) { j.drain(ease(x, 1.8), o2); }, function () {
               host.classList.remove('shaking');
-              if (ir.svg.parentNode) ir.svg.parentNode.removeChild(ir.svg);
+              if (j.svg.parentNode) j.svg.parentNode.removeChild(j.svg);
               busy = false;
             });
-          });
+          }, 120);
         });
       };
     }
