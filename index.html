@@ -50,6 +50,15 @@ h1{margin:0;font-family:var(--display);font-weight:800;font-size:clamp(44px,7vw,
 /* Когда добавите настоящую картинку, уберите padding у .poster с картинкой */
 .poster.has-img{padding:0}
 
+/* Постеры в шапке: наклон, параллакс и блик при наведении */
+.posters{perspective:900px}
+.poster.has-img{position:relative;transition:transform .55s cubic-bezier(.2,.7,.2,1),box-shadow .55s;will-change:transform}
+.poster.has-img.on{transition:transform .12s linear,box-shadow .55s;box-shadow:0 28px 50px -22px rgba(18,24,31,.6)}
+.poster.has-img img{transition:transform .55s cubic-bezier(.2,.7,.2,1)}
+.poster.has-img.on img{transform:translate3d(calc(var(--px,0)*-9px),calc(var(--py,0)*-9px),0) scale(1.07);transition:transform .12s linear}
+.poster.has-img::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .4s;background:radial-gradient(circle at calc(var(--mx,.5)*100%) calc(var(--my,.5)*100%),rgba(255,255,255,.5),rgba(255,255,255,0) 58%);mix-blend-mode:overlay}
+.poster.has-img.on::after{opacity:1}
+
 /* Киноархив: плёнка выходит из объектива проектора и растёт. Размеры считаются от --k */
 .reel{--k:1;--cine:#f5c928;--pj-h:calc(504px*var(--k));--sh:calc(314px*var(--k));background:var(--cine);padding:calc(40px*var(--k)) 0 0;overflow:hidden;position:relative}
 @media (max-width:1100px){.reel{--k:.8}}
@@ -60,6 +69,9 @@ h1{margin:0;font-family:var(--display);font-weight:800;font-size:clamp(44px,7vw,
 .head h2{max-width:calc(640px*var(--k));font-size:calc(56px*var(--k));letter-spacing:-.035em;line-height:.95}
 .mq{position:absolute;left:0;right:calc(var(--pj-h)*.4896);bottom:calc(var(--pj-h)*.5416 - var(--sh)/2 + 0px);height:var(--sh);overflow:hidden;z-index:1}
 .mq-track{position:absolute;inset:0}
+.mq{cursor:grab;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.mq.drag{cursor:grabbing}
+.mq img{-webkit-user-drag:none;pointer-events:none}
 .frame{position:absolute;left:0;top:0;width:calc(224px*var(--k));height:var(--sh);transform-origin:0 0;background:#0b0c0e;box-shadow:0 0 0 .6px #0b0c0e;will-change:transform}
 .frame::before,.frame::after{content:"";position:absolute;left:0;width:100%;height:calc(11px*var(--k));background:var(--cine);
   -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 11'%3E%3Crect x='6' width='16' height='11' rx='2'/%3E%3C/svg%3E");
@@ -242,7 +254,7 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
     var N = frames.length;
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var desk = window.matchMedia('(min-width: 641px)');
-    var visible = false, hover = false, m = 0, last = 0, scrollP = 0;
+    var visible = false, hover = false, drag = false, extra = 0, m = 0, last = 0, scrollP = 0;
     var W, w0, h0, k, D, SE = 0.18, LOOP;
 
     // появление
@@ -298,7 +310,12 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
     function loop(t) {
       raf = 0;
       if (!visible || !desk.matches || reduce) return;
-      if (last && !hover) m += Math.min(80, t - last) * 0.035 * k;
+      var dt = last ? Math.min(80, t - last) : 0;
+      if (dt && !drag) {
+        if (!hover) m += dt * 0.035 * k;
+        m += extra * dt; extra *= Math.pow(0.94, dt / 16);
+        if (Math.abs(extra) < 0.0004) extra = 0;
+      }
       last = t;
       render();
       raf = requestAnimationFrame(loop);
@@ -313,6 +330,31 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
       measure();
       if (desk.matches) { render(); }
     }
+    // перетаскивание плёнки мышью: вправо — назад, к проектору
+    var px0 = 0, lastX = 0, lastT = 0, vel = 0;
+    mq.addEventListener('pointerdown', function (e) {
+      if (!desk.matches || (e.pointerType === 'mouse' && e.button !== 0)) return;
+      drag = true; px0 = lastX = e.clientX; lastT = e.timeStamp; vel = 0; extra = 0;
+      mq.classList.add('drag');
+      try { mq.setPointerCapture(e.pointerId); } catch (_) {}
+    });
+    mq.addEventListener('pointermove', function (e) {
+      if (!drag) return;
+      var dx = e.clientX - lastX, dt = Math.max(1, e.timeStamp - lastT);
+      m -= dx * 1.15;
+      vel = 0.8 * vel + 0.2 * (-dx * 1.15 / dt);
+      lastX = e.clientX; lastT = e.timeStamp;
+      if (reduce) render();
+    });
+    function endDrag() {
+      if (!drag) return;
+      drag = false; mq.classList.remove('drag');
+      extra = Math.max(-1.6, Math.min(1.6, vel)) - 0.035 * k * 0 ;
+      last = 0;
+    }
+    mq.addEventListener('pointerup', endDrag);
+    mq.addEventListener('pointercancel', endDrag);
+    mq.addEventListener('dragstart', function (e) { e.preventDefault(); });
     mq.addEventListener('mouseenter', function () { hover = true; });
     mq.addEventListener('mouseleave', function () { hover = false; last = 0; });
     window.addEventListener('resize', function () { start(); });
@@ -323,6 +365,26 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(start);
     start();
     if (visible && !raf) raf = requestAnimationFrame(loop);
+  })();
+
+  // Постеры в шапке: наклон, параллакс картинки и блик за курсором
+  (function () {
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var list = document.querySelectorAll('.poster.has-img');
+    Array.prototype.forEach.call(list, function (p) {
+      p.addEventListener('pointermove', function (e) {
+        var r = p.getBoundingClientRect();
+        var x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+        p.style.setProperty('--mx', x.toFixed(3)); p.style.setProperty('--my', y.toFixed(3));
+        p.style.setProperty('--px', ((x - 0.5) * 2).toFixed(3)); p.style.setProperty('--py', ((y - 0.5) * 2).toFixed(3));
+        p.style.transform = 'rotateX(' + ((0.5 - y) * 9).toFixed(2) + 'deg) rotateY(' + ((x - 0.5) * 11).toFixed(2) + 'deg) scale(1.03)';
+        p.classList.add('on');
+      });
+      p.addEventListener('pointerleave', function () {
+        p.classList.remove('on'); p.style.transform = '';
+      });
+    });
   })();
 </script>
 </body>
