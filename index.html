@@ -57,6 +57,18 @@ h1{margin:0;font-family:var(--display);font-weight:800;font-size:clamp(44px,7vw,
   .poster.has-img:hover{transform:translateY(-10px) scale(1.07);z-index:2;box-shadow:0 34px 44px -18px rgba(18,24,31,.55),0 12px 18px -8px rgba(18,24,31,.35)}
 }
 
+.hero{overflow-x:clip}
+.poster.has-scene{cursor:pointer}
+.scene{position:absolute;z-index:6;left:50%;top:50%;width:135%;aspect-ratio:300/469;transform:translate(-50%,-50%) scale(.66);opacity:0;border-radius:6px;overflow:hidden;background:#6e6e6e;box-shadow:0 44px 70px -22px rgba(0,0,0,.55);pointer-events:none;transition:opacity .5s ease,transform 1s cubic-bezier(.2,.7,.2,1)}
+.scene.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.scene.out{opacity:0;transform:translate(-50%,-50%) scale(.8);transition:opacity .7s ease,transform .9s cubic-bezier(.4,0,.2,1)}
+.scene .stack{position:absolute;inset:0}
+.scene .stack.kb{animation:kb 6.2s ease-in-out both}
+.poster.has-img .scene img{position:absolute;inset:0;z-index:auto;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .2s linear;pointer-events:none}
+.poster.has-img .scene img.on{opacity:1}
+@keyframes kb{from{transform:scale(1)}to{transform:scale(1.06)}}
+@media (prefers-reduced-motion:reduce){.scene{display:none}}
+
 /* Киноархив: плоская плёнка на жёлтом фоне, кадры открывают карточку проекта. Размеры считаются от --k */
 .projects .p-head{padding-block:clamp(40px,6vw,72px) clamp(20px,3vw,32px);display:flex;flex-direction:column;gap:14px}
 .p-head .badge{background:var(--ink);color:var(--cine,#f5c928)}
@@ -176,7 +188,7 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
     <div class="posters">
       <div class="poster has-img bf" style="animation-delay:.3s"><img src="nenormalny.webp" alt="Постер фильма «Ненормальный»"></div>
       <div class="poster accent has-img bf" style="animation-delay:.45s"><img src="yuzzz.webp" alt="Постер сериала «ЮЗЗЗ»"></div>
-      <div class="poster has-img bf" style="animation-delay:.6s"><img src="cheburashka2.webp" alt="Постер фильма «Чебурашка 2»"></div>
+      <div class="poster has-img has-scene bf" style="animation-delay:.6s" tabindex="0" role="button" aria-label="Чебурашка 2: нажми, чтобы посмотреть"><img src="cheburashka2.webp" alt="Постер фильма «Чебурашка 2»"></div>
     </div>
   </div>
 </section>
@@ -202,7 +214,7 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
           <span class="frame" role="button" tabindex="0" data-i="10" aria-label="Варшава 21 — открыть карточку проекта"><span class="fi"><small>11</small><span class="cap"><b>Варшава 21</b><em>СЕРИАЛ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">11▸</i><i class="fx" style="--i:11"></i></span>
           <span class="frame" role="button" tabindex="0" data-i="11" aria-label="Купцы и дети — открыть карточку проекта"><span class="fi"><small>12</small><span class="cap"><b>Купцы и дети</b><em>СЕРИАЛ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">12▸</i><i class="fx" style="--i:12"></i></span>
           <span class="frame" role="button" tabindex="0" data-i="12" aria-label="Чебурашка 2 — открыть карточку проекта"><span class="fi"><img src="cheburashka2.webp" alt="" width="1000" height="1429" decoding="async"><small>13</small><span class="cap"><b>Чебурашка 2</b><em>ФИЛЬМ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">13▸</i><i class="fx" style="--i:13"></i></span>
-          <span class="frame" role="button" tabindex="0" data-i="13" aria-label="Чебурашка 3 — открыть карточку проекта"><span class="fi"><small>14</small><span class="cap"><b>Чебурашка 3</b><em>ФИЛЬМ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">14▸</i><i class="fx" style="--i:14"></i></span>
+          <span class="frame" role="button" tabindex="0" data-i="13" aria-label="Чебурашка 3 — открыть карточку проекта"><span class="fi"><img src="cheburashka3.webp" alt="" width="1000" height="1500" decoding="async"><small>14</small><span class="cap"><b>Чебурашка 3</b><em>ФИЛЬМ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">14▸</i><i class="fx" style="--i:14"></i></span>
           <span class="frame" role="button" tabindex="0" data-i="14" aria-label="Тысяча «нет» и одно «да» — открыть карточку проекта"><span class="fi"><small>15</small><span class="cap"><b>Тысяча «нет» и одно «да»</b><em>СЕРИАЛ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">15▸</i><i class="fx" style="--i:15"></i></span>
           <span class="frame" role="button" tabindex="0" data-i="15" aria-label="Холоп 3 — открыть карточку проекта"><span class="fi"><small>16</small><span class="cap"><b>Холоп 3</b><em>ФИЛЬМ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">16▸</i><i class="fx" style="--i:16"></i></span>
           <span class="frame" role="button" tabindex="0" data-i="16" aria-label="После Фишера. Инквизитор — открыть карточку проекта"><span class="fi"><small>17</small><span class="cap"><b>После Фишера. Инквизитор</b><em>СЕРИАЛ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">17▸</i><i class="fx" style="--i:17"></i></span>
@@ -404,6 +416,60 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
       else if (e.key === 'ArrowLeft') step(-1);
       else if (e.key === 'ArrowRight') step(1);
     });
+  })();
+
+  // Чебурашка 2 в шапке: по клику плёнка-сценка, в конце постер заменяется на «Чебурашку 3»
+  (function () {
+    var host = document.querySelector('.poster.has-scene');
+    if (!host) return;
+    var img = host.querySelector('img');
+    var reduceM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var seq = [[1, 800], [2, 430], [3, 430], [4, 450], [5, 650], [6, 520], [7, 470], [8, 430], [9, 520], [10, 1100]];
+    var scene = null, stack = null, ready = null, busy = false, done = false;
+    function pad(n) { return (n < 10 ? '0' : '') + n; }
+    function build() {
+      if (ready) return ready;
+      scene = document.createElement('div'); scene.className = 'scene'; scene.setAttribute('aria-hidden', 'true');
+      stack = document.createElement('div'); stack.className = 'stack'; scene.appendChild(stack);
+      var loads = seq.map(function (s) {
+        return new Promise(function (res) {
+          var im = new Image(); im.alt = ''; im.decoding = 'async';
+          im.onload = im.onerror = function () { res(); };
+          im.src = 'scene/f' + pad(s[0]) + '.webp'; stack.appendChild(im);
+        });
+      });
+      host.appendChild(scene);
+      ready = Promise.all(loads);
+      return ready;
+    }
+    function swap() {
+      img.src = 'cheburashka3.webp'; img.alt = 'Постер фильма «Чебурашка 3»';
+      host.classList.remove('has-scene'); host.removeAttribute('tabindex'); host.removeAttribute('role'); host.removeAttribute('aria-label');
+      done = true;
+    }
+    function play() {
+      if (busy || done) return;
+      if (reduceM) { swap(); return; }
+      busy = true;
+      build().then(function () {
+        var imgs = stack.children, t = 0, prev = null;
+        scene.classList.add('show'); stack.classList.add('kb');
+        seq.forEach(function (s, i) {
+          setTimeout(function () {
+            if (prev) prev.classList.remove('on');
+            imgs[i].classList.add('on'); prev = imgs[i];
+          }, t + (i ? 0 : 250));
+          t += s[1];
+        });
+        setTimeout(function () {
+          swap(); scene.classList.remove('show'); scene.classList.add('out');
+          setTimeout(function () { if (scene.parentNode) scene.parentNode.removeChild(scene); busy = false; }, 1000);
+        }, t + 400);
+      });
+    }
+    host.addEventListener('pointerenter', function () { build(); }, { once: true });
+    host.addEventListener('click', play);
+    host.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); play(); } });
   })();
 </script>
 </body>

@@ -15,7 +15,7 @@ window.PROJECTS = [
   { title: "Варшава 21", type: "СЕРИАЛ", poster: null, year: "", director: "", role: "", description: "" },
   { title: "Купцы и дети", type: "СЕРИАЛ", poster: null, year: "", director: "", role: "", description: "" },
   { title: "Чебурашка 2", type: "ФИЛЬМ", poster: "cheburashka2.webp", year: "", director: "", role: "", description: "" },
-  { title: "Чебурашка 3", type: "ФИЛЬМ", poster: null, year: "", director: "", role: "", description: "" },
+  { title: "Чебурашка 3", type: "ФИЛЬМ", poster: "cheburashka3.webp", year: "", director: "", role: "", description: "" },
   { title: "Тысяча «нет» и одно «да»", type: "СЕРИАЛ", poster: null, year: "", director: "", role: "", description: "" },
   { title: "Холоп 3", type: "ФИЛЬМ", poster: null, year: "", director: "", role: "", description: "" },
   { title: "После Фишера. Инквизитор", type: "СЕРИАЛ", poster: null, year: "", director: "", role: "", description: "" },
