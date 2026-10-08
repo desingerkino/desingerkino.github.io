@@ -49,13 +49,37 @@ h1{margin:0;font-family:var(--display);font-weight:800;font-size:clamp(44px,7vw,
 /* Когда добавите настоящую картинку, уберите padding у .poster с картинкой */
 .poster.has-img{padding:0}
 
-.mq{background:var(--ink);color:var(--tag);padding:28px 0;overflow:hidden}
-.mq-track{display:flex;width:max-content;animation:mq 120s linear infinite}
+/* Киноплёнка и проектор. Все размеры считаются от --k, на телефоне всё уменьшается разом */
+.reel{--k:1;background:var(--tag);padding:clamp(32px,5vw,56px) 0;overflow:hidden}
+@media (max-width:720px){.reel{--k:.65}}
+.reel-row{display:flex;align-items:center}
+.mq{flex:1 1 0;min-width:0;overflow:hidden;position:relative;z-index:1}
+.mq-track{position:relative;display:flex;width:max-content;padding-block:calc(26px*var(--k));background:#0a0d11;animation:mq 90s linear infinite}
 .mq:hover .mq-track{animation-play-state:paused}
-.mq-group{display:flex;align-items:center;flex-shrink:0}
-.mq-item{display:flex;align-items:center;gap:32px;padding-right:32px;white-space:nowrap;font-family:var(--display);font-weight:800;font-size:clamp(32px,5vw,56px);letter-spacing:-.02em}
-.mq-item i{display:inline-block;width:12px;height:12px;background:#fff}
+/* Перфорация: два ряда отверстий сверху и снизу */
+.mq-track::before,.mq-track::after{content:"";position:absolute;left:0;width:100%;height:calc(11px*var(--k));background:var(--tag);
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 11'%3E%3Crect x='7' width='14' height='11' rx='2.5'/%3E%3C/svg%3E");
+  mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 11'%3E%3Crect x='7' width='14' height='11' rx='2.5'/%3E%3C/svg%3E");
+  -webkit-mask-size:calc(28px*var(--k)) 100%;mask-size:calc(28px*var(--k)) 100%;
+  -webkit-mask-repeat:repeat-x;mask-repeat:repeat-x}
+.mq-track::before{top:calc(8px*var(--k))}
+.mq-track::after{bottom:calc(8px*var(--k))}
+.mq-group{display:flex;flex-shrink:0}
+.frame{flex:none;width:calc(280px*var(--k));padding-inline:calc(7px*var(--k))}
+.fi{height:calc(124px*var(--k));background:#1c2530;border-radius:calc(2px*var(--k));padding:calc(12px*var(--k)) calc(14px*var(--k));display:flex;flex-direction:column;justify-content:space-between;color:#fff}
+.fi small{font-family:var(--mono);font-size:calc(12px*var(--k));letter-spacing:.08em;color:var(--tag)}
+.fi b{font-family:var(--display);font-weight:800;font-size:calc(24px*var(--k));line-height:1.05;letter-spacing:-.01em;text-wrap:balance}
 @keyframes mq{to{transform:translateX(-50%)}}
+
+.projector{flex:none;width:calc(300px*var(--k));height:calc(340px*var(--k));margin-left:calc(-12px*var(--k));position:relative;z-index:2}
+.pj-ink{fill:var(--ink)}
+.pj-mid{fill:#2b3541}
+.pj-hole{fill:var(--tag)}
+.pj-film{fill:#0a0d11}
+.pj-lamp{fill:var(--tag)}
+.pj-line{stroke:#46525f;stroke-width:2;fill:none}
+.reel-spin{transform-box:fill-box;transform-origin:center;animation:spin 5s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 
 .work .wrap{padding-block:80px;display:flex;flex-wrap:wrap;gap:48px}
 h2{margin:0;font-family:var(--display);font-weight:800;line-height:1.05;letter-spacing:-.02em;text-wrap:balance}
@@ -74,7 +98,7 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
 @keyframes bf{from{opacity:0;filter:blur(10px);transform:translateY(10px)}to{opacity:1;filter:blur(0);transform:none}}
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
-  .bf,.mq-track{animation:none}
+  .bf,.mq-track,.reel-spin{animation:none}
   .mq{overflow-x:auto}
 }
 </style>
@@ -115,28 +139,70 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
   </div>
 </section>
 
-<section id="projects" class="mq" aria-label="Проекты">
-  <div class="mq-track">
-    <div class="mq-group" id="mq-group">
-      <span class="mq-item">Ле.Ген.Да<i></i></span>
-      <span class="mq-item">СашаТаня<i></i></span>
-      <span class="mq-item">Подельники<i></i></span>
-      <span class="mq-item">ЮЗЗЗ<i></i></span>
-      <span class="mq-item">Пассажиры<i></i></span>
-      <span class="mq-item">Волшебники<i></i></span>
-      <span class="mq-item">Иван Семенов: Большой поход<i></i></span>
-      <span class="mq-item">Яша и Леонид Брежнев<i></i></span>
-      <span class="mq-item">Ненормальный<i></i></span>
-      <span class="mq-item">Бар один звонок<i></i></span>
-      <span class="mq-item">Варшава 21<i></i></span>
-      <span class="mq-item">Купцы и дети<i></i></span>
-      <span class="mq-item">Чебурашка 2<i></i></span>
-      <span class="mq-item">Чебурашка 3<i></i></span>
-      <span class="mq-item">Тысяча «нет» и одно «да»<i></i></span>
-      <span class="mq-item">Холоп 3<i></i></span>
-      <span class="mq-item">После Фишера. Инквизитор<i></i></span>
-      <span class="mq-item">Баста: Начало игры!<i></i></span>
+<section id="projects" class="reel" aria-label="Проекты">
+  <div class="reel-row">
+
+    <!-- Плёнка выходит из проектора справа и уезжает влево -->
+    <div class="mq">
+      <div class="mq-track">
+        <div class="mq-group" id="mq-group">
+          <span class="frame"><span class="fi"><small>01</small><b>Ле.Ген.Да</b></span></span>
+          <span class="frame"><span class="fi"><small>02</small><b>СашаТаня</b></span></span>
+          <span class="frame"><span class="fi"><small>03</small><b>Подельники</b></span></span>
+          <span class="frame"><span class="fi"><small>04</small><b>ЮЗЗЗ</b></span></span>
+          <span class="frame"><span class="fi"><small>05</small><b>Пассажиры</b></span></span>
+          <span class="frame"><span class="fi"><small>06</small><b>Волшебники</b></span></span>
+          <span class="frame"><span class="fi"><small>07</small><b>Иван Семенов: Большой поход</b></span></span>
+          <span class="frame"><span class="fi"><small>08</small><b>Яша и Леонид Брежнев</b></span></span>
+          <span class="frame"><span class="fi"><small>09</small><b>Ненормальный</b></span></span>
+          <span class="frame"><span class="fi"><small>10</small><b>Бар один звонок</b></span></span>
+          <span class="frame"><span class="fi"><small>11</small><b>Варшава 21</b></span></span>
+          <span class="frame"><span class="fi"><small>12</small><b>Купцы и дети</b></span></span>
+          <span class="frame"><span class="fi"><small>13</small><b>Чебурашка 2</b></span></span>
+          <span class="frame"><span class="fi"><small>14</small><b>Чебурашка 3</b></span></span>
+          <span class="frame"><span class="fi"><small>15</small><b>Тысяча «нет» и одно «да»</b></span></span>
+          <span class="frame"><span class="fi"><small>16</small><b>Холоп 3</b></span></span>
+          <span class="frame"><span class="fi"><small>17</small><b>После Фишера. Инквизитор</b></span></span>
+          <span class="frame"><span class="fi"><small>18</small><b>Баста: Начало игры!</b></span></span>
+        </div>
+      </div>
     </div>
+
+    <!-- Кинопроектор -->
+    <svg class="projector" viewBox="0 0 300 340" aria-hidden="true" focusable="false">
+      <!-- ножка и основание -->
+      <rect class="pj-ink" x="112" y="264" width="76" height="62"/>
+      <rect class="pj-ink" x="64" y="322" width="172" height="12" rx="3"/>
+      <!-- бобины -->
+      <g class="reel-spin">
+        <circle class="pj-ink" cx="108" cy="40" r="40"/>
+        <circle class="pj-hole" cx="108" cy="18" r="9"/>
+        <circle class="pj-hole" cx="127" cy="51" r="9"/>
+        <circle class="pj-hole" cx="89" cy="51" r="9"/>
+        <circle class="pj-mid" cx="108" cy="40" r="6"/>
+      </g>
+      <g class="reel-spin">
+        <circle class="pj-ink" cx="206" cy="40" r="40"/>
+        <circle class="pj-hole" cx="206" cy="18" r="9"/>
+        <circle class="pj-hole" cx="225" cy="51" r="9"/>
+        <circle class="pj-hole" cx="187" cy="51" r="9"/>
+        <circle class="pj-mid" cx="206" cy="40" r="6"/>
+      </g>
+      <!-- корпус -->
+      <rect class="pj-ink" x="22" y="72" width="266" height="196" rx="12"/>
+      <!-- щель, из которой выходит плёнка -->
+      <rect class="pj-film" x="22" y="84" width="14" height="172"/>
+      <!-- вентиляционная решётка -->
+      <path class="pj-line" d="M96 104H236M96 120H236M96 136H236M96 152H236"/>
+      <!-- шильдик, ручка, лампа -->
+      <rect class="pj-mid" x="100" y="206" width="112" height="30" rx="3"/>
+      <circle class="pj-mid" cx="66" cy="226" r="16"/>
+      <circle class="pj-line" cx="66" cy="226" r="9"/>
+      <circle class="pj-lamp" cx="262" cy="96" r="6"/>
+      <!-- объектив -->
+      <rect class="pj-mid" x="288" y="150" width="10" height="40" rx="3"/>
+    </svg>
+
   </div>
 </section>
 
