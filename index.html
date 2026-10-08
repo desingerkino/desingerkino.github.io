@@ -58,16 +58,16 @@ h1{margin:0;font-family:var(--display);font-weight:800;font-size:clamp(44px,7vw,
 }
 
 .hero{overflow-x:clip}
-.poster.has-scene{cursor:pointer}
-.scene{position:absolute;z-index:6;left:50%;top:50%;width:135%;aspect-ratio:300/469;transform:translate(-50%,-50%) scale(.66);opacity:0;border-radius:6px;overflow:hidden;background:#6e6e6e;box-shadow:0 44px 70px -22px rgba(0,0,0,.55);pointer-events:none;transition:opacity .5s ease,transform 1s cubic-bezier(.2,.7,.2,1)}
-.scene.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
-.scene.out{opacity:0;transform:translate(-50%,-50%) scale(.8);transition:opacity .7s ease,transform .9s cubic-bezier(.4,0,.2,1)}
-.scene .stack{position:absolute;inset:0}
-.scene .stack.kb{animation:kb 6.2s ease-in-out both}
-.poster.has-img .scene img{position:absolute;inset:0;z-index:auto;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .2s linear;pointer-events:none}
-.poster.has-img .scene img.on{opacity:1}
-@keyframes kb{from{transform:scale(1)}to{transform:scale(1.06)}}
-@media (prefers-reduced-motion:reduce){.scene{display:none}}
+.poster.has-burst{cursor:pointer}
+.poster.shaking{will-change:transform,filter;box-shadow:0 0 40px 6px rgba(255,160,30,.55)!important;z-index:4}
+.poster .cracks{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none;overflow:visible}
+.poster .cracks path{fill:none;stroke:#fff;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:100;stroke-dashoffset:100;filter:drop-shadow(0 0 1.5px rgba(0,0,0,.8));animation:crack .22s ease-out forwards;vector-effect:non-scaling-stroke}
+@keyframes crack{to{stroke-dashoffset:0}}
+.poster .shards{position:absolute;inset:0;z-index:5;pointer-events:none}
+.poster .shards i{position:absolute;inset:0;background:url(cheburashka2.webp) center/cover no-repeat;will-change:transform,opacity}
+.poster .shards b{position:absolute;z-index:2;margin:-4px;will-change:transform,opacity}
+.poster .shards .ring{position:absolute;z-index:3;left:50%;top:42%;width:100%;aspect-ratio:1;border-radius:50%;border:3px solid rgba(255,255,255,.95);box-shadow:0 0 30px 6px rgba(255,190,70,.8),inset 0 0 30px 6px rgba(255,190,70,.6)}
+.poster .shards .flash{position:absolute;z-index:4;inset:-30%;background:radial-gradient(circle at 50% 42%,#fff 0,rgba(255,226,150,.85) 18%,rgba(255,170,40,0) 55%);text-decoration:none}
 
 /* Киноархив: плоская плёнка на жёлтом фоне, кадры открывают карточку проекта. Размеры считаются от --k */
 .projects .p-head{padding-block:clamp(40px,6vw,72px) clamp(20px,3vw,32px);display:flex;flex-direction:column;gap:14px}
@@ -188,7 +188,7 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
     <div class="posters">
       <div class="poster has-img bf" style="animation-delay:.3s"><img src="nenormalny.webp" alt="Постер фильма «Ненормальный»"></div>
       <div class="poster accent has-img bf" style="animation-delay:.45s"><img src="yuzzz.webp" alt="Постер сериала «ЮЗЗЗ»"></div>
-      <div class="poster has-img has-scene bf" style="animation-delay:.6s" tabindex="0" role="button" aria-label="Чебурашка 2: нажми, чтобы посмотреть"><img src="cheburashka2.webp" alt="Постер фильма «Чебурашка 2»"></div>
+      <div class="poster has-img has-burst bf" style="animation-delay:.6s" tabindex="0" role="button" aria-label="Чебурашка 2: нажми, чтобы посмотреть"><img src="cheburashka2.webp" alt="Постер фильма «Чебурашка 2»"></div>
     </div>
   </div>
 </section>
@@ -418,56 +418,108 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
     });
   })();
 
-  // Чебурашка 2 в шапке: по клику плёнка-сценка, в конце постер заменяется на «Чебурашку 3»
+  // «Чебурашка 2» в шапке: по клику постер трясётся, трескается и лопается осколками — под ним «Чебурашка 3»
   (function () {
-    var host = document.querySelector('.poster.has-scene');
+    var host = document.querySelector('.poster.has-burst');
     if (!host) return;
     var img = host.querySelector('img');
-    var reduceM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var seq = [[1, 800], [2, 430], [3, 430], [4, 450], [5, 650], [6, 520], [7, 470], [8, 430], [9, 520], [10, 1100]];
-    var scene = null, stack = null, ready = null, busy = false, done = false;
-    function pad(n) { return (n < 10 ? '0' : '') + n; }
-    function build() {
-      if (ready) return ready;
-      scene = document.createElement('div'); scene.className = 'scene'; scene.setAttribute('aria-hidden', 'true');
-      stack = document.createElement('div'); stack.className = 'stack'; scene.appendChild(stack);
-      var loads = seq.map(function (s) {
-        return new Promise(function (res) {
-          var im = new Image(); im.alt = ''; im.decoding = 'async';
-          im.onload = im.onerror = function () { res(); };
-          im.src = 'scene/f' + pad(s[0]) + '.webp'; stack.appendChild(im);
-        });
-      });
-      host.appendChild(scene);
-      ready = Promise.all(loads);
-      return ready;
-    }
+    var reduceB = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var busy = false, done = false, NS = 'http://www.w3.org/2000/svg';
+    function rnd(a, b) { return a + Math.random() * (b - a); }
     function swap() {
       img.src = 'cheburashka3.webp'; img.alt = 'Постер фильма «Чебурашка 3»';
-      host.classList.remove('has-scene'); host.removeAttribute('tabindex'); host.removeAttribute('role'); host.removeAttribute('aria-label');
+      host.classList.remove('has-burst'); host.removeAttribute('tabindex'); host.removeAttribute('role'); host.removeAttribute('aria-label');
       done = true;
+    }
+    function cracks(w, h) {
+      var svg = document.createElementNS(NS, 'svg');
+      svg.setAttribute('class', 'cracks'); svg.setAttribute('viewBox', '0 0 100 150'); svg.setAttribute('preserveAspectRatio', 'none');
+      var cx = rnd(40, 60), cy = rnd(48, 68);
+      for (var i = 0; i < 9; i++) {
+        var ang = (i / 9) * Math.PI * 2 + rnd(-0.3, 0.3), x = cx, y = cy, d = 'M' + cx.toFixed(1) + ' ' + cy.toFixed(1);
+        var len = rnd(40, 90), steps = 6;
+        for (var s = 1; s <= steps; s++) {
+          ang += rnd(-0.45, 0.45); x += Math.cos(ang) * len / steps; y += Math.sin(ang) * len / steps * 1.2;
+          d += 'L' + x.toFixed(1) + ' ' + y.toFixed(1);
+        }
+        var p = document.createElementNS(NS, 'path');
+        p.setAttribute('d', d); p.setAttribute('pathLength', '100');
+        p.style.animationDelay = (0.35 + i * 0.07).toFixed(2) + 's';
+        svg.appendChild(p);
+      }
+      host.appendChild(svg); return svg;
+    }
+    function shatter() {
+      var r = host.getBoundingClientRect(), w = r.width, h = r.height;
+      var box = document.createElement('div'); box.className = 'shards';
+      var cols = 7, rows = 10, pts = [], i, j;
+      for (j = 0; j <= rows; j++) { pts[j] = []; for (i = 0; i <= cols; i++) {
+        var jx = (i === 0 || i === cols) ? 0 : rnd(-0.32, 0.32), jy = (j === 0 || j === rows) ? 0 : rnd(-0.32, 0.32);
+        pts[j][i] = [(i + jx) / cols * 100, (j + jy) / rows * 100];
+      } }
+      var ox = 50, oy = 40, anims = [];
+      function shard(p1, p2, p3) {
+        var el = document.createElement('i');
+        el.style.clipPath = 'polygon(' + [p1, p2, p3].map(function (p) { return p[0].toFixed(2) + '% ' + p[1].toFixed(2) + '%'; }).join(',') + ')';
+        el.style.webkitClipPath = el.style.clipPath;
+        var mx = (p1[0] + p2[0] + p3[0]) / 3, my = (p1[1] + p2[1] + p3[1]) / 3;
+        var vx = (mx - ox) / 50, vy = (my - oy) / 50, dist = Math.sqrt(vx * vx + vy * vy) + 0.15;
+        var push = rnd(0.9, 1.5) * (1.1 - Math.min(dist, 1) * 0.3);
+        var dx = vx / dist * w * push * rnd(0.6, 1.2) + rnd(-20, 20), dy = vy / dist * h * push * rnd(0.4, 0.9) - rnd(10, 90);
+        var rot = rnd(-160, 160), dur = rnd(950, 1500);
+        box.appendChild(el);
+        anims.push([el, [
+          { transform: 'translate(0,0) rotate(0) scale(1)', opacity: 1 },
+          { transform: 'translate(' + dx + 'px,' + dy + 'px) rotate(' + rot * 0.6 + 'deg) scale(1)', opacity: 1, offset: 0.5 },
+          { transform: 'translate(' + dx * 1.2 + 'px,' + (dy + h * 0.9) + 'px) rotate(' + rot + 'deg) scale(.85)', opacity: 0 }
+        ], { duration: dur, easing: 'cubic-bezier(.15,.7,.4,1)', fill: 'forwards' }]);
+      }
+      for (j = 0; j < rows; j++) for (i = 0; i < cols; i++) {
+        var a = pts[j][i], b = pts[j][i + 1], c = pts[j + 1][i + 1], d = pts[j + 1][i];
+        if ((i + j) % 2) { shard(a, b, c); shard(a, c, d); } else { shard(a, b, d); shard(b, c, d); }
+      }
+      // конфетти цвета апельсина
+      var cols2 = ['#ff9a1f', '#ffc83d', '#ff7a00', '#fff1b8', '#ffffff'];
+      for (i = 0; i < 34; i++) {
+        var c = document.createElement('b'), sz = rnd(5, 11), ang = rnd(0, Math.PI * 2), dd = rnd(0.5, 1.5) * w;
+        c.style.cssText = 'left:' + rnd(35, 65) + '%;top:' + rnd(30, 50) + '%;width:' + sz + 'px;height:' + sz + 'px;background:' + cols2[i % cols2.length] + ';border-radius:' + (i % 3 ? '50%' : '2px');
+        box.appendChild(c);
+        anims.push([c, [
+          { transform: 'translate(0,0) scale(.4)', opacity: 1 },
+          { transform: 'translate(' + Math.cos(ang) * dd + 'px,' + (Math.sin(ang) * dd - 60) + 'px) scale(1)', opacity: 1, offset: 0.45 },
+          { transform: 'translate(' + Math.cos(ang) * dd * 1.15 + 'px,' + (Math.sin(ang) * dd + h * 0.8) + 'px) rotate(' + rnd(-360, 360) + 'deg) scale(.7)', opacity: 0 }
+        ], { duration: rnd(1000, 1700), easing: 'cubic-bezier(.2,.7,.4,1)', fill: 'forwards' }]);
+      }
+      var ring = document.createElement('u'); ring.className = 'ring'; box.appendChild(ring);
+      var flash = document.createElement('s'); flash.className = 'flash'; box.appendChild(flash);
+      host.appendChild(box);
+      swap();                                   // под осколками уже «Чебурашка 3»
+      img.animate([{ transform: 'scale(.9)', filter: 'brightness(1.8)' }, { transform: 'scale(1.035)', filter: 'brightness(1.15)', offset: 0.45 }, { transform: 'scale(1)', filter: 'brightness(1)' }], { duration: 900, easing: 'cubic-bezier(.2,.8,.2,1)' });
+      ring.animate([{ transform: 'translate(-50%,-50%) scale(.1)', opacity: .95 }, { transform: 'translate(-50%,-50%) scale(3.4)', opacity: 0 }], { duration: 750, easing: 'cubic-bezier(.1,.7,.3,1)', fill: 'forwards' });
+      flash.animate([{ opacity: .95 }, { opacity: 0 }], { duration: 420, easing: 'ease-out', fill: 'forwards' });
+      anims.forEach(function (x) { x[0].animate(x[1], x[2]); });
+      setTimeout(function () { if (box.parentNode) box.parentNode.removeChild(box); busy = false; }, 1900);
     }
     function play() {
       if (busy || done) return;
-      if (reduceM) { swap(); return; }
+      if (reduceB) { swap(); return; }
       busy = true;
-      build().then(function () {
-        var imgs = stack.children, t = 0, prev = null;
-        scene.classList.add('show'); stack.classList.add('kb');
-        seq.forEach(function (s, i) {
-          setTimeout(function () {
-            if (prev) prev.classList.remove('on');
-            imgs[i].classList.add('on'); prev = imgs[i];
-          }, t + (i ? 0 : 250));
-          t += s[1];
+      var svg = cracks();
+      var N = 30, kf = [], t, k;
+      for (k = 0; k <= N; k++) {
+        t = k / N;
+        var amp = 0.4 + 7 * Math.pow(t, 1.6), s = k % 2 ? 1 : -1;
+        kf.push({
+          transform: 'translate(' + (s * amp * rnd(0.5, 1)).toFixed(2) + 'px,' + (-10 + rnd(-1, 1) * amp * 0.6).toFixed(2) + 'px) rotate(' + (s * amp * 0.28 * rnd(0.5, 1)).toFixed(2) + 'deg) scale(' + (1.07 + 0.06 * t).toFixed(3) + ')',
+          filter: 'brightness(' + (1 + 0.45 * t * t).toFixed(2) + ') saturate(' + (1 + 0.5 * t).toFixed(2) + ')',
+          offset: t
         });
-        setTimeout(function () {
-          swap(); scene.classList.remove('show'); scene.classList.add('out');
-          setTimeout(function () { if (scene.parentNode) scene.parentNode.removeChild(scene); busy = false; }, 1000);
-        }, t + 400);
-      });
+      }
+      kf[N].transform = 'translate(0,-10px) rotate(0) scale(1.14)';
+      host.classList.add('shaking');
+      var an = host.animate(kf, { duration: 1300, easing: 'linear' });
+      an.onfinish = function () { host.classList.remove('shaking'); if (svg.parentNode) svg.parentNode.removeChild(svg); shatter(); };
     }
-    host.addEventListener('pointerenter', function () { build(); }, { once: true });
     host.addEventListener('click', play);
     host.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); play(); } });
   })();
