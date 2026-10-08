@@ -56,61 +56,72 @@ h1{margin:0;font-family:var(--display);font-weight:800;font-size:clamp(44px,7vw,
 @media (hover:hover) and (pointer:fine){
   .poster.has-img:hover{transform:translateY(-10px) scale(1.07);z-index:2;box-shadow:0 34px 44px -18px rgba(18,24,31,.55),0 12px 18px -8px rgba(18,24,31,.35)}
 }
-.poster.has-pop{cursor:pointer}
-.poster.has-img .pop{position:absolute;z-index:-1;left:50%;bottom:calc(100% - 3px);width:70%;height:auto;transform:translate(-50%,100%);transform-origin:50% 100%;pointer-events:none}
-.poster.popping .pop{animation:peek 3.1s cubic-bezier(.3,.7,.3,1) both}
-@keyframes peek{
-  0%{transform:translate(-50%,100%) rotate(0)}
-  18%{transform:translate(-50%,6%) rotate(0)}
-  30%{transform:translate(-50%,0) rotate(-6deg)}
-  42%{transform:translate(-50%,0) rotate(6deg)}
-  54%{transform:translate(-50%,0) rotate(-6deg)}
-  66%{transform:translate(-50%,0) rotate(5deg)}
-  76%{transform:translate(-50%,0) rotate(0)}
-  100%{transform:translate(-50%,100%) rotate(0)}}
-@media (prefers-reduced-motion:reduce){.poster.popping .pop{animation:none}}
 
-/* Киноархив: плёнка выходит из объектива проектора и растёт. Размеры считаются от --k */
+/* Киноархив: плоская плёнка на жёлтом фоне, кадры открывают карточку проекта. Размеры считаются от --k */
 .projects .p-head{padding-block:clamp(40px,6vw,72px) clamp(20px,3vw,32px);display:flex;flex-direction:column;gap:14px}
 .p-head .badge{background:var(--ink);color:var(--cine,#f5c928)}
 .p-head h2{max-width:720px;font-size:clamp(34px,4.4vw,56px);letter-spacing:-.035em;line-height:.98}
-.reel{--k:1;--cine:#f5c928;--pj-h:calc(480px*var(--k));--sh:calc(240px*var(--k));background:var(--cine);overflow:hidden;position:relative}
+.reel{--k:1;--cine:#f5c928;--sh:calc(314px*var(--k));background:var(--cine);overflow:hidden;position:relative;padding-block:calc(56px*var(--k))}
 @media (max-width:1100px){.reel{--k:.8}}
 @media (max-width:760px){.reel{--k:.6}}
 @media (min-width:1700px){.reel{--k:1.2}}
-.stage{position:relative;height:calc(var(--pj-h) + 40px*var(--k))}
-.mq{position:absolute;left:0;right:calc(var(--pj-h)*.576);bottom:calc(var(--pj-h)*.427 + 14px*var(--k) - var(--sh)/2);height:var(--sh);overflow:hidden;z-index:1}
-.mq-track{position:absolute;inset:0}
-.mq{cursor:grab;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.mq{position:relative;height:var(--sh);overflow:hidden;cursor:grab;touch-action:pan-y;user-select:none;-webkit-user-select:none}
 .mq.drag{cursor:grabbing}
 .mq img{-webkit-user-drag:none;pointer-events:none}
-.frame{position:absolute;left:0;top:0;width:calc(168px*var(--k));height:var(--sh);transform-origin:0 0;background:#0b0c0e;box-shadow:0 0 0 .6px #0b0c0e;will-change:transform}
-.frame::before,.frame::after{content:"";position:absolute;left:0;width:100%;height:calc(9px*var(--k));background:var(--cine);
+.mq-track{position:absolute;inset:0}
+.frame{position:absolute;left:0;top:0;width:calc(224px*var(--k));height:var(--sh);background:#0b0c0e;box-shadow:0 0 0 .6px #0b0c0e;will-change:transform;outline-offset:-3px}
+.frame:focus-visible{outline:3px solid var(--cine)}
+.frame::before,.frame::after{content:"";position:absolute;left:0;width:100%;height:calc(11px*var(--k));background:var(--cine);
   -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 11'%3E%3Crect x='6' width='16' height='11' rx='2'/%3E%3C/svg%3E");
   mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 11'%3E%3Crect x='6' width='16' height='11' rx='2'/%3E%3C/svg%3E");
   -webkit-mask-size:calc(28px*var(--k)) 100%;mask-size:calc(28px*var(--k)) 100%;-webkit-mask-repeat:repeat-x;mask-repeat:repeat-x}
-.frame::before{top:calc(5px*var(--k))}
-.frame::after{bottom:calc(5px*var(--k))}
-.fi{position:absolute;left:calc(8px*var(--k));right:calc(8px*var(--k));top:calc(24px*var(--k));bottom:calc(24px*var(--k));display:block;overflow:hidden;border-radius:calc(2px*var(--k));background:radial-gradient(130% 75% at 25% 12%,#3b3427 0,#1a1d22 52%,#0e1013 100%);color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);transition:transform .45s cubic-bezier(.2,.7,.2,1),filter .45s}
+.frame::before{top:calc(6px*var(--k))}
+.frame::after{bottom:calc(6px*var(--k))}
+.fi{position:absolute;left:calc(12px*var(--k));right:calc(12px*var(--k));top:calc(31px*var(--k));bottom:calc(31px*var(--k));display:block;overflow:hidden;border-radius:calc(2px*var(--k));background:radial-gradient(130% 75% at 25% 12%,#3b3427 0,#1a1d22 52%,#0e1013 100%);color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);transition:transform .45s cubic-bezier(.2,.7,.2,1),filter .45s;cursor:pointer}
 .fi img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 20%;display:block}
 .fi::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(5,6,8,.92) 0,rgba(5,6,8,.55) 38%,rgba(5,6,8,0) 66%)}
-.fi:hover{transform:scale(1.04);filter:brightness(1.12)}
-.fi small{position:absolute;z-index:1;top:calc(9px*var(--k));left:calc(10px*var(--k));font-family:var(--mono);font-size:calc(11px*var(--k));font-weight:500;letter-spacing:.08em;color:var(--cine)}
-.cap{position:absolute;z-index:1;left:calc(10px*var(--k));right:calc(10px*var(--k));bottom:calc(10px*var(--k));display:flex;flex-direction:column;gap:calc(4px*var(--k))}
-.cap b{font-family:var(--display);font-weight:800;font-size:calc(16px*var(--k));line-height:1.05;letter-spacing:-.015em;text-wrap:balance}
-.cap em{font-style:normal;font-family:var(--body);font-size:calc(8.5px*var(--k));letter-spacing:.1em;color:rgba(255,255,255,.62)}
-.ek{position:absolute;left:calc(9px*var(--k));font-style:normal;font-family:var(--mono);font-size:calc(6px*var(--k));line-height:1;letter-spacing:.14em;color:rgba(245,201,40,.5)}
-.ek.t{top:calc(15px*var(--k))}
-.ek.b{bottom:calc(15px*var(--k))}
+@media (hover:hover){.frame:hover .fi{transform:scale(1.04);filter:brightness(1.12)}}
+.fi small{position:absolute;z-index:1;top:calc(12px*var(--k));left:calc(13px*var(--k));font-family:var(--mono);font-size:calc(13px*var(--k));font-weight:500;letter-spacing:.08em;color:var(--cine)}
+.cap{position:absolute;z-index:1;left:calc(13px*var(--k));right:calc(13px*var(--k));bottom:calc(13px*var(--k));display:flex;flex-direction:column;gap:calc(5px*var(--k))}
+.cap b{font-family:var(--display);font-weight:800;font-size:calc(21px*var(--k));line-height:1.04;letter-spacing:-.015em;text-wrap:balance}
+.cap em{font-style:normal;font-family:var(--body);font-size:calc(10px*var(--k));letter-spacing:.1em;color:rgba(255,255,255,.62)}
+.ek{position:absolute;left:calc(12px*var(--k));font-style:normal;font-family:var(--mono);font-size:calc(7.5px*var(--k));line-height:1;letter-spacing:.14em;color:rgba(245,201,40,.5)}
+.ek.t{top:calc(19px*var(--k))}
+.ek.b{bottom:calc(19px*var(--k))}
 .fx{position:absolute;inset:0;pointer-events:none;z-index:3;opacity:.55;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1008' height='314' viewBox='0 0 1008 314' preserveAspectRatio='none'%3E%3Cpath d='M326 45q-2.6 80 0.1 160' stroke='#fff' stroke-opacity='0.17' stroke-width='0.6' fill='none'/%3E%3Cpath d='M917 64q-0.5 24 -1.0 47' stroke='#fff' stroke-opacity='0.21' stroke-width='0.6' fill='none'/%3E%3Cpath d='M833 37q0.8 37 1.8 75' stroke='#fff' stroke-opacity='0.22' stroke-width='1.2' fill='none'/%3E%3Cpath d='M50 66q-2.2 71 -0.3 141' stroke='#fff' stroke-opacity='0.21' stroke-width='1' fill='none'/%3E%3Cpath d='M565 205q0.4 25 -1.2 51' stroke='#fff' stroke-opacity='0.12' stroke-width='0.6' fill='none'/%3E%3Cpath d='M569 186q0.2 65 1.1 129' stroke='#fff' stroke-opacity='0.19' stroke-width='1.2' fill='none'/%3E%3Cpath d='M364 75q1.7 33 -1.7 66' stroke='#fff' stroke-opacity='0.16' stroke-width='1.2' fill='none'/%3E%3Cpath d='M882 219q2.9 44 -1.5 88' stroke='#fff' stroke-opacity='0.18' stroke-width='1' fill='none'/%3E%3Cpath d='M153 147q1.0 19 1.1 38' stroke='#fff' stroke-opacity='0.21' stroke-width='1' fill='none'/%3E%3Cpath d='M343 105q1.8 65 -1.7 129' stroke='#fff' stroke-opacity='0.12' stroke-width='1' fill='none'/%3E%3Cpath d='M478 199q1.2 21 0.6 42' stroke='#fff' stroke-opacity='0.30' stroke-width='1.2' fill='none'/%3E%3Cpath d='M287 116q-2.9 82 -0.2 164' stroke='#fff' stroke-opacity='0.13' stroke-width='0.6' fill='none'/%3E%3Cpath d='M498 65q1.4 44 -0.4 87' stroke='#fff' stroke-opacity='0.28' stroke-width='1.2' fill='none'/%3E%3Cpath d='M81 135q2.3 70 1.3 140' stroke='#fff' stroke-opacity='0.27' stroke-width='1' fill='none'/%3E%3Cpath d='M712 296q-0.7 83 -1.1 167' stroke='#fff' stroke-opacity='0.12' stroke-width='0.8' fill='none'/%3E%3Cpath d='M234 70q0.5 63 -0.9 127' stroke='#fff' stroke-opacity='0.10' stroke-width='1.2' fill='none'/%3E%3Cpath d='M539 183q-2.2 47 1.4 94' stroke='#fff' stroke-opacity='0.29' stroke-width='0.6' fill='none'/%3E%3Cpath d='M460 261q1.1 110 0.2 220' stroke='#fff' stroke-opacity='0.18' stroke-width='1.2' fill='none'/%3E%3Cpath d='M104 190q-2.6 21 -1.2 42' stroke='#fff' stroke-opacity='0.13' stroke-width='1' fill='none'/%3E%3Cpath d='M606 31q0.2 72 1.8 143' stroke='#fff' stroke-opacity='0.22' stroke-width='0.6' fill='none'/%3E%3Cpath d='M881 184q-1.5 30 -0.6 60' stroke='#fff' stroke-opacity='0.17' stroke-width='0.6' fill='none'/%3E%3Cpath d='M116 146q-0.1 113 -0.8 226' stroke='#fff' stroke-opacity='0.13' stroke-width='1' fill='none'/%3E%3Cpath d='M746 144q0.1 84 -1.2 168' stroke='#fff' stroke-opacity='0.29' stroke-width='1' fill='none'/%3E%3Cpath d='M148 163q0.2 18 1.9 35' stroke='#fff' stroke-opacity='0.27' stroke-width='1' fill='none'/%3E%3Cpath d='M523 272q-1.7 51 0.2 101' stroke='#fff' stroke-opacity='0.20' stroke-width='0.8' fill='none'/%3E%3Cpath d='M618 237q-1.8 91 -1.0 182' stroke='#fff' stroke-opacity='0.18' stroke-width='0.8' fill='none'/%3E%3Ccircle cx='202' cy='155' r='0.6' fill='#fff' fill-opacity='0.50'/%3E%3Ccircle cx='796' cy='148' r='0.8' fill='#fff' fill-opacity='0.39'/%3E%3Ccircle cx='964' cy='140' r='1.0' fill='#fff' fill-opacity='0.48'/%3E%3Ccircle cx='368' cy='69' r='0.8' fill='#fff' fill-opacity='0.31'/%3E%3Ccircle cx='340' cy='152' r='1.8' fill='#fff' fill-opacity='0.44'/%3E%3Ccircle cx='483' cy='205' r='0.6' fill='#fff' fill-opacity='0.44'/%3E%3Ccircle cx='121' cy='122' r='0.8' fill='#fff' fill-opacity='0.32'/%3E%3Ccircle cx='180' cy='248' r='1.0' fill='#fff' fill-opacity='0.18'/%3E%3Ccircle cx='954' cy='227' r='1.3' fill='#fff' fill-opacity='0.29'/%3E%3Ccircle cx='954' cy='228' r='0.8' fill='#fff' fill-opacity='0.50'/%3E%3Ccircle cx='28' cy='186' r='1.3' fill='#fff' fill-opacity='0.43'/%3E%3Ccircle cx='147' cy='260' r='1.3' fill='#fff' fill-opacity='0.38'/%3E%3Ccircle cx='353' cy='172' r='0.8' fill='#fff' fill-opacity='0.16'/%3E%3Ccircle cx='806' cy='228' r='0.6' fill='#fff' fill-opacity='0.33'/%3E%3Ccircle cx='941' cy='136' r='0.8' fill='#fff' fill-opacity='0.44'/%3E%3Ccircle cx='213' cy='79' r='1.0' fill='#fff' fill-opacity='0.33'/%3E%3Ccircle cx='770' cy='102' r='1.8' fill='#fff' fill-opacity='0.30'/%3E%3Ccircle cx='132' cy='286' r='1.0' fill='#fff' fill-opacity='0.46'/%3E%3Ccircle cx='668' cy='256' r='1.8' fill='#fff' fill-opacity='0.30'/%3E%3Ccircle cx='925' cy='158' r='1.8' fill='#fff' fill-opacity='0.20'/%3E%3Ccircle cx='515' cy='274' r='0.8' fill='#fff' fill-opacity='0.36'/%3E%3Ccircle cx='782' cy='47' r='0.8' fill='#fff' fill-opacity='0.32'/%3E%3Ccircle cx='731' cy='175' r='1.0' fill='#fff' fill-opacity='0.39'/%3E%3Ccircle cx='535' cy='152' r='0.6' fill='#fff' fill-opacity='0.46'/%3E%3Ccircle cx='57' cy='60' r='0.6' fill='#fff' fill-opacity='0.42'/%3E%3Ccircle cx='512' cy='176' r='0.6' fill='#fff' fill-opacity='0.31'/%3E%3Ccircle cx='617' cy='159' r='1.8' fill='#fff' fill-opacity='0.22'/%3E%3Ccircle cx='279' cy='160' r='1.3' fill='#fff' fill-opacity='0.33'/%3E%3Ccircle cx='250' cy='164' r='1.0' fill='#fff' fill-opacity='0.47'/%3E%3Ccircle cx='900' cy='64' r='1.3' fill='#fff' fill-opacity='0.20'/%3E%3Ccircle cx='123' cy='139' r='0.6' fill='#fff' fill-opacity='0.38'/%3E%3Ccircle cx='432' cy='67' r='1.0' fill='#fff' fill-opacity='0.42'/%3E%3Ccircle cx='904' cy='48' r='1.0' fill='#fff' fill-opacity='0.20'/%3E%3Ccircle cx='890' cy='304' r='0.8' fill='#fff' fill-opacity='0.41'/%3E%3Ccircle cx='95' cy='278' r='0.8' fill='#fff' fill-opacity='0.50'/%3E%3Ccircle cx='839' cy='51' r='1.3' fill='#fff' fill-opacity='0.50'/%3E%3Ccircle cx='407' cy='132' r='1.0' fill='#fff' fill-opacity='0.26'/%3E%3Ccircle cx='728' cy='6' r='1.8' fill='#fff' fill-opacity='0.31'/%3E%3Ccircle cx='709' cy='121' r='1.8' fill='#fff' fill-opacity='0.37'/%3E%3Ccircle cx='516' cy='20' r='0.8' fill='#fff' fill-opacity='0.49'/%3E%3Ccircle cx='106' cy='83' r='0.6' fill='#fff' fill-opacity='0.47'/%3E%3Ccircle cx='183' cy='237' r='1.3' fill='#fff' fill-opacity='0.45'/%3E%3Ccircle cx='681' cy='297' r='1.3' fill='#fff' fill-opacity='0.20'/%3E%3Ccircle cx='927' cy='179' r='1.0' fill='#fff' fill-opacity='0.18'/%3E%3Ccircle cx='58' cy='216' r='1.3' fill='#fff' fill-opacity='0.46'/%3E%3Ccircle cx='271' cy='5' r='0.6' fill='#fff' fill-opacity='0.43'/%3E%3Ccircle cx='84' cy='269' r='0.6' fill='#fff' fill-opacity='0.24'/%3E%3Ccircle cx='123' cy='4' r='1.8' fill='#fff' fill-opacity='0.30'/%3E%3Ccircle cx='923' cy='195' r='0.6' fill='#fff' fill-opacity='0.33'/%3E%3Ccircle cx='240' cy='34' r='0.8' fill='#fff' fill-opacity='0.24'/%3E%3Ccircle cx='183' cy='293' r='1.0' fill='#fff' fill-opacity='0.34'/%3E%3Ccircle cx='208' cy='140' r='0.8' fill='#fff' fill-opacity='0.24'/%3E%3Ccircle cx='810' cy='312' r='0.6' fill='#fff' fill-opacity='0.16'/%3E%3Ccircle cx='739' cy='173' r='0.8' fill='#fff' fill-opacity='0.33'/%3E%3Ccircle cx='248' cy='140' r='1.3' fill='#fff' fill-opacity='0.38'/%3E%3Ccircle cx='550' cy='279' r='1.8' fill='#fff' fill-opacity='0.26'/%3E%3Ccircle cx='217' cy='72' r='0.8' fill='#fff' fill-opacity='0.44'/%3E%3Ccircle cx='712' cy='200' r='1.3' fill='#fff' fill-opacity='0.50'/%3E%3Ccircle cx='990' cy='263' r='0.6' fill='#fff' fill-opacity='0.17'/%3E%3Ccircle cx='747' cy='80' r='0.8' fill='#fff' fill-opacity='0.17'/%3E%3Cpath d='M671 123c6 -5 12 3 18 -2s9 4 14 0' stroke='#fff' stroke-opacity='.2' stroke-width='.8' fill='none'/%3E%3Cpath d='M510 282c6 -5 12 3 18 -2s9 4 14 0' stroke='#fff' stroke-opacity='.2' stroke-width='.8' fill='none'/%3E%3Cpath d='M604 207c6 -5 12 3 18 -2s9 4 14 0' stroke='#fff' stroke-opacity='.2' stroke-width='.8' fill='none'/%3E%3Cpath d='M46 70c6 -5 12 3 18 -2s9 4 14 0' stroke='#fff' stroke-opacity='.2' stroke-width='.8' fill='none'/%3E%3Cpath d='M271 21c6 -5 12 3 18 -2s9 4 14 0' stroke='#fff' stroke-opacity='.2' stroke-width='.8' fill='none'/%3E%3Cpath d='M367 109c6 -5 12 3 18 -2s9 4 14 0' stroke='#fff' stroke-opacity='.2' stroke-width='.8' fill='none'/%3E%3Cpath d='M993 107c6 -5 12 3 18 -2s9 4 14 0' stroke='#fff' stroke-opacity='.2' stroke-width='.8' fill='none'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 1.4 0 0 0 -.5'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(#n)'/%3E%3C/svg%3E");background-size:calc(1008px*var(--k)) 100%,220px 220px;background-repeat:repeat-x,repeat;background-position:calc(var(--i,0)*-168px*var(--k)) 0,0 0}
-.glow{position:absolute;z-index:3;pointer-events:none;right:calc(var(--pj-h)*.56 - var(--pj-h)*.25);bottom:calc(14px*var(--k) + var(--pj-h)*.427 - var(--pj-h)*.25);width:calc(var(--pj-h)*.5);height:calc(var(--pj-h)*.5);background:radial-gradient(circle,rgba(255,228,150,.55),rgba(255,214,110,.16) 36%,rgba(255,214,110,0) 64%);mix-blend-mode:screen;animation:flick 8s ease-in-out infinite}
-.floor{position:absolute;z-index:0;right:calc(var(--pj-h)*.02);bottom:calc(8px*var(--k));width:calc(var(--pj-h)*.62);height:calc(var(--pj-h)*.06);background:radial-gradient(ellipse at 50% 50%,rgba(70,45,0,.3),rgba(70,45,0,0) 68%);filter:blur(6px)}
-.proj{position:absolute;z-index:2;right:calc(8px*var(--k));bottom:calc(14px*var(--k));height:var(--pj-h);width:auto;max-width:none;display:block}
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1008' height='314' viewBox='0 0 1008 314' preserveAspectRatio='none'%3E%3Cpath d='M326 45q-2.6 80 0.1 160' stroke='#fff' stroke-opacity='0.17' stroke-width='0.6' fill='none'/%3E%3Cpath d='M917 64q-0.5 24 -1.0 47' stroke='#fff' stroke-opacity='0.21' stroke-width='0.6' fill='none'/%3E%3Cpath d='M833 37q0.8 37 1.8 75' stroke='#fff' stroke-opacity='0.22' stroke-width='1.2' fill='none'/%3E%3Cpath d='M50 66q-2.2 71 -0.3 141' stroke='#fff' stroke-opacity='0.21' stroke-width='1' fill='none'/%3E%3Cpath d='M565 205q0.4 25 -1.2 51' stroke='#fff' stroke-opacity='0.12' stroke-width='0.6' fill='none'/%3E%3Cpath d='M569 186q0.2 65 1.1 129' stroke='#fff' stroke-opacity='0.19' stroke-width='1.2' fill='none'/%3E%3Cpath d='M364 75q1.7 33 -1.7 66' stroke='#fff' stroke-opacity='0.16' stroke-width='1.2' fill='none'/%3E%3Cpath d='M882 219q2.9 44 -1.5 88' stroke='#fff' stroke-opacity='0.18' stroke-width='1' fill='none'/%3E%3Cpath d='M153 147q1.0 19 1.1 38' stroke='#fff' stroke-opacity='0.21' stroke-width='1' fill='none'/%3E%3Cpath d='M343 105q1.8 65 -1.7 129' stroke='#fff' stroke-opacity='0.12' stroke-width='1' fill='none'/%3E%3Cpath d='M478 199q1.2 21 0.6 42' stroke='#fff' stroke-opacity='0.30' stroke-width='1.2' fill='none'/%3E%3Cpath d='M287 116q-2.9 82 -0.2 164' stroke='#fff' stroke-opacity='0.13' stroke-width='0.6' fill='none'/%3E%3Cpath d='M498 65q1.4 44 -0.4 87' stroke='#fff' stroke-opacity='0.28' stroke-width='1.2' fill='none'/%3E%3Cpath d='M81 135q2.3 70 1.3 140' stroke='#fff' stroke-opacity='0.27' stroke-width='1' fill='none'/%3E%3Cpath d='M712 296q-0.7 83 -1.1 167' stroke='#fff' stroke-opacity='0.12' stroke-width='0.8' fill='none'/%3E%3Cpath d='M234 70q0.5 63 -0.9 127' stroke='#fff' stroke-opacity='0.10' stroke-width='1.2' fill='none'/%3E%3Cpath d='M539 183q-2.2 47 1.4 94' stroke='#fff' stroke-opacity='0.29' stroke-width='0.6' fill='none'/%3E%3Cpath d='M460 261q1.1 110 0.2 220' stroke='#fff' stroke-opacity='0.18' stroke-width='1.2' fill='none'/%3E%3Cpath d='M104 190q-2.6 21 -1.2 42' stroke='#fff' stroke-opacity='0.13' stroke-width='1' fill='none'/%3E%3Cpath d='M606 31q0.2 72 1.8 143' stroke='#fff' stroke-opacity='0.22' stroke-width='0.6' fill='none'/%3E%3Cpath d='M881 184q-1.5 30 -0.6 60' stroke='#fff' stroke-opacity='0.17' stroke-width='0.6' fill='none'/%3E%3Cpath d='M116 146q-0.1 113 -0.8 226' stroke='#fff' stroke-opacity='0.13' stroke-width='1' fill='none'/%3E%3Cpath d='M746 144q0.1 84 -1.2 168' stroke='#fff' stroke-opacity='0.29' stroke-width='1' fill='none'/%3E%3Cpath d='M148 163q0.2 18 1.9 35' stroke='#fff' stroke-opacity='0.27' stroke-width='1' fill='none'/%3E%3Cpath d='M523 272q-1.7 51 0.2 101' stroke='#fff' stroke-opacity='0.20' stroke-width='0.8' fill='none'/%3E%3Cpath d='M618 237q-1.8 91 -1.0 182' stroke='#fff' stroke-opacity='0.18' stroke-width='0.8' fill='none'/%3E%3Ccircle cx='202' cy='155' r='0.6' fill='#fff' fill-opacity='0.50'/%3E%3Ccircle cx='796' cy='148' r='0.8' fill='#fff' fill-opacity='0.39'/%3E%3Ccircle cx='964' cy='140' r='1.0' fill='#fff' fill-opacity='0.48'/%3E%3Ccircle cx='368' cy='69' r='0.8' fill='#fff' fill-opacity='0.31'/%3E%3Ccircle cx='340' cy='152' r='1.8' fill='#fff' fill-opacity='0.44'/%3E%3Ccircle cx='483' cy='205' r='0.6' fill='#fff' fill-opacity='0.44'/%3E%3Ccircle cx='121' cy='122' r='0.8' fill='#fff' fill-opacity='0.32'/%3E%3Ccircle cx='180' cy='248' r='1.0' fill='#fff' fill-opacity='0.18'/%3E%3Ccircle cx='954' cy='227' r='1.3' fill='#fff' fill-opacity='0.29'/%3E%3Ccircle cx='954' cy='228' r='0.8' fill='#fff' fill-opacity='0.50'/%3E%3Ccircle cx='28' cy='186' r='1.3' fill='#fff' fill-opacity='0.43'/%3E%3Ccircle cx='147' cy='260' r='1.3' fill='#fff' fill-opacity='0.38'/%3E%3Ccircle cx='353' cy='172' r='0.8' fill='#fff' fill-opacity='0.16'/%3E%3Ccircle cx='806' cy='228' r='0.6' fill='#fff' fill-opacity='0.33'/%3E%3Ccircle cx='941' cy='136' r='0.8' fill='#fff' fill-opacity='0.44'/%3E%3Ccircle cx='213' cy='79' r='1.0' fill='#fff' fill-opacity='0.33'/%3E%3Ccircle cx='770' cy='102' r='1.8' fill='#fff' fill-opacity='0.30'/%3E%3Ccircle cx='132' cy='286' r='1.0' fill='#fff' fill-opacity='0.46'/%3E%3Ccircle cx='668' cy='256' r='1.8' fill='#fff' fill-opacity='0.30'/%3E%3Ccircle cx='925' cy='158' r='1.8' fill='#fff' fill-opacity='0.20'/%3E%3Ccircle cx='515' cy='274' r='0.8' fill='#fff' fill-opacity='0.36'/%3E%3Ccircle cx='782' cy='47' r='0.8' fill='#fff' fill-opacity='0.32'/%3E%3Ccircle cx='731' cy='175' r='1.0' fill='#fff' fill-opacity='0.39'/%3E%3Ccircle cx='535' cy='152' r='0.6' fill='#fff' fill-opacity='0.46'/%3E%3Ccircle cx='57' cy='60' r='0.6' fill='#fff' fill-opacity='0.42'/%3E%3Ccircle cx='512' cy='176' r='0.6' fill='#fff' fill-opacity='0.31'/%3E%3Ccircle cx='617' cy='159' r='1.8' fill='#fff' fill-opacity='0.22'/%3E%3Ccircle cx='279' cy='160' r='1.3' fill='#fff' fill-opacity='0.33'/%3E%3Ccircle cx='250' cy='164' r='1.0' fill='#fff' fill-opacity='0.47'/%3E%3Ccircle cx='900' cy='64' r='1.3' fill='#fff' fill-opacity='0.20'/%3E%3Ccircle cx='123' cy='139' r='0.6' fill='#fff' fill-opacity='0.38'/%3E%3Ccircle cx='432' cy='67' r='1.0' fill='#fff' fill-opacity='0.42'/%3E%3Ccircle cx='904' cy='48' r='1.0' fill='#fff' fill-opacity='0.20'/%3E%3Ccircle cx='890' cy='304' r='0.8' fill='#fff' fill-opacity='0.41'/%3E%3Ccircle cx='95' cy='278' r='0.8' fill='#fff' fill-opacity='0.50'/%3E%3Ccircle cx='839' cy='51' r='1.3' fill='#fff' fill-opacity='0.50'/%3E%3Ccircle cx='407' cy='132' r='1.0' fill='#fff' fill-opacity='0.26'/%3E%3Ccircle cx='728' cy='6' r='1.8' fill='#fff' fill-opacity='0.31'/%3E%3Ccircle cx='709' cy='121' r='1.8' fill='#fff' fill-opacity='0.37'/%3E%3Ccircle cx='516' cy='20' r='0.8' fill='#fff' fill-opacity='0.49'/%3E%3Ccircle cx='106' cy='83' r='0.6' fill='#fff' fill-opacity='0.47'/%3E%3Ccircle cx='183' cy='237' r='1.3' fill='#fff' fill-opacity='0.45'/%3E%3Ccircle cx='681' cy='297' r='1.3' fill='#fff' fill-opacity='0.20'/%3E%3Ccircle cx='927' cy='179' r='1.0' fill='#fff' fill-opacity='0.18'/%3E%3Ccircle cx='58' cy='216' r='1.3' fill='#fff' fill-opacity='0.46'/%3E%3Ccircle cx='271' cy='5' r='0.6' fill='#fff' fill-opacity='0.43'/%3E%3Ccircle cx='84' cy='269' r='0.6' fill='#fff' fill-opacity='0.24'/%3E%3Ccircle cx='123' cy='4' r='1.8' fill='#fff' fill-opacity='0.30'/%3E%3Ccircle cx='923' cy='195' r='0.6' fill='#fff' fill-opacity='0.33'/%3E%3Ccircle cx='240' cy='34' r='0.8' fill='#fff' fill-opacity='0.24'/%3E%3Ccircle cx='183' cy='293' r='1.0' fill='#fff' fill-opacity='0.34'/%3E%3Ccircle cx='208' cy='140' r='0.8' fill='#fff' fill-opacity='0.24'/%3E%3Ccircle cx='810' cy='312' r='0.6' fill='#fff' fill-opacity='0.16'/%3E%3Ccircle cx='739' cy='173' r='0.8' fill='#fff' fill-opacity='0.33'/%3E%3Ccircle cx='248' cy='140' r='1.3' fill='#fff' fill-opacity='0.38'/%3E%3Ccircle cx='550' cy='279' r='1.8' fill='#fff' fill-opacity='0.26'/%3E%3Ccircle cx='217' cy='72' r='0.8' fill='#fff' fill-opacity='0.44'/%3E%3Ccircle cx='712' cy='200' r='1.3' fill='#fff' fill-opacity='0.50'/%3E%3Ccircle cx='990' cy='263' r='0.6' fill='#fff' fill-opacity='0.17'/%3E%3Ccircle cx='747' cy='80' r='0.8' fill='#fff' fill-opacity='0.17'/%3E%3Cpath d='M671 123c6 -5 12 3 18 -2s9 4 14 0' stroke='#fff' stroke-opacity='.2' stroke-width='.8' fill='none'/%3E%3Cpath d='M510 282c6 -5 12 3 18 -2s9 4 14 0' stroke='#fff' stroke-opacity='.2' stroke-width='.8' fill='none'/%3E%3Cpath d='M604 207c6 -5 12 3 18 -2s9 4 14 0' stroke='#fff' stroke-opacity='.2' stroke-width='.8' fill='none'/%3E%3Cpath d='M46 70c6 -5 12 3 18 -2s9 4 14 0' stroke='#fff' stroke-opacity='.2' stroke-width='.8' fill='none'/%3E%3Cpath d='M271 21c6 -5 12 3 18 -2s9 4 14 0' stroke='#fff' stroke-opacity='.2' stroke-width='.8' fill='none'/%3E%3Cpath d='M367 109c6 -5 12 3 18 -2s9 4 14 0' stroke='#fff' stroke-opacity='.2' stroke-width='.8' fill='none'/%3E%3Cpath d='M993 107c6 -5 12 3 18 -2s9 4 14 0' stroke='#fff' stroke-opacity='.2' stroke-width='.8' fill='none'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 1.4 0 0 0 -.5'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(#n)'/%3E%3C/svg%3E");background-size:calc(1008px*var(--k)) 100%,220px 220px;background-repeat:repeat-x,repeat;background-position:calc(var(--i,0)*-224px*var(--k)) 0,0 0}
 .js .reel .mq{opacity:0;transition:opacity 1.2s ease}
 .js .reel.in .mq{opacity:1}
-@keyframes flick{0%,100%{opacity:1}50%{opacity:.82}}
 
+/* Карточка проекта */
+body.modal-open{overflow:hidden}
+.modal{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:clamp(12px,3vw,40px);background:rgba(10,12,16,.55);-webkit-backdrop-filter:blur(14px) saturate(1.1);backdrop-filter:blur(14px) saturate(1.1);opacity:0;visibility:hidden;transition:opacity .3s ease,visibility 0s linear .3s}
+.modal.open{opacity:1;visibility:visible;transition:opacity .3s ease}
+.m-card{position:relative;width:min(980px,100%);max-height:100%;overflow:auto;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);background:var(--ground);color:var(--ink);border-radius:6px;box-shadow:0 40px 90px -20px rgba(0,0,0,.6);transform:translateY(16px) scale(.98);transition:transform .4s cubic-bezier(.2,.7,.2,1)}
+.modal.open .m-card{transform:none}
+.m-poster{position:relative;background:#0b0c0e;min-height:100%}
+.m-poster img{display:block;width:100%;height:100%;object-fit:cover;aspect-ratio:2/3}
+.m-ph{aspect-ratio:2/3;display:flex;align-items:flex-end;padding:24px;background:radial-gradient(130% 75% at 25% 12%,#3b3427 0,#1a1d22 52%,#0e1013 100%);color:#fff;font-family:var(--display);font-weight:800;font-size:clamp(22px,3vw,34px);line-height:1.05}
+.m-body{padding:clamp(24px,4vw,48px);display:flex;flex-direction:column;gap:18px}
+.m-meta{display:flex;gap:12px;align-items:center;font-family:var(--mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase}
+.m-meta .tag{background:var(--ink);color:var(--cine,#f5c928);padding:4px 10px}
+.m-title{margin:0;font-family:var(--display);font-weight:800;font-size:clamp(30px,4vw,48px);line-height:1;letter-spacing:-.03em;text-wrap:balance}
+.m-facts{display:grid;grid-template-columns:auto 1fr;gap:6px 20px;margin:0;font-size:15px}
+.m-facts dt{color:var(--muted)}
+.m-facts dd{margin:0;font-weight:500}
+.m-desc{margin:0;color:var(--muted);font-size:17px;line-height:1.55}
+.m-desc.empty{opacity:.6}
+.m-close,.m-nav{position:absolute;z-index:2;width:44px;height:44px;border:0;border-radius:50%;background:rgba(18,24,31,.88);color:#fff;font-size:22px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.m-close{top:12px;right:12px}
+.m-close:hover,.m-nav:hover{background:var(--ink)}
+.m-close:focus-visible,.m-nav:focus-visible{outline:2px solid var(--cine);outline-offset:2px}
+.m-foot{margin-top:auto;display:flex;gap:10px;align-items:center;font-family:var(--mono);font-size:13px;letter-spacing:.08em;color:var(--muted)}
+.m-nav{position:static;width:40px;height:40px;font-size:18px}
+@media (max-width:760px){
+  .m-card{grid-template-columns:1fr}
+  .m-poster img,.m-ph{aspect-ratio:3/2;object-position:50% 20%}
+}
+@media (prefers-reduced-motion:reduce){.modal,.m-card{transition:none}.js .reel .mq{opacity:1;transition:none}}
 
 .work .wrap{padding-block:80px;display:flex;flex-wrap:wrap;gap:48px}
 h2{margin:0;font-family:var(--display);font-weight:800;line-height:1.05;letter-spacing:-.02em;text-wrap:balance}
@@ -165,7 +176,7 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
     <div class="posters">
       <div class="poster has-img bf" style="animation-delay:.3s"><img src="nenormalny.webp" alt="Постер фильма «Ненормальный»"></div>
       <div class="poster accent has-img bf" style="animation-delay:.45s"><img src="yuzzz.webp" alt="Постер сериала «ЮЗЗЗ»"></div>
-      <div class="poster has-img has-pop bf" style="animation-delay:.6s" tabindex="0" role="button" aria-label="Чебурашка 2: нажми"><img class="pop" src="cheburashka-pop.webp" alt="" onerror="this.remove()"><img src="cheburashka2.webp" alt="Постер фильма «Чебурашка 2»"></div>
+      <div class="poster has-img bf" style="animation-delay:.6s"><img src="cheburashka2.webp" alt="Постер фильма «Чебурашка 2»"></div>
     </div>
   </div>
 </section>
@@ -176,33 +187,44 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
     <h2>Каждый проект — отдельный кадр</h2>
   </div>
   <div class="reel">
-    <div class="stage">
-      <!-- Плёнка выходит из объектива проектора справа, растёт и уезжает влево -->
-      <div class="mq">
-        <div class="mq-track" id="mq-track">
-          <span class="frame"><span class="fi"><small>01</small><span class="cap"><b>Ле.Ген.Да</b><em>СЕРИАЛ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">01▸</i><i class="fx" style="--i:1"></i></span>
-          <span class="frame"><span class="fi"><small>02</small><span class="cap"><b>СашаТаня</b><em>СЕРИАЛ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">02▸</i><i class="fx" style="--i:2"></i></span>
-          <span class="frame"><span class="fi"><small>03</small><span class="cap"><b>Подельники</b><em>ФИЛЬМ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">03▸</i><i class="fx" style="--i:3"></i></span>
-          <span class="frame"><span class="fi"><img src="yuzzz.webp" alt="Постер: ЮЗЗЗ" width="1000" height="1500" decoding="async"><small>04</small><span class="cap"><b>ЮЗЗЗ</b><em>СЕРИАЛ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">04▸</i><i class="fx" style="--i:4"></i></span>
-          <span class="frame"><span class="fi"><small>05</small><span class="cap"><b>Пассажиры</b><em>СЕРИАЛ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">05▸</i><i class="fx" style="--i:5"></i></span>
-          <span class="frame"><span class="fi"><small>06</small><span class="cap"><b>Волшебники</b><em>ПИЛОТ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">06▸</i><i class="fx" style="--i:6"></i></span>
-          <span class="frame"><span class="fi"><small>07</small><span class="cap"><b>Иван Семенов: Большой поход</b><em>ФИЛЬМ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">07▸</i><i class="fx" style="--i:7"></i></span>
-          <span class="frame"><span class="fi"><small>08</small><span class="cap"><b>Яша и Леонид Брежнев</b><em>ФИЛЬМ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">08▸</i><i class="fx" style="--i:8"></i></span>
-          <span class="frame"><span class="fi"><img src="nenormalny.webp" alt="Постер: Ненормальный" width="740" height="1100" decoding="async"><small>09</small><span class="cap"><b>Ненормальный</b><em>ФИЛЬМ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">09▸</i><i class="fx" style="--i:9"></i></span>
-          <span class="frame"><span class="fi"><small>10</small><span class="cap"><b>Бар один звонок</b><em>СЕРИАЛ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">10▸</i><i class="fx" style="--i:10"></i></span>
-          <span class="frame"><span class="fi"><small>11</small><span class="cap"><b>Варшава 21</b><em>СЕРИАЛ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">11▸</i><i class="fx" style="--i:11"></i></span>
-          <span class="frame"><span class="fi"><small>12</small><span class="cap"><b>Купцы и дети</b><em>СЕРИАЛ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">12▸</i><i class="fx" style="--i:12"></i></span>
-          <span class="frame"><span class="fi"><img src="cheburashka2.webp" alt="Постер: Чебурашка 2" width="1000" height="1429" decoding="async"><small>13</small><span class="cap"><b>Чебурашка 2</b><em>ФИЛЬМ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">13▸</i><i class="fx" style="--i:13"></i></span>
-          <span class="frame"><span class="fi"><small>14</small><span class="cap"><b>Чебурашка 3</b><em>ФИЛЬМ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">14▸</i><i class="fx" style="--i:14"></i></span>
-          <span class="frame"><span class="fi"><small>15</small><span class="cap"><b>Тысяча «нет» и одно «да»</b><em>СЕРИАЛ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">15▸</i><i class="fx" style="--i:15"></i></span>
-          <span class="frame"><span class="fi"><small>16</small><span class="cap"><b>Холоп 3</b><em>ФИЛЬМ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">16▸</i><i class="fx" style="--i:16"></i></span>
-          <span class="frame"><span class="fi"><small>17</small><span class="cap"><b>После Фишера. Инквизитор</b><em>СЕРИАЛ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">17▸</i><i class="fx" style="--i:17"></i></span>
-          <span class="frame"><span class="fi"><small>18</small><span class="cap"><b>Баста: Начало игры!</b><em>ФИЛЬМ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">18▸</i><i class="fx" style="--i:18"></i></span>
+    <div class="mq">
+      <div class="mq-track" id="mq-track">
+          <span class="frame" role="button" tabindex="0" data-i="0" aria-label="Ле.Ген.Да — открыть карточку проекта"><span class="fi"><small>01</small><span class="cap"><b>Ле.Ген.Да</b><em>СЕРИАЛ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">01▸</i><i class="fx" style="--i:1"></i></span>
+          <span class="frame" role="button" tabindex="0" data-i="1" aria-label="СашаТаня — открыть карточку проекта"><span class="fi"><small>02</small><span class="cap"><b>СашаТаня</b><em>СЕРИАЛ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">02▸</i><i class="fx" style="--i:2"></i></span>
+          <span class="frame" role="button" tabindex="0" data-i="2" aria-label="Подельники — открыть карточку проекта"><span class="fi"><small>03</small><span class="cap"><b>Подельники</b><em>ФИЛЬМ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">03▸</i><i class="fx" style="--i:3"></i></span>
+          <span class="frame" role="button" tabindex="0" data-i="3" aria-label="ЮЗЗЗ — открыть карточку проекта"><span class="fi"><img src="yuzzz.webp" alt="" width="1000" height="1500" decoding="async"><small>04</small><span class="cap"><b>ЮЗЗЗ</b><em>СЕРИАЛ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">04▸</i><i class="fx" style="--i:4"></i></span>
+          <span class="frame" role="button" tabindex="0" data-i="4" aria-label="Пассажиры — открыть карточку проекта"><span class="fi"><small>05</small><span class="cap"><b>Пассажиры</b><em>СЕРИАЛ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">05▸</i><i class="fx" style="--i:5"></i></span>
+          <span class="frame" role="button" tabindex="0" data-i="5" aria-label="Волшебники — открыть карточку проекта"><span class="fi"><small>06</small><span class="cap"><b>Волшебники</b><em>ПИЛОТ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">06▸</i><i class="fx" style="--i:6"></i></span>
+          <span class="frame" role="button" tabindex="0" data-i="6" aria-label="Иван Семенов: Большой поход — открыть карточку проекта"><span class="fi"><small>07</small><span class="cap"><b>Иван Семенов: Большой поход</b><em>ФИЛЬМ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">07▸</i><i class="fx" style="--i:7"></i></span>
+          <span class="frame" role="button" tabindex="0" data-i="7" aria-label="Яша и Леонид Брежнев — открыть карточку проекта"><span class="fi"><small>08</small><span class="cap"><b>Яша и Леонид Брежнев</b><em>ФИЛЬМ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">08▸</i><i class="fx" style="--i:8"></i></span>
+          <span class="frame" role="button" tabindex="0" data-i="8" aria-label="Ненормальный — открыть карточку проекта"><span class="fi"><img src="nenormalny.webp" alt="" width="740" height="1100" decoding="async"><small>09</small><span class="cap"><b>Ненормальный</b><em>ФИЛЬМ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">09▸</i><i class="fx" style="--i:9"></i></span>
+          <span class="frame" role="button" tabindex="0" data-i="9" aria-label="Бар один звонок — открыть карточку проекта"><span class="fi"><small>10</small><span class="cap"><b>Бар один звонок</b><em>СЕРИАЛ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">10▸</i><i class="fx" style="--i:10"></i></span>
+          <span class="frame" role="button" tabindex="0" data-i="10" aria-label="Варшава 21 — открыть карточку проекта"><span class="fi"><small>11</small><span class="cap"><b>Варшава 21</b><em>СЕРИАЛ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">11▸</i><i class="fx" style="--i:11"></i></span>
+          <span class="frame" role="button" tabindex="0" data-i="11" aria-label="Купцы и дети — открыть карточку проекта"><span class="fi"><small>12</small><span class="cap"><b>Купцы и дети</b><em>СЕРИАЛ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">12▸</i><i class="fx" style="--i:12"></i></span>
+          <span class="frame" role="button" tabindex="0" data-i="12" aria-label="Чебурашка 2 — открыть карточку проекта"><span class="fi"><img src="cheburashka2.webp" alt="" width="1000" height="1429" decoding="async"><small>13</small><span class="cap"><b>Чебурашка 2</b><em>ФИЛЬМ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">13▸</i><i class="fx" style="--i:13"></i></span>
+          <span class="frame" role="button" tabindex="0" data-i="13" aria-label="Чебурашка 3 — открыть карточку проекта"><span class="fi"><small>14</small><span class="cap"><b>Чебурашка 3</b><em>ФИЛЬМ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">14▸</i><i class="fx" style="--i:14"></i></span>
+          <span class="frame" role="button" tabindex="0" data-i="14" aria-label="Тысяча «нет» и одно «да» — открыть карточку проекта"><span class="fi"><small>15</small><span class="cap"><b>Тысяча «нет» и одно «да»</b><em>СЕРИАЛ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">15▸</i><i class="fx" style="--i:15"></i></span>
+          <span class="frame" role="button" tabindex="0" data-i="15" aria-label="Холоп 3 — открыть карточку проекта"><span class="fi"><small>16</small><span class="cap"><b>Холоп 3</b><em>ФИЛЬМ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">16▸</i><i class="fx" style="--i:16"></i></span>
+          <span class="frame" role="button" tabindex="0" data-i="16" aria-label="После Фишера. Инквизитор — открыть карточку проекта"><span class="fi"><small>17</small><span class="cap"><b>После Фишера. Инквизитор</b><em>СЕРИАЛ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">17▸</i><i class="fx" style="--i:17"></i></span>
+          <span class="frame" role="button" tabindex="0" data-i="17" aria-label="Баста: Начало игры! — открыть карточку проекта"><span class="fi"><small>18</small><span class="cap"><b>Баста: Начало игры!</b><em>ФИЛЬМ</em></span></span><i class="ek t">▸ 35MM</i><i class="ek b">18▸</i><i class="fx" style="--i:18"></i></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="m-title" aria-hidden="true">
+    <div class="m-card">
+      <button class="m-close" id="m-close" type="button" aria-label="Закрыть">✕</button>
+      <div class="m-poster" id="m-poster"></div>
+      <div class="m-body">
+        <div class="m-meta"><span class="tag" id="m-type"></span><span id="m-num"></span></div>
+        <h3 class="m-title" id="m-title"></h3>
+        <dl class="m-facts" id="m-facts"></dl>
+        <p class="m-desc" id="m-desc"></p>
+        <div class="m-foot">
+          <button class="m-nav" id="m-prev" type="button" aria-label="Предыдущий проект">←</button>
+          <button class="m-nav" id="m-next" type="button" aria-label="Следующий проект">→</button>
         </div>
       </div>
-      <div class="floor"></div>
-      <img class="proj" src="projector.webp" alt="" width="603" height="943" loading="lazy" decoding="async">
-      <div class="glow"></div>
     </div>
   </div>
 </section>
@@ -233,6 +255,7 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
   </div>
 </footer>
 
+<script src="projects.js"></script>
 <script>
   (function () {
     var track = document.getElementById('mq-track');
@@ -243,11 +266,9 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
     var frames = Array.prototype.slice.call(track.children);
     var N = frames.length;
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var desk = { matches: true };
-    var visible = false, hover = false, drag = false, extra = 0, m = 0, last = 0, scrollP = 0;
-    var W, w0, h0, k, D, SE = 0.23, LOOP;
+    var visible = false, hover = false, drag = false, extra = 0, m = 0, last = 0, scrollP = 0, raf = 0;
+    var W, w0, k, LOOP;
 
-    // появление
     if ('IntersectionObserver' in window) {
       var io = new IntersectionObserver(function (e) {
         visible = e[0].isIntersecting;
@@ -258,119 +279,131 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
 
     function measure() {
       reel.style.setProperty('--k', Math.max(0.6, Math.min(1.25, window.innerWidth / 1440)).toFixed(3));
-      W = mq.clientWidth; w0 = frames[0].offsetWidth; h0 = frames[0].offsetHeight;
-      k = w0 / 168; D = Math.min(720 * k, W * 0.95); LOOP = N * w0;
+      W = mq.clientWidth; w0 = frames[0].offsetWidth; k = w0 / 224; LOOP = N * w0;
     }
-    // ширина на экране от кончика (d = расстояние вдоль ленты)
-    function g(d) {
-      if (d <= 0) return SE * d;
-      if (d < D) return SE * d + (1 - SE) * d * d / (2 * D);
-      return SE * D + (1 - SE) * D / 2 + (d - D);
-    }
-    function sc(d) { return d <= 0 ? SE : d >= D ? 1 : SE + (1 - SE) * d / D; }
-
-    function quad(el, xL, hL, xR, hR) {
-      var cy = h0 / 2;
-      var x0 = xL, y0 = cy - hL / 2, x1 = xR, y1 = cy - hR / 2, x2 = xR, y2 = cy + hR / 2, x3 = xL, y3 = cy + hL / 2;
-      var dx1 = x1 - x2, dx2 = x3 - x2, dx3 = x0 - x1 + x2 - x3;
-      var dy1 = y1 - y2, dy2 = y3 - y2, dy3 = y0 - y1 + y2 - y3;
-      var den = dx1 * dy2 - dy1 * dx2;
-      var gg = (dx3 * dy2 - dy3 * dx2) / den, hh = (dx1 * dy3 - dy1 * dx3) / den;
-      var a = x1 - x0 + gg * x1, b = x3 - x0 + hh * x3, c = x0;
-      var d = y1 - y0 + gg * y1, e = y3 - y0 + hh * y3, f = y0;
-      el.style.transform = 'matrix3d(' + [a / w0, d / w0, 0, gg / w0, b / h0, e / h0, 0, hh / h0, 0, 0, 1, 0, c, f, 0, 1].join(',') + ')';
-    }
-
     function render() {
-      var off = ((m % LOOP) + LOOP) % LOOP;
       for (var i = 0; i < N; i++) {
+        var x = ((((i * w0 - m) % LOOP) + LOOP) % LOOP) - w0;
         var el = frames[i];
-        // кадр 01 дальше всех от проектора, последний ближе всего
-        var d = (((N - 1 - i) * w0 + off + w0) % LOOP) - w0;
-        var xL = W - g(d + w0);
-        if (xL > W || W - g(d) < -2 || xL < -w0 - 4) { el.style.visibility = 'hidden'; continue; }
+        if (x >= W || x <= -w0) { el.style.visibility = 'hidden'; continue; }
         el.style.visibility = 'visible';
-        if (d >= D) {
-          el.style.transform = 'translate3d(' + xL.toFixed(2) + 'px,0,0)';
-        } else {
-          quad(el, xL, h0 * sc(d + w0), W - g(d), h0 * sc(d));
-        }
+        el.style.transform = 'translate3d(' + x.toFixed(2) + 'px,0,0)';
       }
     }
-    var raf = 0;
     function loop(t) {
       raf = 0;
-      if (!visible || !desk.matches || reduce) return;
+      if (!visible || reduce) return;
       var dt = last ? Math.min(80, t - last) : 0;
       if (dt && !drag) {
-        if (!hover) m += dt * 0.035 * k;
+        if (!hover) m += dt * 0.045 * k;
         m += extra * dt; extra *= Math.pow(0.94, dt / 16);
         if (Math.abs(extra) < 0.0004) extra = 0;
       }
-      last = t;
-      render();
+      last = t; render();
       raf = requestAnimationFrame(loop);
     }
     function updScroll() {
       var r = sec.getBoundingClientRect(), vh = window.innerHeight;
       var p = Math.min(1, Math.max(0, (vh - r.top) / (vh + r.height)));
       m += (p - scrollP) * 160 * k; scrollP = p;
-      if (reduce && desk.matches) render();
+      if (reduce) render();
     }
-    function start() {
-      measure();
-      if (desk.matches) { render(); }
+    function start() { measure(); render(); }
+
+    // перетаскивание: вправо — назад; короткое касание — открыть карточку
+    var downX = 0, downY = 0, lastX = 0, lastT = 0, vel = 0, moved = 0;
+    function frameAt(x, y) {
+      for (var i = 0; i < N; i++) {
+        if (frames[i].style.visibility === 'hidden') continue;
+        var r = frames[i].getBoundingClientRect();
+        if (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom) return i;
+      }
+      return -1;
     }
-    // перетаскивание плёнки мышью: вправо — назад, к проектору
-    var px0 = 0, lastX = 0, lastT = 0, vel = 0;
     mq.addEventListener('pointerdown', function (e) {
-      if (!desk.matches || (e.pointerType === 'mouse' && e.button !== 0)) return;
-      drag = true; px0 = lastX = e.clientX; lastT = e.timeStamp; vel = 0; extra = 0;
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      drag = true; downX = lastX = e.clientX; downY = e.clientY; lastT = e.timeStamp; vel = 0; extra = 0; moved = 0;
       mq.classList.add('drag');
       try { mq.setPointerCapture(e.pointerId); } catch (_) {}
     });
     mq.addEventListener('pointermove', function (e) {
       if (!drag) return;
       var dx = e.clientX - lastX, dt = Math.max(1, e.timeStamp - lastT);
-      m -= dx * 1.15;
+      m -= dx * 1.15; moved += Math.abs(dx);
       vel = 0.8 * vel + 0.2 * (-dx * 1.15 / dt);
       lastX = e.clientX; lastT = e.timeStamp;
       if (reduce) render();
     });
-    function endDrag() {
+    function endDrag(e) {
       if (!drag) return;
       drag = false; mq.classList.remove('drag');
-      extra = Math.max(-1.6, Math.min(1.6, vel)) - 0.035 * k * 0 ;
-      last = 0;
+      if (e.type === 'pointerup' && moved < 6 && Math.abs(e.clientY - downY) < 10) {
+        var i = frameAt(e.clientX, e.clientY);
+        if (i >= 0) { vel = 0; openModal(i, frames[i]); }
+      }
+      extra = Math.max(-1.6, Math.min(1.6, vel)); last = 0;
     }
     mq.addEventListener('pointerup', endDrag);
     mq.addEventListener('pointercancel', endDrag);
     mq.addEventListener('dragstart', function (e) { e.preventDefault(); });
     mq.addEventListener('mouseenter', function () { hover = true; });
     mq.addEventListener('mouseleave', function () { hover = false; last = 0; });
-    window.addEventListener('resize', function () { start(); });
+    frames.forEach(function (f, i) {
+      f.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(i, f); } });
+    });
+    window.addEventListener('resize', start);
     var tick = false;
     window.addEventListener('scroll', function () {
-      if (!tick) { tick = true; requestAnimationFrame(function () { tick = false; if (desk.matches && !reduce) { updScroll(); } }); }
+      if (!tick) { tick = true; requestAnimationFrame(function () { tick = false; if (!reduce) updScroll(); }); }
     }, { passive: true });
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(start);
     start();
     if (visible && !raf) raf = requestAnimationFrame(loop);
-  })();
 
-  // Постеры в шапке: клик по «Чебурашке 2» — выглядывает персонаж
-  (function () {
-    var host = document.querySelector('.poster.has-pop');
-    var pop = host && host.querySelector('.pop');
-    if (!pop) return;
-    var busy = false;
-    function go() {
-      if (busy || !pop.complete || !pop.naturalWidth) return;
-      busy = true; host.classList.add('popping');
-      setTimeout(function () { host.classList.remove('popping'); busy = false; }, 3200);
+    // ---- карточка проекта ----
+    var modal = document.getElementById('modal'), cur = 0, opener = null;
+    var el = function (id) { return document.getElementById(id); };
+    function fill(i) {
+      var p = (window.PROJECTS || [])[i]; if (!p) return;
+      cur = i;
+      var poster = el('m-poster'); poster.textContent = '';
+      if (p.poster) { var im = document.createElement('img'); im.src = p.poster; im.alt = 'Постер: ' + p.title; poster.appendChild(im); }
+      else { var ph = document.createElement('div'); ph.className = 'm-ph'; ph.textContent = p.title; poster.appendChild(ph); }
+      el('m-type').textContent = p.type || '';
+      el('m-num').textContent = (i < 9 ? '0' : '') + (i + 1) + ' / ' + PROJECTS.length;
+      el('m-title').textContent = p.title;
+      var facts = el('m-facts'); facts.textContent = '';
+      [['Год', p.year], ['Режиссёр', p.director], ['Моя роль', p.role]].forEach(function (r) {
+        if (!r[1]) return;
+        var dt = document.createElement('dt'), dd = document.createElement('dd');
+        dt.textContent = r[0]; dd.textContent = r[1]; facts.appendChild(dt); facts.appendChild(dd);
+      });
+      var d = el('m-desc');
+      d.textContent = p.description || 'Описание проекта скоро появится.';
+      d.className = 'm-desc' + (p.description ? '' : ' empty');
     }
-    host.addEventListener('click', go);
-    host.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
+    function openModal(i, from) {
+      fill(i); opener = from || null;
+      modal.classList.add('open'); modal.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('modal-open');
+      el('m-close').focus();
+    }
+    function closeModal() {
+      modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('modal-open');
+      if (opener) { try { opener.focus({ preventScroll: true }); } catch (_) {} }
+    }
+    function step(d) { var n = window.PROJECTS.length; fill((cur + d + n) % n); }
+    el('m-close').addEventListener('click', closeModal);
+    el('m-prev').addEventListener('click', function () { step(-1); });
+    el('m-next').addEventListener('click', function () { step(1); });
+    modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
+    document.addEventListener('keydown', function (e) {
+      if (!modal.classList.contains('open')) return;
+      if (e.key === 'Escape') closeModal();
+      else if (e.key === 'ArrowLeft') step(-1);
+      else if (e.key === 'ArrowRight') step(1);
+    });
   })();
 </script>
 </body>
