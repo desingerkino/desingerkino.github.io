@@ -50,11 +50,12 @@ h1{margin:0;font-family:var(--display);font-weight:800;font-size:clamp(44px,7vw,
 /* Когда добавите настоящую картинку, уберите padding у .poster с картинкой */
 .poster.has-img{padding:0}
 
-/* Постеры в шапке: подсветка при наведении; Чебурашка выглядывает по клику */
-.poster.has-img{position:relative;overflow:visible;isolation:isolate}
+/* Постеры в шапке: при наведении постер подаётся вперёд, под ним растёт тень */
+.poster.has-img{position:relative;overflow:visible;isolation:isolate;transition:transform .45s cubic-bezier(.2,.7,.2,1),box-shadow .45s cubic-bezier(.2,.7,.2,1);box-shadow:0 2px 6px rgba(18,24,31,.12)}
 .poster.has-img img{position:relative;z-index:0}
-.poster.has-img::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0;transition:opacity .4s;background:radial-gradient(circle at calc(var(--mx,.5)*100%) calc(var(--my,.5)*100%),rgba(255,255,255,.55),rgba(255,255,255,0) 60%);mix-blend-mode:overlay}
-.poster.has-img.on::after{opacity:1}
+@media (hover:hover) and (pointer:fine){
+  .poster.has-img:hover{transform:translateY(-10px) scale(1.07);z-index:2;box-shadow:0 34px 44px -18px rgba(18,24,31,.55),0 12px 18px -8px rgba(18,24,31,.35)}
+}
 .poster.has-pop{cursor:pointer}
 .poster.has-img .pop{position:absolute;z-index:-1;left:50%;bottom:calc(100% - 3px);width:70%;height:auto;transform:translate(-50%,100%);transform-origin:50% 100%;pointer-events:none}
 .poster.popping .pop{animation:peek 3.1s cubic-bezier(.3,.7,.3,1) both}
@@ -357,20 +358,8 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
     if (visible && !raf) raf = requestAnimationFrame(loop);
   })();
 
-  // Постеры в шапке: подсветка за курсором; клик по «Чебурашке 2» — выглядывает персонаж
+  // Постеры в шапке: клик по «Чебурашке 2» — выглядывает персонаж
   (function () {
-    var list = document.querySelectorAll('.poster.has-img');
-    var fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-    Array.prototype.forEach.call(list, function (p) {
-      if (!fine) return;
-      p.addEventListener('pointermove', function (e) {
-        var r = p.getBoundingClientRect();
-        p.style.setProperty('--mx', ((e.clientX - r.left) / r.width).toFixed(3));
-        p.style.setProperty('--my', ((e.clientY - r.top) / r.height).toFixed(3));
-        p.classList.add('on');
-      });
-      p.addEventListener('pointerleave', function () { p.classList.remove('on'); });
-    });
     var host = document.querySelector('.poster.has-pop');
     var pop = host && host.querySelector('.pop');
     if (!pop) return;
