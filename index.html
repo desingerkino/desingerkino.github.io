@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Миша Черкасов — художник по реквизиту</title>
 <meta name="description" content="Художник по реквизиту в кино с 2015 года. Реквизит, бутафория, игровые телефоны.">
-<script>document.documentElement.className+=" js"</script>
+<script>document.documentElement.className+=" js";setTimeout(function(){if(!window.__fxReady)document.documentElement.classList.add("fx-off")},3000)</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Geist:wght@400;500&family=Geist+Mono:wght@400;500&display=swap">
@@ -167,6 +167,8 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
 .contacts{display:flex;flex-direction:column;gap:4px;font-family:var(--mono);font-size:15px}
 
 .bf{animation:bf .9s cubic-bezier(.2,.7,.2,1) backwards}
+/* Текст шапки анимирует GSAP (fx.js). Если GSAP недоступен, на html ставится fx-off и работает .bf */
+.js:not(.fx-off) .hero-text .bf{animation:none;opacity:0}
 @keyframes bf{from{opacity:0;filter:blur(10px);transform:translateY(10px)}to{opacity:1;filter:blur(0);transform:none}}
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
@@ -311,7 +313,9 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
-<script src="projects.js?v=20261009c"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/SplitText.min.js"></script>
+<script src="projects.js?v=20261009d"></script>
 <script>
   (function () {
     var track = document.getElementById('mq-track');
@@ -437,6 +441,7 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
       var d = el('m-desc');
       d.textContent = p.description || 'Описание проекта скоро появится.';
       d.className = 'm-desc' + (p.description ? '' : ' empty');
+      if (window.fxModalIn) window.fxModalIn();
     }
     function openModal(i, from) {
       fill(i); opener = from || null;
@@ -672,5 +677,6 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
   })();
 </script>
 <script src="dolly.js" defer></script>
+<script src="fx.js?v=20261009d" defer></script>
 </body>
 </html>
