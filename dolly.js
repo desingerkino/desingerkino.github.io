@@ -56,7 +56,7 @@
     return pad(h, 2) + ':' + pad(m % 60, 2) + ':' + pad(s % 60, 2) + ':' + pad(fr, 2);
   }
   // тележка едет в одну сторону: уезжает за правый край и заново выезжает слева, за кадром — короткая пауза
-  var TRAVEL = 9000, PAUSE = 900, CYCLE = TRAVEL + PAUSE;
+  var TRAVEL = 18000, PAUSE = 900, CYCLE = TRAVEL + PAUSE;
   function pos(t) { var c = t % CYCLE; return c < TRAVEL ? c / TRAVEL : 1; }
   var running = false, t0 = 0, lastX = null, theta = 0, raf = 0, visible = false;
   function frame(now) {
