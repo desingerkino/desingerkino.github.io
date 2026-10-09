@@ -107,9 +107,6 @@
         }
       });
 
-      revealLines($('.d-head h2'), { trigger: true });
-      revealOnScroll('.d-head p', { y: 16, duration: .8 });
-
       revealLines($('footer h2'), { trigger: true });
       revealOnScroll('footer .contacts', { y: 16, duration: .8 });
 
