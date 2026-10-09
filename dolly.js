@@ -1,4 +1,4 @@
-// Блок «Кино — это движение»: тележка долли едет по рельсам от края до края, колёса крутятся
+// Блок «Кино — это движение»: тележка долли едет по рельсам, огибая страницу за кадром; крутятся маленькие колёса
 (function () {
   var sec = document.getElementById('dolly');
   if (!sec) return;
@@ -47,7 +47,6 @@
     ctx.clearRect(0, 0, SW, SH);
     var i;
     for (i = 0; i < SMALL.length; i++) drawSmall(SMALL[i], theta / 43);
-    for (i = 0; i < BIG.length; i++) drawBig(BIG[i], theta / BIG[i].r);
   }
   if (img.complete && img.naturalWidth) setup(); else img.addEventListener('load', setup);
 
@@ -56,22 +55,16 @@
     var f = Math.floor(ms / 1000 * 24), fr = f % 24, s = Math.floor(f / 24), m = Math.floor(s / 60), h = Math.floor(m / 60);
     return pad(h, 2) + ':' + pad(m % 60, 2) + ':' + pad(s % 60, 2) + ':' + pad(fr, 2);
   }
-  // положение: плавный туда-обратно с короткими паузами у краёв
-  var TRAVEL = 7200, PAUSE = 900, CYCLE = 2 * (TRAVEL + PAUSE);
-  function pos(t) { // 0..1
-    var c = t % CYCLE, p;
-    if (c < TRAVEL) { p = c / TRAVEL; return .5 - .5 * Math.cos(Math.PI * p); }
-    c -= TRAVEL; if (c < PAUSE) return 1;
-    c -= PAUSE; if (c < TRAVEL) { p = c / TRAVEL; return .5 + .5 * Math.cos(Math.PI * p); }
-    return 0;
-  }
+  // тележка едет в одну сторону: уезжает за правый край и заново выезжает слева, за кадром — короткая пауза
+  var TRAVEL = 9000, PAUSE = 900, CYCLE = TRAVEL + PAUSE;
+  function pos(t) { var c = t % CYCLE; return c < TRAVEL ? c / TRAVEL : 1; }
   var running = false, t0 = 0, lastX = null, theta = 0, raf = 0, visible = false;
   function frame(now) {
     if (!running) return;
     var t = now - t0, W = stage.clientWidth, dw = box.clientWidth, k = dw / SW;
-    var x = (W - dw + dw * .06) * pos(t) - dw * .03;
+    var x = -dw * 1.02 + (W + dw * 1.04) * pos(t);
     box.style.transform = 'translate3d(' + x.toFixed(2) + 'px,0,0)';
-    if (lastX !== null) theta += (x - lastX) / k; // пиксели пути в координатах спрайта
+    if (lastX !== null && x > lastX) theta += (x - lastX) / k; // пиксели пути в координатах спрайта
     lastX = x; draw(theta);
     if (tcEl) tcEl.textContent = timecode(t);
     raf = requestAnimationFrame(frame);
