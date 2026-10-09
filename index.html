@@ -61,6 +61,8 @@ h1{margin:0;font-family:var(--display);font-weight:800;font-size:clamp(44px,7vw,
 .hero>.wrap{width:100%}
 .poster.has-burst{cursor:pointer}
 .poster.shaking{will-change:transform,filter;box-shadow:0 0 40px 6px rgba(255,160,30,.55)!important;z-index:4}
+.poster .splat{position:absolute;inset:0;width:100%;height:100%;z-index:6;pointer-events:none;border-radius:inherit}
+.poster .orange{position:absolute;z-index:8;pointer-events:none;filter:drop-shadow(0 14px 14px rgba(0,0,0,.35));will-change:transform}
 .poster .juice{position:absolute;inset:0;width:100%;height:100%;z-index:6;pointer-events:none;border-radius:inherit;overflow:hidden}
 .poster .juice-drops{position:absolute;inset:0;z-index:7;pointer-events:none}
 .poster .juice-drops i{position:absolute;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:radial-gradient(circle at 35% 30%,#ffe29a,#ffa51f 55%,#f06a00);box-shadow:0 0 6px rgba(255,150,20,.5)}
@@ -423,7 +425,7 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
     });
   })();
 
-  // «Чебурашка 2/3» в шапке: по клику постер дрожит, брызгает апельсиновый сок, заливает постер и стекает вниз — под ним другой постер. Каждый клик меняет туда-обратно
+  // «Чебурашка 2/3» в шапке: по клику на постер падает апельсин, разбивается, сок заливает постер и стекает вниз — под ним другой постер. Каждый клик меняет туда-обратно
   (function () {
     var host = document.querySelector('.poster.has-burst');
     if (!host) return;
@@ -440,96 +442,157 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
       var p = PIC[isTwo ? 2 : 3];
       img.src = p.src; img.alt = p.alt; host.setAttribute('aria-label', p.label);
     }
-    function ease(t, p) { return t < .5 ? Math.pow(2 * t, p) / 2 : 1 - Math.pow(2 * (1 - t), p) / 2; }
     function tween(ms, fn, cb) {
       var t0 = performance.now();
       (function f(now) { var t = Math.min(1, (now - t0) / ms); fn(t); if (t < 1) requestAnimationFrame(f); else if (cb) cb(); })(t0);
     }
-    function drops(W, H) {
-      var box = document.createElement('div'); box.className = 'juice-drops'; host.appendChild(box);
-      var n = 26, i;
-      for (i = 0; i < n; i++) {
-        var d = document.createElement('i'), s = rnd(5, 15), a = rnd(0, Math.PI * 2), r = rnd(W * .35, W * .95), dur = rnd(650, 1100);
-        d.style.cssText = 'width:' + s + 'px;height:' + s * rnd(1, 1.35) + 'px;left:' + (W / 2 - s / 2) + 'px;top:' + (H * .45 - s / 2) + 'px';
-        box.appendChild(d);
-        var dx = Math.cos(a) * r, dy = Math.sin(a) * r * .8;
-        d.animate([
-          { transform: 'translate(0,0) scale(.3)', opacity: 1 },
-          { transform: 'translate(' + (dx * .6) + 'px,' + (dy * .6 - 20) + 'px) scale(1)', opacity: 1, offset: .45 },
-          { transform: 'translate(' + dx + 'px,' + (dy + rnd(60, 150)) + 'px) scale(.7)', opacity: 0 }
-        ], { duration: dur, easing: 'cubic-bezier(.2,.7,.4,1)', fill: 'forwards' });
-      }
-      setTimeout(function () { if (box.parentNode) box.parentNode.removeChild(box); }, 1300);
+    function splatSound() {
+      try {
+        var AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+        var ac = new AC(), n = Math.floor(ac.sampleRate * 0.28), buf = ac.createBuffer(1, n, ac.sampleRate), d = buf.getChannelData(0), i;
+        for (i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, 2.2);
+        var src = ac.createBufferSource(), g = ac.createGain(), f = ac.createBiquadFilter();
+        f.type = 'lowpass'; f.frequency.setValueAtTime(1400, ac.currentTime); f.frequency.exponentialRampToValueAtTime(300, ac.currentTime + 0.25);
+        g.gain.value = 0.5; src.buffer = buf; src.connect(f); f.connect(g); g.connect(ac.destination); src.start();
+        setTimeout(function () { ac.close(); }, 600);
+      } catch (e) {}
     }
-    function juice() {
-      var W = host.clientWidth, H = host.clientHeight, D = H * .2, C = 28, i;
-      var svg = document.createElementNS(NS, 'svg');
-      svg.setAttribute('class', 'juice'); svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
-      svg.innerHTML = '<defs><linearGradient id="jg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffbe3a"/><stop offset=".5" stop-color="#ff9a12"/><stop offset="1" stop-color="#f06a00"/></linearGradient></defs>';
-      var body = document.createElementNS(NS, 'path'); body.setAttribute('fill', 'url(#jg)');
-      var edge = document.createElementNS(NS, 'path'); edge.setAttribute('fill', 'none'); edge.setAttribute('stroke', 'rgba(255,240,190,.9)'); edge.setAttribute('stroke-width', '3'); edge.setAttribute('stroke-linecap', 'round');
-      var shine = document.createElementNS(NS, 'path'); shine.setAttribute('fill', 'none'); shine.setAttribute('stroke', 'rgba(255,255,255,.28)'); shine.setAttribute('stroke-width', '10'); shine.setAttribute('stroke-linecap', 'round');
-      svg.appendChild(body); svg.appendChild(shine); svg.appendChild(edge); host.appendChild(svg);
-      function offsets() {
-        var o = [], k;
-        for (k = 0; k <= C; k++) o.push(Math.random() < .22 ? rnd(.6, 1) * D : rnd(0, .35) * D);
-        for (k = 1; k < C; k++) o[k] = (o[k - 1] * .25 + o[k] * .5 + o[k + 1] * .25); // сглаживаем соседей, но капли-языки остаются
-        return o;
+    // апельсин (SVG): шарик с ямочками, бликом и листиком
+    function makeOrange(S) {
+      var s = document.createElementNS(NS, 'svg'), i, h = '';
+      s.setAttribute('viewBox', '0 0 100 100'); s.setAttribute('class', 'orange'); s.style.width = S + 'px'; s.style.height = S + 'px';
+      for (i = 0; i < 90; i++) {
+        var a = rnd(0, 6.283), r = Math.sqrt(Math.random()) * 44;
+        h += '<circle cx="' + (50 + Math.cos(a) * r).toFixed(1) + '" cy="' + (52 + Math.sin(a) * r).toFixed(1) + '" r="' + rnd(.5, 1.1).toFixed(2) + '" fill="rgba(140,50,0,.28)"/>';
       }
-      function edgePath(p, o) {
-        var pts = [], k, x, y;
-        for (k = 0; k <= C; k++) { x = -6 + k * (W + 12) / C; y = -D - 24 + p * (H + 2 * D + 48) + o[k]; pts.push([x, y]); }
-        var d = 'M' + pts[0][0] + ' ' + pts[0][1].toFixed(1);
-        for (k = 1; k < C; k++) { d += 'Q' + pts[k][0].toFixed(1) + ' ' + pts[k][1].toFixed(1) + ' ' + ((pts[k][0] + pts[k + 1][0]) / 2).toFixed(1) + ' ' + ((pts[k][1] + pts[k + 1][1]) / 2).toFixed(1); }
-        d += 'L' + pts[C][0].toFixed(1) + ' ' + pts[C][1].toFixed(1);
-        return d;
+      s.innerHTML = '<defs><radialGradient id="og" cx=".36" cy=".3" r=".85"><stop offset="0" stop-color="#ffc253"/><stop offset=".45" stop-color="#ff9412"/><stop offset="1" stop-color="#c85600"/></radialGradient><clipPath id="oc"><circle cx="50" cy="52" r="44"/></clipPath></defs>' +
+        '<circle cx="50" cy="52" r="44" fill="url(#og)"/><g clip-path="url(#oc)">' + h + '<ellipse cx="34" cy="34" rx="14" ry="8" transform="rotate(-35 34 34)" fill="rgba(255,255,255,.42)"/><circle cx="74" cy="70" r="30" fill="rgba(120,40,0,.18)"/></g>' +
+        '<path d="M50 9 Q56 2 66 5 Q60 14 50 11Z" fill="#4c9a2a"/><circle cx="50" cy="9" r="2.6" fill="#5a3a12"/>';
+      return s;
+    }
+    // брызги-капли: летят от места удара и падают
+    function drops(cx, cy, W) {
+      var box = document.createElement('div'); box.className = 'juice-drops'; host.appendChild(box);
+      var i, n = 46;
+      for (i = 0; i < n; i++) {
+        var d = document.createElement('i'), s = rnd(3, 14), a = rnd(-Math.PI * 0.95, Math.PI * 0.05) + (Math.random() < .35 ? Math.PI : 0), v = rnd(W * .3, W * 1.25), dur = rnd(620, 1150);
+        var dx = Math.cos(a) * v, dy = Math.sin(a) * v * .8, fall = rnd(80, 220), stretch = rnd(1, 1.6);
+        d.style.cssText = 'width:' + s + 'px;height:' + (s * stretch) + 'px;left:' + (cx - s / 2) + 'px;top:' + (cy - s / 2) + 'px';
+        box.appendChild(d);
+        d.animate([
+          { transform: 'translate(0,0) scale(.4)', opacity: 1 },
+          { transform: 'translate(' + (dx * .62) + 'px,' + (dy * .62) + 'px) scale(1)', opacity: 1, offset: .42 },
+          { transform: 'translate(' + dx + 'px,' + (dy + fall) + 'px) scale(.75)', opacity: 0 }
+        ], { duration: dur, easing: 'cubic-bezier(.15,.6,.35,1)', fill: 'forwards' });
       }
-      return {
-        svg: svg,
-        cover: function (p, o) { // заливка сверху вниз
-          var e = edgePath(p, o);
-          body.setAttribute('d', e.replace(/^M/, 'M-6 -30L') + 'L' + (W + 6) + ' -30Z');
-          edge.setAttribute('d', e); shine.setAttribute('d', e); shine.setAttribute('transform', 'translate(0,-8)');
-        },
-        drain: function (p, o) { // сок стекает вниз и открывает постер
-          var e = edgePath(p, o);
-          body.setAttribute('d', e + 'L' + (W + 6) + ' ' + (H + 40) + 'L-6 ' + (H + 40) + 'Z');
-          edge.setAttribute('d', e); shine.setAttribute('d', e); shine.setAttribute('transform', 'translate(0,8)');
-        },
-        offsets: offsets
-      };
+      setTimeout(function () { if (box.parentNode) box.parentNode.removeChild(box); }, 1400);
     }
     function play() {
       if (busy) return;
       if (reduceB) { swap(); return; }
       busy = true;
-      var W = host.clientWidth, H = host.clientHeight;
-      host.classList.add('shaking');
-      // 1. дрожь и «давление»
-      var N = 12, kf = [], k, t, s;
-      for (k = 0; k <= N; k++) {
-        t = k / N; s = k % 2 ? 1 : -1;
-        var amp = 0.6 + 3.4 * t;
-        kf.push({ transform: 'translate(' + (s * amp).toFixed(2) + 'px,-10px) rotate(' + (s * amp * 0.12).toFixed(2) + 'deg) scale(' + (1.07 - 0.03 * t).toFixed(3) + ',' + (1.07 + 0.05 * t).toFixed(3) + ')', offset: t });
+      var W = host.clientWidth, H = host.clientHeight, dpr = Math.min(2, window.devicePixelRatio || 1);
+      var cx = W / 2, cy = H * .42, S = Math.round(W * .44);
+      // слой сока (канвас внутри границ постера)
+      var cv = document.createElement('canvas'); cv.className = 'splat';
+      cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+      var ctx = cv.getContext('2d'); ctx.scale(dpr, dpr);
+      host.appendChild(cv);
+      // «масса» сока: заранее нарисованная текстура с волнистой верхней кромкой
+      var MH = H + 140, mass = document.createElement('canvas'); mass.width = Math.round(W * dpr); mass.height = Math.round(MH * dpr);
+      (function () {
+        var m = mass.getContext('2d'); m.scale(dpr, dpr);
+        var ph1 = rnd(0, 6), ph2 = rnd(0, 6), lob = [], k;
+        for (k = 0; k < 4; k++) lob.push({ x: rnd(.08, .92) * W, w: rnd(.06, .14) * W, h: rnd(-26, 18) });
+        function edge(x) {
+          var y = 46 + 7 * Math.sin(x / W * 9 + ph1) + 4 * Math.sin(x / W * 23 + ph2);
+          lob.forEach(function (l) { y += l.h * Math.exp(-Math.pow((x - l.x) / l.w, 2)); });
+          return y;
+        }
+        var g = m.createLinearGradient(0, 0, 0, MH);
+        g.addColorStop(0, 'rgba(255,196,70,.86)'); g.addColorStop(.45, 'rgba(255,150,20,.84)'); g.addColorStop(1, 'rgba(236,104,0,.88)');
+        m.beginPath(); m.moveTo(0, MH); m.lineTo(0, edge(0));
+        for (k = 1; k <= 60; k++) m.lineTo(k * W / 60, edge(k * W / 60));
+        m.lineTo(W, MH); m.closePath(); m.fillStyle = g; m.fill();
+        m.save(); m.clip();
+        // мякоть и пузырьки
+        for (k = 0; k < 120; k++) { m.fillStyle = 'rgba(255,' + Math.round(rnd(190, 235)) + ',' + Math.round(rnd(110, 160)) + ',' + rnd(.12, .3).toFixed(2) + ')'; m.beginPath(); m.ellipse(rnd(0, W), rnd(60, MH), rnd(1, 4), rnd(2, 8), rnd(0, 3), 0, 6.283); m.fill(); }
+        for (k = 0; k < 16; k++) { var bx = rnd(0, W), by = rnd(70, MH), br = rnd(2, 6); m.fillStyle = 'rgba(255,230,160,.22)'; m.beginPath(); m.arc(bx, by, br, 0, 6.283); m.fill(); m.fillStyle = 'rgba(255,255,255,.55)'; m.beginPath(); m.arc(bx - br * .3, by - br * .3, br * .28, 0, 6.283); m.fill(); }
+        // глянцевые блики-потёки
+        for (k = 0; k < 7; k++) { var hx = rnd(.05, .95) * W, hy = rnd(.15, .8) * MH, hl = rnd(30, 90); var hg = m.createLinearGradient(hx, hy, hx, hy + hl); hg.addColorStop(0, 'rgba(255,255,255,0)'); hg.addColorStop(.3, 'rgba(255,255,255,.38)'); hg.addColorStop(1, 'rgba(255,255,255,0)'); m.fillStyle = hg; m.fillRect(hx - rnd(1.5, 3.5), hy, rnd(3, 7), hl); }
+        m.restore();
+        // валик на верхней кромке
+        m.beginPath(); m.moveTo(0, edge(0));
+        for (k = 1; k <= 60; k++) m.lineTo(k * W / 60, edge(k * W / 60));
+        m.strokeStyle = 'rgba(255,240,190,.9)'; m.lineWidth = 3; m.stroke();
+        m.translate(0, 5); m.strokeStyle = 'rgba(255,255,255,.28)'; m.lineWidth = 8; m.stroke();
+      })();
+      // форма всплеска: неровный круг с острыми «языками»
+      var NA = 40, mult = [], k, j;
+      for (k = 0; k < NA; k++) mult.push(rnd(.78, 1.12));
+      for (j = 0; j < 11; j++) { var c = Math.floor(rnd(0, NA)), L = rnd(1.5, 2.3); mult[c] = L; mult[(c + 1) % NA] = Math.max(mult[(c + 1) % NA], (L + 1) / 2 * .9); mult[(c + NA - 1) % NA] = Math.max(mult[(c + NA - 1) % NA], (L + 1) / 2 * .9); }
+      var RC = Math.hypot(W / 2, H * .62) / .72;
+      function blobPath(base) {
+        var pts = [], i;
+        for (i = 0; i < NA; i++) { var a = i / NA * 6.283; pts.push([cx + Math.cos(a) * base * mult[i], cy + Math.sin(a) * base * mult[i] * .92]); }
+        ctx.beginPath();
+        ctx.moveTo((pts[0][0] + pts[NA - 1][0]) / 2, (pts[0][1] + pts[NA - 1][1]) / 2);
+        for (i = 0; i < NA; i++) { var n = pts[(i + 1) % NA]; ctx.quadraticCurveTo(pts[i][0], pts[i][1], (pts[i][0] + n[0]) / 2, (pts[i][1] + n[1]) / 2); }
+        ctx.closePath();
       }
-      kf.push({ transform: 'translate(0,-10px) scale(1.07)', offset: 1 });
-      var shake = host.animate(kf, { duration: 480, easing: 'linear' });
-      shake.onfinish = function () {
-        var j = juice(), o1 = j.offsets(), o2 = j.offsets();
-        drops(W, H);
-        j.cover(0, o1);
-        // 2. сок заливает постер сверху вниз
-        tween(620, function (x) { j.cover(ease(x, 2), o1); }, function () {
+      // апельсин
+      var og = makeOrange(S); og.style.left = (cx - S / 2) + 'px'; og.style.top = (cy - S / 2) + 'px'; host.appendChild(og);
+      var fromY = -(cy + S + 320), rot0 = rnd(-30, 30);
+      var fall = og.animate([
+        { transform: 'translateY(' + fromY + 'px) rotate(' + rot0 + 'deg)' },
+        { transform: 'translateY(0) rotate(' + (rot0 - 110) + 'deg)' }
+      ], { duration: 520, easing: 'cubic-bezier(.55,0,.9,.5)', fill: 'forwards' });
+      fall.onfinish = function () {
+        // удар
+        if (og.parentNode) og.parentNode.removeChild(og);
+        splatSound();
+        drops(cx, cy, W);
+        host.animate([
+          { transform: 'translateY(-10px) scale(1.07)' },
+          { transform: 'translateY(-4px) scale(1.02,.97)', offset: .18 },
+          { transform: 'translateY(-10px) scale(1.07)' }
+        ], { duration: 340, easing: 'ease-out' });
+        // 1. всплеск расходится и накрывает постер
+        tween(430, function (t) {
+          var e = 1 - Math.pow(1 - t, 3);
+          ctx.clearRect(0, 0, W, H);
+          ctx.save(); blobPath(Math.max(2, RC * e)); ctx.clip();
+          ctx.drawImage(mass, 0, -86, W, MH); ctx.restore();
+          // яркая вспышка в точке удара
+          if (t < .35) { var fg = ctx.createRadialGradient(cx, cy, 0, cx, cy, W * .5); fg.addColorStop(0, 'rgba(255,255,230,' + (.8 * (1 - t / .35)).toFixed(2) + ')'); fg.addColorStop(1, 'rgba(255,255,230,0)'); ctx.fillStyle = fg; ctx.fillRect(0, 0, W, H); }
+        }, function () {
           swap();
-          // 3. сок стекает — под ним другой постер
+          // 2. сок стекает вниз, оставляя плёнку и потёки
+          var trails = [], i;
+          for (i = 0; i < 12; i++) trails.push({ x: rnd(.05, .95) * W, r: rnd(2, 5), sp: rnd(.55, 1.25), len: rnd(.25, .6) });
           setTimeout(function () {
-            host.animate([{ transform: 'translateY(-10px) scale(1.12)' }, { transform: 'translateY(-10px) scale(1.07)' }], { duration: 900, easing: 'cubic-bezier(.2,.8,.2,1)' });
-            tween(1000, function (x) { j.drain(ease(x, 1.8), o2); }, function () {
-              host.classList.remove('shaking');
-              if (j.svg.parentNode) j.svg.parentNode.removeChild(j.svg);
+            host.animate([{ transform: 'translateY(-10px) scale(1.11)' }, { transform: 'translateY(-10px) scale(1.07)' }], { duration: 1000, easing: 'cubic-bezier(.2,.8,.2,1)' });
+            tween(1250, function (t) {
+              var p = Math.pow(t, 2.1);
+              ctx.clearRect(0, 0, W, H);
+              // тонкая плёнка сока
+              ctx.fillStyle = 'rgba(255,150,25,' + (.32 * Math.pow(1 - t, 1.3)).toFixed(3) + ')'; ctx.fillRect(0, 0, W, H);
+              // основная масса съезжает вниз
+              ctx.drawImage(mass, 0, -86 + p * (H + 120), W, MH);
+              // потёки с каплями на конце
+              trails.forEach(function (tr) {
+                var y = Math.min(1, p * tr.sp * 1.15) * (H + 20), y0 = Math.max(0, y - tr.len * H), al = Math.pow(1 - t, .8);
+                if (y <= 0) return;
+                ctx.strokeStyle = 'rgba(255,160,30,' + (.7 * al).toFixed(2) + ')'; ctx.lineWidth = tr.r * 1.1; ctx.lineCap = 'round';
+                ctx.beginPath(); ctx.moveTo(tr.x, y0); ctx.lineTo(tr.x, y); ctx.stroke();
+                ctx.fillStyle = 'rgba(255,175,45,' + (.85 * al).toFixed(2) + ')'; ctx.beginPath(); ctx.arc(tr.x, y, tr.r * 1.5, 0, 6.283); ctx.fill();
+                ctx.fillStyle = 'rgba(255,255,255,' + (.7 * al).toFixed(2) + ')'; ctx.beginPath(); ctx.arc(tr.x - tr.r * .45, y - tr.r * .45, tr.r * .45, 0, 6.283); ctx.fill();
+              });
+            }, function () {
+              if (cv.parentNode) cv.parentNode.removeChild(cv);
               busy = false;
             });
-          }, 120);
+          }, 140);
         });
       };
     }
