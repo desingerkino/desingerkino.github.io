@@ -162,6 +162,22 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
   .bf,.glow{animation:none}
   .js .reel .mq{opacity:1;transition:none}
 }
+
+/* Блок «Кино — это движение»: чёрно-белая сцена с долли */
+.dolly{--dw:clamp(340px,50vw,780px);position:relative;background:#fff;color:#0a0a0a;overflow:hidden;filter:grayscale(1) contrast(1.06)}
+.d-bar{background:#050505;color:#f2f2f2;font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:0 clamp(16px,3vw,40px);height:clamp(40px,5vw,60px)}
+.d-bar b{font-weight:500;display:inline-flex;align-items:center;gap:8px}
+.d-rec{width:9px;height:9px;border-radius:50%;background:#fff;animation:dRec 1.2s steps(2,jump-none) infinite}
+@keyframes dRec{0%{opacity:1}50%{opacity:.15}}
+.d-head{max-width:1280px;margin:0 auto;padding:clamp(40px,6vw,84px) 24px clamp(8px,2vw,24px);display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px 32px}
+.d-head h2{margin:0;font-family:var(--display);font-weight:800;font-size:clamp(36px,6.6vw,96px);line-height:.95;letter-spacing:-.03em;text-transform:uppercase;max-width:11ch}
+.d-head p{margin:0;font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#555;text-align:right}
+.d-stage{position:relative;height:calc(var(--dw)*.73);margin-top:clamp(4px,2vw,24px)}
+.d-rails{position:absolute;left:0;right:0;top:calc(var(--dw)*.5253);height:calc(var(--dw)*.1818);background:url(rails.webp) repeat-x 0 0/auto 100%}
+.d-dolly{position:absolute;left:0;top:0;width:var(--dw);aspect-ratio:990/652;will-change:transform}
+.d-dolly img,.d-dolly canvas{position:absolute;inset:0;width:100%;height:100%;display:block;user-select:none;-webkit-user-drag:none}
+.dolly::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,rgba(0,0,0,0) 55%,rgba(0,0,0,.10) 100%),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E");mix-blend-mode:multiply;opacity:.22}
+@media (max-width:640px){.d-bar span.d-hide{display:none}.d-head p{text-align:left}}
 </style>
 </head>
 <body>
@@ -262,6 +278,15 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
       </div>
     </div>
   </div>
+</section>
+<section id="dolly" class="dolly" aria-label="Кино — это движение">
+  <div class="d-bar"><b><i class="d-rec"></i>REC</b><span class="d-hide">Сцена 12 · Дубль 3</span><span class="d-tc">00:00:00:00</span></div>
+  <div class="d-head"><h2>Кино — это движение</h2><p>Камера едет.<br>Реквизит остаётся в кадре.</p></div>
+  <div class="d-stage" id="d-stage">
+    <div class="d-rails" aria-hidden="true"></div>
+    <div class="d-dolly" aria-hidden="true"><img src="dolly.webp" alt="" draggable="false"><canvas></canvas></div>
+  </div>
+  <div class="d-bar"><span>Кинотележка · рельсы · колёса</span><span class="d-hide">24 к/с</span></div>
 </section>
 </main>
 
@@ -634,5 +659,6 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
     host.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); play(); } });
   })();
 </script>
+<script src="dolly.js" defer></script>
 </body>
 </html>
