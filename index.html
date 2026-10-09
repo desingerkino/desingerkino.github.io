@@ -31,11 +31,13 @@ header .wrap{padding-block:20px;display:flex;flex-wrap:wrap;align-items:center;j
 .logo{font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:-.01em}
 nav{display:flex;flex-wrap:wrap;gap:4px 8px;font-size:15px}
 nav a{padding:10px 12px}
+@media (max-width:640px){nav{margin-left:-12px}}
 
 .hero .wrap{padding-block:32px 64px;display:flex;flex-wrap:wrap;align-items:center;gap:48px}
 .hero-text{flex:1 1 420px;min-width:0;display:flex;flex-direction:column;gap:24px}
 .badge{align-self:flex-start;padding:4px 10px;background:var(--tag);font-family:var(--mono);font-size:13px;font-weight:500;text-transform:uppercase;letter-spacing:.08em}
-h1{margin:0;font-family:var(--display);font-weight:800;font-size:clamp(44px,7vw,92px);line-height:.98;letter-spacing:-.03em;text-wrap:balance}
+h1{margin:0;font-family:var(--display);font-weight:800;font-size:clamp(44px,6.4vw,84px);line-height:.98;letter-spacing:-.03em;text-wrap:balance}
+@media (max-width:340px){h1{font-size:38px}}
 .lead{margin:0;max-width:520px;font-size:18px;color:var(--muted)}
 .buttons{display:flex;flex-wrap:wrap;gap:12px}
 .btn{display:inline-flex;align-items:center;min-height:48px;padding:0 22px;border-radius:4px;font-weight:500;border:1.5px solid var(--ink)}
@@ -79,7 +81,7 @@ h1{margin:0;font-family:var(--display);font-weight:800;font-size:clamp(44px,7vw,
 /* Киноархив: плоская плёнка на жёлтом фоне, кадры открывают карточку проекта. Размеры считаются от --k */
 .projects .p-head{padding-block:clamp(40px,6vw,72px) clamp(20px,3vw,32px);display:flex;flex-direction:column;gap:14px}
 .p-head .badge{background:var(--ink);color:var(--cine,#f5c928)}
-.p-head h2{max-width:720px;font-size:clamp(34px,4.4vw,56px);letter-spacing:-.035em;line-height:.98}
+.p-head h2{max-width:720px;font-size:clamp(34px,4.4vw,56px);letter-spacing:-.035em;line-height:1.06}
 .reel{--k:1;--cine:#f5c928;--sh:calc(314px*var(--k));background:var(--cine);overflow:hidden;position:relative;padding-block:calc(56px*var(--k))}
 @media (max-width:1100px){.reel{--k:.8}}
 @media (max-width:760px){.reel{--k:.6}}
@@ -212,7 +214,7 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
     <div class="hero-text">
       <span class="badge bf" style="animation-delay:.05s">В кино с 2015 года</span>
       <h1 class="bf" style="animation-delay:.15s">Художник по реквизиту</h1>
-      <p class="lead bf" style="animation-delay:.3s">Создаю предметный мир фильма.<br>Реквизит, который помогает истории стать реальностью — от замысла до съёмочной площадки.</p>
+      <p class="lead bf" style="animation-delay:.3s">Создаю предметный мир фильма.<br>Реквизит, который помогает истории стать реальностью&nbsp;— от замысла до съёмочной площадки.</p>
       <div class="buttons bf" style="animation-delay:.45s">
         <a class="btn solid" href="#projects">Смотреть проекты</a>
       </div>
