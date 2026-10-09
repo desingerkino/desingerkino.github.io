@@ -4,7 +4,7 @@
 window.PROJECTS = [
   { title: "Ле.Ген.Да", type: "СЕРИАЛ", poster: null, year: "", director: "", role: "", description: "" },
   { title: "СашаТаня", type: "СЕРИАЛ", poster: null, year: "", director: "", role: "", description: "" },
-  { title: "Подельники", type: "ФИЛЬМ", poster: null, year: "", director: "", role: "", description: "" },
+  { title: "Подельники", type: "ФИЛЬМ", poster: "podelniki.webp", year: "2022", director: "Евгений Григорьев", role: "Реквизитор", description: "В центре истории — небольшая уральская деревня, где происходит жестокое преступление. После убийства отца мальчик становится одержим желанием найти виновного и отомстить. Подозрения падают на человека, который живёт рядом и которого окружающие знают совсем не так, как он есть на самом деле. Фильм рассказывает о детской травме, мести, молчании взрослых и о том, как стремление восстановить справедливость может превратиться в разрушительную одержимость." },
   { title: "ЮЗЗЗ", type: "СЕРИАЛ", poster: "yuzzz.webp", year: "", director: "", role: "", description: "" },
   { title: "Пассажиры", type: "СЕРИАЛ", poster: null, year: "", director: "", role: "", description: "" },
   { title: "Волшебники", type: "ПИЛОТ", poster: null, year: "", director: "", role: "", description: "" },
