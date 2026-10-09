@@ -475,7 +475,7 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
       var box = document.createElement('div'); box.className = 'juice-drops'; host.appendChild(box);
       var i, n = 46;
       for (i = 0; i < n; i++) {
-        var d = document.createElement('i'), s = rnd(3, 14), a = rnd(-Math.PI * 0.95, Math.PI * 0.05) + (Math.random() < .35 ? Math.PI : 0), v = rnd(W * .3, W * 1.25), dur = rnd(620, 1150);
+        var d = document.createElement('i'), s = rnd(3, 14), a = rnd(-Math.PI * 0.95, Math.PI * 0.05) + (Math.random() < .35 ? Math.PI : 0), v = rnd(W * .3, W * 1.25), dur = rnd(1000, 1900);
         var dx = Math.cos(a) * v, dy = Math.sin(a) * v * .8, fall = rnd(80, 220), stretch = rnd(1, 1.6);
         d.style.cssText = 'width:' + s + 'px;height:' + (s * stretch) + 'px;left:' + (cx - s / 2) + 'px;top:' + (cy - s / 2) + 'px';
         box.appendChild(d);
@@ -485,7 +485,7 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
           { transform: 'translate(' + dx + 'px,' + (dy + fall) + 'px) scale(.75)', opacity: 0 }
         ], { duration: dur, easing: 'cubic-bezier(.15,.6,.35,1)', fill: 'forwards' });
       }
-      setTimeout(function () { if (box.parentNode) box.parentNode.removeChild(box); }, 1400);
+      setTimeout(function () { if (box.parentNode) box.parentNode.removeChild(box); }, 2200);
     }
     function play() {
       if (busy) return;
@@ -515,11 +515,45 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
         for (k = 1; k <= 60; k++) m.lineTo(k * W / 60, edge(k * W / 60));
         m.lineTo(W, MH); m.closePath(); m.fillStyle = g; m.fill();
         m.save(); m.clip();
-        // мякоть и пузырьки
-        for (k = 0; k < 120; k++) { m.fillStyle = 'rgba(255,' + Math.round(rnd(190, 235)) + ',' + Math.round(rnd(110, 160)) + ',' + rnd(.12, .3).toFixed(2) + ')'; m.beginPath(); m.ellipse(rnd(0, W), rnd(60, MH), rnd(1, 4), rnd(2, 8), rnd(0, 3), 0, 6.283); m.fill(); }
-        for (k = 0; k < 16; k++) { var bx = rnd(0, W), by = rnd(70, MH), br = rnd(2, 6); m.fillStyle = 'rgba(255,230,160,.22)'; m.beginPath(); m.arc(bx, by, br, 0, 6.283); m.fill(); m.fillStyle = 'rgba(255,255,255,.55)'; m.beginPath(); m.arc(bx - br * .3, by - br * .3, br * .28, 0, 6.283); m.fill(); }
-        // глянцевые блики-потёки
-        for (k = 0; k < 7; k++) { var hx = rnd(.05, .95) * W, hy = rnd(.15, .8) * MH, hl = rnd(30, 90); var hg = m.createLinearGradient(hx, hy, hx, hy + hl); hg.addColorStop(0, 'rgba(255,255,255,0)'); hg.addColorStop(.3, 'rgba(255,255,255,.38)'); hg.addColorStop(1, 'rgba(255,255,255,0)'); m.fillStyle = hg; m.fillRect(hx - rnd(1.5, 3.5), hy, rnd(3, 7), hl); }
+        // мягкие перепады плотности: где-то сок гуще, где-то тоньше
+        var hasF = ('filter' in m);
+        if (hasF) m.filter = 'blur(' + (W * .05).toFixed(1) + 'px)';
+        for (k = 0; k < 26; k++) {
+          var dark = Math.random() < .5, bx0 = rnd(-.1, 1.1) * W, by0 = rnd(.05, 1) * MH, brr = rnd(.12, .32) * W;
+          var bg = m.createRadialGradient(bx0, by0, 0, bx0, by0, brr);
+          bg.addColorStop(0, dark ? 'rgba(200,70,0,.42)' : 'rgba(255,225,130,.42)'); bg.addColorStop(1, 'rgba(255,200,80,0)');
+          m.fillStyle = bg; m.fillRect(bx0 - brr, by0 - brr, brr * 2, brr * 2);
+        }
+        if (hasF) m.filter = 'none';
+        // сочные мешочки апельсина: вытянутые капли с объёмом
+        for (k = 0; k < 150; k++) {
+          var sx = rnd(0, W), sy = rnd(60, MH), sl = rnd(5, 13), sw = rnd(1.8, 4.2), sa = rnd(-.5, .5) + 1.5708;
+          m.save(); m.translate(sx, sy); m.rotate(sa);
+          var sg = m.createLinearGradient(0, -sl, 0, sl);
+          sg.addColorStop(0, 'rgba(255,236,160,.0)'); sg.addColorStop(.35, 'rgba(255,214,110,' + rnd(.16, .34).toFixed(2) + ')'); sg.addColorStop(1, 'rgba(210,90,0,' + rnd(.14, .3).toFixed(2) + ')');
+          m.fillStyle = sg; m.beginPath(); m.ellipse(0, 0, sw, sl, 0, 0, 6.283); m.fill();
+          m.fillStyle = 'rgba(255,255,235,.38)'; m.beginPath(); m.ellipse(-sw * .3, -sl * .35, sw * .28, sl * .3, 0, 0, 6.283); m.fill();
+          m.restore();
+        }
+        // пузырьки с бликами и тёмным ободком
+        for (k = 0; k < 22; k++) {
+          var qx = rnd(0, W), qy = rnd(70, MH), qr = rnd(2, 7);
+          var qg = m.createRadialGradient(qx - qr * .3, qy - qr * .3, 0, qx, qy, qr);
+          qg.addColorStop(0, 'rgba(255,245,200,.55)'); qg.addColorStop(.7, 'rgba(255,190,70,.12)'); qg.addColorStop(1, 'rgba(190,80,0,.4)');
+          m.fillStyle = qg; m.beginPath(); m.arc(qx, qy, qr, 0, 6.283); m.fill();
+          m.fillStyle = 'rgba(255,255,255,.85)'; m.beginPath(); m.arc(qx - qr * .38, qy - qr * .38, qr * .24, 0, 6.283); m.fill();
+        }
+        // длинные изогнутые блики-потёки
+        for (k = 0; k < 9; k++) {
+          var hx = rnd(.06, .94) * W, hy = rnd(.1, .85) * MH, hl = rnd(40, 120), bend = rnd(-9, 9);
+          var hg = m.createLinearGradient(hx, hy, hx, hy + hl); hg.addColorStop(0, 'rgba(255,255,255,0)'); hg.addColorStop(.25, 'rgba(255,255,255,.55)'); hg.addColorStop(1, 'rgba(255,255,255,0)');
+          m.strokeStyle = hg; m.lineWidth = rnd(2, 5); m.lineCap = 'round';
+          m.beginPath(); m.moveTo(hx, hy); m.quadraticCurveTo(hx + bend, hy + hl * .5, hx + bend * .4, hy + hl); m.stroke();
+        }
+        // мелкое зерно: сок не должен быть гладкой краской
+        var id = m.getImageData(0, 0, mass.width, mass.height), dd = id.data, pi;
+        for (pi = 0; pi < dd.length; pi += 4) { if (dd[pi + 3] === 0) continue; var nz = (Math.random() - .5) * 20; dd[pi] = Math.max(0, Math.min(255, dd[pi] + nz)); dd[pi + 1] = Math.max(0, Math.min(255, dd[pi + 1] + nz * .8)); dd[pi + 2] = Math.max(0, Math.min(255, dd[pi + 2] + nz * .4)); }
+        m.setTransform(1, 0, 0, 1, 0, 0); m.putImageData(id, 0, 0); m.scale(dpr, dpr);
         m.restore();
         // валик на верхней кромке
         m.beginPath(); m.moveTo(0, edge(0));
@@ -546,7 +580,7 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
       var fall = og.animate([
         { transform: 'translateY(' + fromY + 'px) rotate(' + rot0 + 'deg)' },
         { transform: 'translateY(0) rotate(' + (rot0 - 110) + 'deg)' }
-      ], { duration: 520, easing: 'cubic-bezier(.55,0,.9,.5)', fill: 'forwards' });
+      ], { duration: 850, easing: 'cubic-bezier(.5,0,.85,.45)', fill: 'forwards' });
       fall.onfinish = function () {
         // удар
         if (og.parentNode) og.parentNode.removeChild(og);
@@ -556,9 +590,9 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
           { transform: 'translateY(-10px) scale(1.07)' },
           { transform: 'translateY(-4px) scale(1.02,.97)', offset: .18 },
           { transform: 'translateY(-10px) scale(1.07)' }
-        ], { duration: 340, easing: 'ease-out' });
+        ], { duration: 600, easing: 'ease-out' });
         // 1. всплеск расходится и накрывает постер
-        tween(430, function (t) {
+        tween(800, function (t) {
           var e = 1 - Math.pow(1 - t, 3);
           ctx.clearRect(0, 0, W, H);
           ctx.save(); blobPath(Math.max(2, RC * e)); ctx.clip();
@@ -571,9 +605,9 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
           var trails = [], i;
           for (i = 0; i < 12; i++) trails.push({ x: rnd(.05, .95) * W, r: rnd(2, 5), sp: rnd(.55, 1.25), len: rnd(.25, .6) });
           setTimeout(function () {
-            host.animate([{ transform: 'translateY(-10px) scale(1.11)' }, { transform: 'translateY(-10px) scale(1.07)' }], { duration: 1000, easing: 'cubic-bezier(.2,.8,.2,1)' });
-            tween(1250, function (t) {
-              var p = Math.pow(t, 2.1);
+            host.animate([{ transform: 'translateY(-10px) scale(1.11)' }, { transform: 'translateY(-10px) scale(1.07)' }], { duration: 1800, easing: 'cubic-bezier(.2,.8,.2,1)' });
+            tween(2600, function (t) {
+              var p = Math.pow(t, 1.9);
               ctx.clearRect(0, 0, W, H);
               // тонкая плёнка сока
               ctx.fillStyle = 'rgba(255,150,25,' + (.32 * Math.pow(1 - t, 1.3)).toFixed(3) + ')'; ctx.fillRect(0, 0, W, H);
@@ -592,7 +626,7 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
               if (cv.parentNode) cv.parentNode.removeChild(cv);
               busy = false;
             });
-          }, 140);
+          }, 380);
         });
       };
     }
