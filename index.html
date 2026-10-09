@@ -137,8 +137,19 @@ body.modal-open{overflow:hidden}
 .m-foot{margin-top:auto;display:flex;gap:10px;align-items:center;font-family:var(--mono);font-size:13px;letter-spacing:.08em;color:var(--muted)}
 .m-nav{position:static;width:40px;height:40px;font-size:18px}
 @media (max-width:760px){
-  .m-card{grid-template-columns:1fr}
-  .m-poster img,.m-ph{aspect-ratio:3/2;object-position:50% 20%}
+  /* Мобильная карточка: постер слева целиком, данные справа, описание ниже */
+  .m-card{grid-template-columns:minmax(0,38%) minmax(0,1fr);grid-template-areas:"poster meta" "poster title" "poster facts" "desc desc" "foot foot";grid-template-rows:auto auto 1fr auto auto;column-gap:14px;row-gap:10px;padding:56px 16px 16px;align-content:start}
+  .m-body{display:contents}
+  .m-poster{grid-area:poster;align-self:start;min-height:0}
+  .m-poster img{height:auto;aspect-ratio:auto;object-fit:contain}
+  .m-ph{aspect-ratio:2/3;padding:12px;font-size:18px}
+  .m-meta{grid-area:meta;flex-wrap:wrap;gap:6px 10px;font-size:11px;align-self:start}
+  .m-title{grid-area:title;font-size:clamp(22px,7vw,30px);align-self:start}
+  .m-facts{grid-area:facts;grid-template-columns:1fr;gap:0;font-size:13px;align-self:start}
+  .m-facts dt{font-size:11px;font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;margin-top:7px}
+  .m-facts dt:first-child{margin-top:0}
+  .m-desc{grid-area:desc;font-size:15px;margin-top:6px}
+  .m-foot{grid-area:foot;margin-top:4px}
 }
 @media (prefers-reduced-motion:reduce){.modal,.m-card{transition:none}.js .reel .mq{opacity:1;transition:none}}
 
