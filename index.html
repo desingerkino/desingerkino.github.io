@@ -155,13 +155,101 @@ body.modal-open{overflow:hidden}
 }
 @media (prefers-reduced-motion:reduce){.modal,.m-card{transition:none}.js .reel .mq{opacity:1;transition:none}}
 
-.work .wrap{padding-block:80px;display:flex;flex-wrap:wrap;gap:48px}
 h2{margin:0;font-family:var(--display);font-weight:800;line-height:1.05;letter-spacing:-.02em;text-wrap:balance}
-.work h2{flex:1 1 280px;min-width:0;font-size:clamp(32px,4vw,48px)}
-.cols{flex:2 1 480px;min-width:0;display:flex;flex-wrap:wrap;gap:24px}
-.col{flex:1 1 240px;min-width:0;border-top:3px solid var(--ink);padding-top:16px}
-.col h3{margin:0 0 8px;font-size:20px;font-weight:500}
-.col p{margin:0;color:var(--muted)}
+
+/* Блок «Что я делаю на площадке»: 13 этапов от сценария до сдачи. Слева заголовок и плёнка-индикатор, справа этапы */
+.work .wrap{padding-block:clamp(64px,8vw,104px);display:grid;grid-template-columns:minmax(0,4fr) minmax(0,7fr);gap:clamp(32px,5vw,72px);align-items:start}
+.w-head{position:sticky;top:28px;display:flex;flex-direction:column;gap:22px;min-width:0}
+.work h2{font-size:clamp(32px,4vw,52px);line-height:1;letter-spacing:-.03em}
+.w-lead{margin:0;max-width:36ch;color:var(--muted);font-size:17px;line-height:1.55}
+.w-reel{position:relative;background:var(--ink);padding:11px 6px}
+.w-reel::before,.w-reel::after{content:"";position:absolute;left:6px;right:6px;height:4px;background:repeating-linear-gradient(90deg,var(--tag) 0 7px,transparent 7px 13px)}
+.w-reel::before{top:3px}
+.w-reel::after{bottom:3px}
+.w-reel ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(13,minmax(0,1fr));gap:3px}
+.w-reel li{aspect-ratio:3/4;display:flex;align-items:flex-end;justify-content:center;padding-bottom:5px;background:#1f262e;color:#8d99a6;font:500 10px/1 var(--mono);letter-spacing:.02em;cursor:pointer;transition:background .35s,color .35s,box-shadow .35s}
+.w-reel li.is-here{box-shadow:inset 0 0 0 1.5px var(--tag);color:#fff}
+.w-reel li.is-part{background:#36414c;color:#fff}
+.w-reel li.is-open{background:var(--tag);color:var(--ink)}
+.w-parts{margin:0;border-top:1.5px solid var(--ink)}
+.w-parts>div{display:grid;grid-template-columns:minmax(120px,9.5rem) minmax(0,1fr);gap:2px 14px;padding:12px 0;border-bottom:1px solid rgba(18,24,31,.16)}
+.w-parts dt{font-weight:500}
+.w-parts dd{margin:0;display:flex;flex-direction:column;color:var(--muted);font-size:14px;line-height:1.45}
+.w-nums{margin-top:3px;font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:var(--ink)}
+
+.st-list{position:relative;list-style:none;margin:0;padding:0;overflow-anchor:none;min-width:0}
+.st-line{position:absolute;left:21px;top:0;bottom:0;width:1.5px;background:rgba(18,24,31,.14);pointer-events:none}
+.st-line i{position:absolute;inset:0;background:var(--ink);transform-origin:50% 0;transform:scaleY(0)}
+.st{position:relative;border-top:1.5px solid var(--ink)}
+.st:last-child{border-bottom:1.5px solid var(--ink)}
+.st-h{margin:0;font:inherit}
+.st-btn{box-sizing:border-box;width:100%;min-height:78px;margin:0;padding:16px 0;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer;display:grid;grid-template-columns:44px minmax(0,1fr) 84px 28px;align-items:center;gap:16px;-webkit-tap-highlight-color:transparent}
+.st-btn:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.st-n{justify-self:start;position:relative;z-index:1;padding:6px 7px;background:var(--ground);font:500 13px/1 var(--mono);letter-spacing:.06em;transition:background .35s,box-shadow .35s}
+.st.is-open .st-n{background:var(--tag)}
+.st.is-part .st-n{box-shadow:inset 0 0 0 1.5px var(--ink)}
+.st-tt{display:flex;flex-direction:column;gap:4px;min-width:0}
+.st-title{font-family:var(--display);font-weight:600;font-size:clamp(18px,1.7vw,22px);line-height:1.15;letter-spacing:-.012em;text-wrap:balance}
+.st-sub{color:var(--muted);font-size:14px;line-height:1.35}
+.st-th{display:block;width:84px;aspect-ratio:320/200;border:1px solid rgba(18,24,31,.2);background:#f4f6f8;transition:opacity .35s ease,transform .5s cubic-bezier(.2,.7,.2,1),border-color .3s}
+.st-th svg{display:block;width:100%;height:100%;stroke-width:3.2}
+.st-th text{display:none}
+.st-list:not(.st-ready) .st-th{visibility:hidden}
+.st.is-open .st-th{opacity:0;transform:scale(.86)}
+@media (hover:hover){.st-btn:hover .st-th{border-color:var(--ink)}}
+.st-ico{position:relative;width:28px;height:28px}
+.st-ico::before,.st-ico::after{content:"";position:absolute;left:6px;right:6px;top:13px;height:2px;background:currentColor;transition:transform .45s cubic-bezier(.2,.7,.2,1)}
+.st-ico::after{transform:rotate(90deg)}
+.st.is-open .st-ico::after{transform:rotate(0)}
+
+.st-p{overflow:hidden}
+.js .st-list:not(.st-ready) .st-p{display:none}
+.st-in{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:28px;padding:2px 0 30px 60px}
+.st-fig{position:relative;margin:0}
+.st-fig::before,.st-fig::after{content:"";position:absolute;top:-5px;width:14px;height:14px;border:2px solid var(--ink);pointer-events:none}
+.st-fig::before{left:-5px;border-right:0;border-bottom:0}
+.st-fig::after{right:-5px;border-left:0;border-bottom:0}
+.st-fig svg{display:block;width:100%;height:auto;border:1px solid rgba(18,24,31,.2);background-color:#f4f6f8;background-image:linear-gradient(rgba(18,24,31,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(18,24,31,.055) 1px,transparent 1px);background-size:16px 16px}
+.st-fig figcaption{margin-top:8px;font:500 11px/1 var(--mono);letter-spacing:.06em;color:var(--muted)}
+.st-txt p{margin:0 0 16px;max-width:60ch;font-size:16px;line-height:1.6}
+.st-tags{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.st-tags li{padding:4px 10px;border:1px solid rgba(18,24,31,.3);border-radius:3px;font-size:13px;line-height:1.4}
+
+/* Иллюстрации: тушь, бумага и один жёлтый акцент */
+.st-list svg{fill:none;stroke:var(--ink);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;overflow:visible}
+.st-list svg .p{fill:#fbfcfd}
+.st-list svg .y{fill:var(--tag);stroke:var(--ink)}
+.st-list svg .k{fill:var(--ink)}
+.st-list svg .hl{stroke:none;mix-blend-mode:multiply}
+.st-list svg .dash{stroke-dasharray:4 3}
+.st-list svg .thick{stroke-width:5}
+.st-list svg .hatch{fill:rgba(18,24,31,.18)}
+.st-list svg .frame{stroke:var(--tag);stroke-width:3}
+.st-list svg text{stroke:none;fill:var(--ink);font:500 9px var(--mono);letter-spacing:.06em}
+.st-list svg .tw{fill:#fbfcfd}
+
+@media (max-width:899px){
+  .work .wrap{grid-template-columns:minmax(0,1fr)}
+  .w-head{position:static}
+  .w-lead{max-width:none}
+}
+@media (max-width:640px){
+  .w-parts>div{grid-template-columns:minmax(0,1fr)}
+  .st-line{left:17px}
+  .st-btn{grid-template-columns:36px minmax(0,1fr) 60px 22px;gap:10px;min-height:72px;padding:14px 0}
+  .st-n{padding:5px 5px;font-size:12px}
+  .st-th{width:60px}
+  .st-title{font-size:17px}
+  .st-sub{font-size:13px}
+  .st-ico{width:22px;height:22px}
+  .st-ico::before,.st-ico::after{left:4px;right:4px;top:10px}
+  .st-in{grid-template-columns:minmax(0,1fr);gap:18px;padding:0 0 24px}
+  .st-p{position:relative;z-index:1;background:var(--ground)}
+  .st-txt p{font-size:15px}
+}
+@media (prefers-reduced-motion:reduce){
+  .w-reel li,.st-n,.st-th,.st-ico::before,.st-ico::after{transition:none}
+}
 
 footer{background:var(--tag);padding:64px 0}
 footer .wrap{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:32px}
@@ -264,19 +352,138 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
   </div>
 </section>
 
-<section id="work" class="work">
+<section id="work" class="work" aria-labelledby="work-title">
   <div class="wrap">
-    <h2>Что я делаю на площадке</h2>
-    <div class="cols">
-      <div class="col">
-        <h3>Игровые телефоны</h3>
-        <p>Экраны и интерфейсы айфонов для кадра: переписки, звонки, уведомления по сценарию.</p>
-      </div>
-      <div class="col">
-        <h3>Реквизит и бутафория</h3>
-        <p>Подбираю предметы и заказываю изготовление у проверенных бутафоров и в мастерских.</p>
-      </div>
+    <div class="w-head">
+      <h2 id="work-title">Что я делаю на площадке</h2>
+      <p class="w-lead">Реквизит проходит путь от первой страницы сценария до возврата на склад после последней смены. Я веду его на каждом этапе.</p>
+      <div class="w-reel" aria-hidden="true"><ol><li data-i="0" data-part="art"><span>01</span></li><li data-i="1" data-part="art"><span>02</span></li><li data-i="2" data-part="prod"><span>03</span></li><li data-i="3" data-part="prod"><span>04</span></li><li data-i="4" data-part="art"><span>05</span></li><li data-i="5" data-part="set"><span>06</span></li><li data-i="6" data-part="art"><span>07</span></li><li data-i="7" data-part="prod"><span>08</span></li><li data-i="8" data-part="prod"><span>09</span></li><li data-i="9" data-part="prod"><span>10</span></li><li data-i="10" data-part="prod"><span>11</span></li><li data-i="11" data-part="set"><span>12</span></li><li data-i="12" data-part="set"><span>13</span></li></ol></div>
+      <dl class="w-parts">
+        <div data-part="art"><dt>Художественная</dt><dd>сценарий, характер героев, эпоха<span class="w-nums">Этапы 01 02 05 07</span></dd></div>
+        <div data-part="prod"><dt>Производственная</dt><dd>поиск, изготовление, подрядчики, бюджет<span class="w-nums">Этапы 03 04 08 09 10 11</span></dd></div>
+        <div data-part="set"><dt>Съёмочная</dt><dd>смена, ракорд, сохранность, сдача<span class="w-nums">Этапы 06 12 13</span></dd></div>
+      </dl>
     </div>
+    <ol class="st-list">
+      <li class="st-line" aria-hidden="true"><i></i></li>
+      <li class="st" data-part="art">
+        <h3 class="st-h"><button class="st-btn" type="button" id="st-b-01" aria-expanded="false" aria-controls="st-p-01"><span class="st-n">01</span><span class="st-tt"><span class="st-title">Разбор сценария и подготовка проекта</span><span class="st-sub">Сцены, КПП и задачи группы</span></span><span class="st-th" aria-hidden="true"></span><span class="st-ico" aria-hidden="true"></span></button></h3>
+        <div class="st-p" id="st-p-01" role="region" aria-labelledby="st-b-01">
+          <div class="st-in">
+            <figure class="st-fig"><svg viewBox="0 0 320 200" role="img" aria-label="Открытый сценарий с выделенными сценами, карандаш и хлопушка"><g class="l1"><path class="p" d="M44 34h114v138H44z"/><path class="p" d="M162 34h114v138H162z"/><path class="dr" pathLength="1" d="M160 30v146"/></g><g class="l2"><path class="dr" pathLength="1" d="M58 56h80M58 66h64M58 76h76M58 94h52M58 104h80M58 114h70M58 132h60M58 142h78M58 152h44"/><text class="t" x="176" y="54">СЦЕНА 12</text><path class="dr" pathLength="1" d="M176 68h84M176 78h70M176 96h86M176 106h60M176 124h80M176 134h72M176 152h50"/></g><g class="l3"><path class="y hl" d="M172 91h94v10h-94zM172 119h88v10h-88z"/><path class="dr" pathLength="1" d="M214 46c22-3 34 4 30 10s-36 7-44 1c-6-5 2-10 14-11"/><g transform="rotate(-38 262 172)"><path class="p" d="M226 167h62v10h-62z"/><path class="k" d="M288 167l12 5-12 5z"/><path d="M226 167v10"/></g><g transform="translate(18 136)"><path class="k" d="M0 10h74v36H0z"/><path class="p" d="M0 8l73-12 2 8-73 12z"/><path class="k" d="M10 6l6-1-2 8-6 1zM28 3l6-1-2 8-6 1zM46 0l6-1-2 8-6 1zM64-3l6-1-2 8-6 1z"/><text class="t tw" x="6" y="32">СЦ 12 · Д 3</text></g></g></svg><figcaption>Кадр 01 / 13</figcaption></figure>
+            <div class="st-txt"><p>Изучаю сценарий, календарно-постановочный план и структуру съёмочного процесса. Определяю необходимый реквизит по сценам, обсуждаю задачи с режиссёром-постановщиком, художником-постановщиком и творческой группой. Согласовываю художественные решения, сроки и объём подготовки.</p><ul class="st-tags"><li>Реквизит по сценам</li><li>Календарно-постановочный план</li><li>Сроки и объём</li></ul></div>
+          </div>
+        </div>
+      </li>
+      <li class="st" data-part="art">
+        <h3 class="st-h"><button class="st-btn" type="button" id="st-b-02" aria-expanded="false" aria-controls="st-p-02"><span class="st-n">02</span><span class="st-tt"><span class="st-title">Идея, подбор и утверждение</span><span class="st-sub">Референсы, варианты, решение</span></span><span class="st-th" aria-hidden="true"></span><span class="st-ico" aria-hidden="true"></span></button></h3>
+        <div class="st-p" id="st-p-02" role="region" aria-labelledby="st-b-02">
+          <div class="st-in">
+            <figure class="st-fig"><svg viewBox="0 0 320 200" role="img" aria-label="Три эскиза предметов, один отмечен как утверждённый"><g class="l1"><g transform="rotate(-8 74 100)"><path class="p" d="M30 46h86v110H30z"/><path class="dr" pathLength="1" d="M48 70v62M48 106h40v26M88 106v-6M48 70h10v36"/><text class="t" x="73" y="148" text-anchor="middle">А</text></g><g transform="rotate(7 251 104)"><path class="p" d="M208 50h86v110h-86z"/><path class="dr" pathLength="1" d="M232 84h34v32a6 6 0 0 1-6 6h-22a6 6 0 0 1-6-6zM266 92h6a8 8 0 0 1 0 16h-6M242 76c-4-5 4-8 0-13M254 76c-4-5 4-8 0-13"/><text class="t" x="251" y="150" text-anchor="middle">В</text></g></g><g class="l2"><path class="p" d="M118 34h88v114h-88z"/><path class="dr" pathLength="1" d="M146 62h30l10 26h-50zM161 88v34M146 122h30M178 88v12"/><text class="t" x="162" y="140" text-anchor="middle">Б</text></g><g class="l3"><path class="frame" d="M114 30h96v122h-96z"/><circle class="y" cx="206" cy="36" r="15"/><path class="dr" pathLength="1" d="M199 36l5 5 9-10"/><circle class="k" cx="74" cy="44" r="3"/><circle class="k" cx="162" cy="34" r="3"/><circle class="k" cx="250" cy="50" r="3"/></g></svg><figcaption>Кадр 02 / 13</figcaption></figure>
+            <div class="st-txt"><p>Предлагаю предметы и визуальные решения, подбираю референсы, ищу варианты и объясняю выбор. Согласовываю реквизит с творческой группой и добиваюсь соответствия сценарию, характеру сцены и общему художественному решению проекта.</p><ul class="st-tags"><li>Референсы</li><li>Варианты на выбор</li><li>Утверждение</li></ul></div>
+          </div>
+        </div>
+      </li>
+      <li class="st" data-part="prod">
+        <h3 class="st-h"><button class="st-btn" type="button" id="st-b-03" aria-expanded="false" aria-controls="st-p-03"><span class="st-n">03</span><span class="st-tt"><span class="st-title">Поиск и аренда реквизита</span><span class="st-sub">Склады, коллекционеры, галереи</span></span><span class="st-th" aria-hidden="true"></span><span class="st-ico" aria-hidden="true"></span></button></h3>
+        <div class="st-p" id="st-p-03" role="region" aria-labelledby="st-b-03">
+          <div class="st-in">
+            <figure class="st-fig"><svg viewBox="0 0 320 200" role="img" aria-label="Стеллажи склада, найденный предмет, бирка аренды и лупа"><g class="l1"><path class="dr" pathLength="1" d="M28 30v150M168 30v150M28 30h140M28 80h140M28 130h140M28 180h140"/></g><g class="l2"><path class="p" d="M36 52h36v28H36zM78 58h28v22H78zM112 46h44v34h-44zM36 100h50v30H36zM92 108h30v22H92zM40 152h40v28H40zM86 146h60v34H86z"/><path class="dr" pathLength="1" d="M42 60h16M118 56h20M42 110h24M48 160h18M94 156h30"/></g><g class="l3"><path class="y" d="M128 96h30v34h-30z"/><path class="dr" pathLength="1" d="M134 106h18"/><path class="dr" pathLength="1" d="M150 112c26-8 44 6 50 16"/><path class="p" d="M214 112h70v48h-70l-14-24z"/><circle cx="222" cy="136" r="4"/><text class="t" x="232" y="132">АРЕНДА</text><text class="t" x="232" y="148">№ 0417</text><circle cx="246" cy="62" r="24"/><path class="thick" d="M263 79l20 20"/></g></svg><figcaption>Кадр 03 / 13</figcaption></figure>
+            <div class="st-txt"><p>Работаю с киноскладами, арендными компаниями, частными коллекционерами, галереями и другими владельцами предметов. Нахожу редкие и нестандартные вещи, договариваюсь об аренде и специальных условиях, учитывая стоимость, сроки и состояние реквизита.</p><ul class="st-tags"><li>Киносклады</li><li>Частные коллекции</li><li>Условия аренды</li></ul></div>
+          </div>
+        </div>
+      </li>
+      <li class="st" data-part="prod">
+        <h3 class="st-h"><button class="st-btn" type="button" id="st-b-04" aria-expanded="false" aria-controls="st-p-04"><span class="st-n">04</span><span class="st-tt"><span class="st-title">Изготовление и бутафория</span><span class="st-sub">Мастерские, ТЗ, прототипы, 3D-печать</span></span><span class="st-th" aria-hidden="true"></span><span class="st-ico" aria-hidden="true"></span></button></h3>
+        <div class="st-p" id="st-p-04" role="region" aria-labelledby="st-b-04">
+          <div class="st-in">
+            <figure class="st-fig"><svg viewBox="0 0 320 200" role="img" aria-label="Чертёж предмета с размерами и 3D-принтер, печатающий деталь"><g class="l1"><path class="p" d="M18 26h150v128H18z"/><path class="dash" d="M90 46v96"/><path class="dr" pathLength="1" d="M70 132h40c0-12-10-20-10-36 0-14 8-20 8-30H74c0 10 8 16 8 30 0 16-10 24-10 36z"/><path class="dr" pathLength="1" d="M66 144h48M66 140v8M114 140v8M128 66v66M124 66h8M124 132h8"/><text class="t" x="90" y="152" text-anchor="middle">Ø 40</text><text class="t" x="134" y="102">110</text></g><g class="l2"><path class="dr" pathLength="1" d="M176 30h122v150H176zM176 52h122M188 160h98"/><path class="k" d="M226 52h16v14l-8 8-8-8z"/><path class="p" d="M220 160h28c0-10-8-16-8-30 0-12 6-16 6-24h-24c0 8 6 12 6 24 0 14-8 20-8 30z"/><path class="dr" pathLength="1" d="M224 150h20M226 140h16M228 130h12M228 120h12"/></g><g class="l3"><path class="y" d="M222 104h24v4h-24z"/><path class="dr" pathLength="1" d="M234 74v30"/><circle cx="290" cy="20" r="10"/><path class="dr" pathLength="1" d="M290 30c0 8-6 12-12 14"/></g></svg><figcaption>Кадр 04 / 13</figcaption></figure>
+            <div class="st-txt"><p>Организую индивидуальное изготовление реквизита в бутафорских мастерских, у профильных мастеров и на специализированных производствах. Работаю с материалами, техническими заданиями и прототипами. При необходимости использую 3D-печать и другие технологии, чтобы получить предмет, которого нет в готовом виде.</p><ul class="st-tags"><li>Проверенные бутафоры</li><li>Прототипы</li><li>3D-печать</li></ul></div>
+          </div>
+        </div>
+      </li>
+      <li class="st" data-part="art">
+        <h3 class="st-h"><button class="st-btn" type="button" id="st-b-05" aria-expanded="false" aria-controls="st-p-05"><span class="st-n">05</span><span class="st-tt"><span class="st-title">Персонажный и личный реквизит</span><span class="st-sub">Вещи, которые рассказывают о герое</span></span><span class="st-th" aria-hidden="true"></span><span class="st-ico" aria-hidden="true"></span></button></h3>
+        <div class="st-p" id="st-p-05" role="region" aria-labelledby="st-b-05">
+          <div class="st-in">
+            <figure class="st-fig"><svg viewBox="0 0 320 200" role="img" aria-label="Блокнот, фотография, часы, билет и ключи одного персонажа"><g class="l1"><path class="p" d="M28 40h92v122H28z"/><path class="dr" pathLength="1" d="M106 40v122M36 40v122"/><path class="dr" pathLength="1" d="M48 66h44M48 78h36M48 90h40"/></g><g class="l2"><g transform="rotate(6 175 70)"><path class="p" d="M140 30h70v82h-70z"/><path d="M146 36h58v52h-58z"/><path class="dr" pathLength="1" d="M175 52a8 8 0 1 1 0 .1M160 88c2-12 8-18 15-18s13 6 15 18"/><path class="dr" pathLength="1" d="M150 100h40"/></g><circle class="p" cx="252" cy="72" r="24"/><circle cx="252" cy="72" r="19"/><path class="p" d="M242 28h20v20h-20zM242 96h20v24h-20z"/><path class="dr" pathLength="1" d="M252 72v-12M252 72l9 5"/><path class="p" d="M232 132h66v34h-66z"/><path class="dash" d="M254 132v34"/><text class="t" x="262" y="153">РЯД 7</text></g><g class="l3"><circle cx="160" cy="150" r="12"/><path class="dr" pathLength="1" d="M170 156l38 14M196 165l-2 8M204 168l-2 8"/><g transform="rotate(-14 136 168)"><path class="y" d="M114 160h40v18h-40z"/><text class="t" x="134" y="173" text-anchor="middle">ДОМ</text></g><path class="dr" pathLength="1" d="M150 150l-8 12"/></g></svg><figcaption>Кадр 05 / 13</figcaption></figure>
+            <div class="st-txt"><p>Подбираю личные вещи персонажей, которые раскрывают их характер, привычки, профессию, социальное положение и прошлое. Работаю с предметными деталями, которые помогают актёру существовать в образе, а зрителю — лучше понимать героя через его окружение и действия.</p><ul class="st-tags"><li>Характер</li><li>Профессия и привычки</li><li>Прошлое героя</li></ul></div>
+          </div>
+        </div>
+      </li>
+      <li class="st" data-part="set">
+        <h3 class="st-h"><button class="st-btn" type="button" id="st-b-06" aria-expanded="false" aria-controls="st-p-06"><span class="st-n">06</span><span class="st-tt"><span class="st-title">Игровой и сюжетно значимый реквизит</span><span class="st-sub">Предметы в действии, дубли, ракорд</span></span><span class="st-th" aria-hidden="true"></span><span class="st-ico" aria-hidden="true"></span></button></h3>
+        <div class="st-p" id="st-p-06" role="region" aria-labelledby="st-b-06">
+          <div class="st-in">
+            <figure class="st-fig"><svg viewBox="0 0 320 200" role="img" aria-label="Один и тот же стакан в трёх дублях и карточка ракорда"><g class="l1"><path d="M14 156h196"/></g><g class="l2"><path class="dr" pathLength="1" d="M40 70h40l-5 80h-30z"/><path class="dr" pathLength="1" d="M116 70h40l-5 80h-30z"/><path class="dr" pathLength="1" d="M192 70h40l-5 80h-30z"/><text class="t" x="60" y="174" text-anchor="middle">ДУБЛЬ 1</text><text class="t" x="136" y="174" text-anchor="middle">ДУБЛЬ 2</text><text class="t" x="212" y="174" text-anchor="middle">ДУБЛЬ 3</text></g><g class="l3"><path class="y" d="M40.8 82H79.2L75 150H45z"/><path class="y" d="M118.6 112H153.4L151 150H121z"/><path class="y" d="M196.2 138H227.8L227 150H197z"/><g transform="rotate(4 270 96)"><path class="p" d="M238 40h64v112h-64z"/><text class="t" x="246" y="58">РАКОРД</text><path class="dr" pathLength="1" d="M246 70h46M246 82h38M246 94h42"/><path d="M246 110h10v10h-10zM246 128h10v10h-10z"/><path class="y" d="M248 112h6v6h-6z"/><path class="dr" pathLength="1" d="M262 116h30M262 134h24"/></g></g></svg><figcaption>Кадр 06 / 13</figcaption></figure>
+            <div class="st-txt"><p>Подготавливаю предметы, с которыми взаимодействуют актёры и которые участвуют в действии сцены. Проверяю их внешний вид, механику, безопасность и соответствие сценарию. Организую дублирование, ремонт и замену предметов, если этого требуют сложность сцены и съёмочный процесс.</p><ul class="st-tags"><li>Механика и безопасность</li><li>Дубли предмета</li><li>Ремонт и замена</li></ul></div>
+          </div>
+        </div>
+      </li>
+      <li class="st" data-part="art">
+        <h3 class="st-h"><button class="st-btn" type="button" id="st-b-07" aria-expanded="false" aria-controls="st-p-07"><span class="st-n">07</span><span class="st-tt"><span class="st-title">Исторический реквизит</span><span class="st-sub">Эпоха, материалы, достоверность</span></span><span class="st-th" aria-hidden="true"></span><span class="st-ico" aria-hidden="true"></span></button></h3>
+        <div class="st-p" id="st-p-07" role="region" aria-labelledby="st-b-07">
+          <div class="st-in">
+            <figure class="st-fig"><svg viewBox="0 0 320 200" role="img" aria-label="Обмерный чертёж старинной лампы и фрагмент описи"><g class="l1"><g transform="translate(14 0) rotate(-3 252 140)"><path class="p" d="M206 96h96v84h-96z"/><text class="t" x="216" y="114">ОПИСЬ</text><path class="dr" pathLength="1" d="M216 126h70M216 138h58M216 150h64"/><path class="dash" d="M268 166a12 12 0 1 1 0 .1"/></g></g><g class="l2"><path class="dr" pathLength="1" d="M78 176h64l-8-10H86zM96 126h28l-4-10h-20zM100 116c-12-10-12-28 0-36V56h20v24c12 8 12 26 0 36"/><ellipse class="p" cx="110" cy="146" rx="30" ry="20"/><path class="dr" pathLength="1" d="M80 146c10 6 50 6 60 0"/></g><g class="l3"><path class="y" d="M110 102c-6-8 0-16 0-22 0 6 7 14 0 22z"/><path class="dr" pathLength="1" d="M52 56v120M48 56h8M48 176h8"/><text class="t" x="44" y="120" text-anchor="end">380</text><path class="dr" pathLength="1" d="M126 70l30-14h14M140 150l20 12h14"/><text class="t" x="174" y="59">стекло</text><text class="t" x="178" y="165">латунь</text></g></svg><figcaption>Кадр 07 / 13</figcaption></figure>
+            <div class="st-txt"><p>Изучаю эпоху, год действия, предметную культуру, материалы и особенности быта. Подбираю исторически подходящие предметы и проверяю их достоверность. Если нужного оригинала нет на складах, организую изготовление соответствующего аналога.</p><ul class="st-tags"><li>Предметная культура</li><li>Проверка достоверности</li><li>Аналоги</li></ul></div>
+          </div>
+        </div>
+      </li>
+      <li class="st" data-part="prod">
+        <h3 class="st-h"><button class="st-btn" type="button" id="st-b-08" aria-expanded="false" aria-controls="st-p-08"><span class="st-n">08</span><span class="st-tt"><span class="st-title">Цифровой реквизит и полиграфия</span><span class="st-sub">Игровые телефоны, экраны, этикетки</span></span><span class="st-th" aria-hidden="true"></span><span class="st-ico" aria-hidden="true"></span></button></h3>
+        <div class="st-p" id="st-p-08" role="region" aria-labelledby="st-b-08">
+          <div class="st-in">
+            <figure class="st-fig"><svg viewBox="0 0 320 200" role="img" aria-label="Смартфон с перепиской и уведомлением, рядом упаковка с этикеткой"><g class="l1"><path class="p rr" d="M40 18h96v176H40z"/><path d="M48 32h80v148H48z"/><path class="dr" pathLength="1" d="M78 25h20"/></g><g class="l2"><path class="y" d="M52 38h72v18H52z"/><path class="dr" pathLength="1" d="M58 45h30M58 50h44"/><path class="dr" pathLength="1" d="M52 66h48v16H52zM52 112h56v22H52z"/><path class="k" d="M76 88h48v16H76z"/><path class="dr" pathLength="1" d="M52 168h72"/></g><g class="l3"><path class="y" d="M70 140h54v16H70z"/><path class="p" d="M178 92h80v88h-80zM178 92l20-16h80l-20 16zM258 92l20-16v88l-20 16z"/><path class="y" d="M186 106h64v34h-64z"/><text class="t" x="218" y="121" text-anchor="middle">КОФЕ</text><text class="t" x="218" y="134" text-anchor="middle">№ 7</text><path class="dr" pathLength="1" d="M192 152v18M196 152v18M201 152v18M204 152v18M209 152v18M214 152v18M216 152v18M221 152v18M226 152v18"/></g></svg><figcaption>Кадр 08 / 13</figcaption></figure>
+            <div class="st-txt"><p>Самостоятельно создаю игровой цифровой реквизит: интерфейсы телефонов, переписки, звонки, уведомления, приложения, сайты и игровые экраны. Разрабатываю документы, этикетки, упаковку, вывески и полиграфию с учётом сценария, эпохи, визуального стиля и требований проекта.</p><ul class="st-tags"><li>Интерфейсы айфонов</li><li>Переписки и звонки</li><li>Этикетки и упаковка</li></ul></div>
+          </div>
+        </div>
+      </li>
+      <li class="st" data-part="prod">
+        <h3 class="st-h"><button class="st-btn" type="button" id="st-b-09" aria-expanded="false" aria-controls="st-p-09"><span class="st-n">09</span><span class="st-tt"><span class="st-title">Игровой транспорт</span><span class="st-sub">Подбор и подача машин к смене</span></span><span class="st-th" aria-hidden="true"></span><span class="st-ico" aria-hidden="true"></span></button></h3>
+        <div class="st-p" id="st-p-09" role="region" aria-labelledby="st-b-09">
+          <div class="st-in">
+            <figure class="st-fig"><svg viewBox="0 0 320 200" role="img" aria-label="Легковой автомобиль и фургон, подготовленные к съёмке, и лист подачи"><g class="l1"><path class="p" d="M176 112V72c0-4 3-7 7-7h66c6 0 10 3 13 8l12 20c2 3 3 6 3 9v10z"/><path class="dr" pathLength="1" d="M250 70h6l10 18h-16z"/><circle class="p" cx="200" cy="112" r="9"/><circle class="p" cx="260" cy="112" r="9"/></g><g class="l2"><path class="p" d="M30 150v-18c0-6 4-10 10-11l34-5c10-12 24-22 44-24h52c16 0 28 10 38 22l28 6c6 1 10 6 10 12v18z"/><path class="dr" pathLength="1" d="M86 116c8-10 18-16 32-18h24v18zM150 98h22c10 0 18 6 24 18h-46zM146 98v40M110 128h10M184 128h10"/><circle class="p" cx="78" cy="150" r="17"/><circle cx="78" cy="150" r="7"/><circle class="p" cx="210" cy="150" r="17"/><circle cx="210" cy="150" r="7"/><path class="dash" d="M14 170h292"/></g><g class="l3"><path class="p" d="M22 22h112v52H22z"/><path class="y" d="M22 22h6v52h-6z"/><text class="t" x="36" y="40">ПОДАЧА 07:00</text><text class="t" x="36" y="54">СМЕНА 14</text><text class="t" x="36" y="68">ПЛОЩАДКА 2</text></g></svg><figcaption>Кадр 09 / 13</figcaption></figure>
+            <div class="st-txt"><p>Подбираю и организую аренду автомобилей и других транспортных средств для съёмок. Взаимодействую с профильными компаниями и владельцами, согласовываю модели, внешний вид, техническое состояние и сроки подачи. Контролирую соответствие транспорта сценарию, эпохе и художественному решению проекта.</p><ul class="st-tags"><li>Модели и эпоха</li><li>Техническое состояние</li><li>Время подачи</li></ul></div>
+          </div>
+        </div>
+      </li>
+      <li class="st" data-part="prod">
+        <h3 class="st-h"><button class="st-btn" type="button" id="st-b-10" aria-expanded="false" aria-controls="st-p-10"><span class="st-n">10</span><span class="st-tt"><span class="st-title">Внешние подрядчики и производство</span><span class="st-sub">Заводы, мастерские, частные исполнители</span></span><span class="st-th" aria-hidden="true"></span><span class="st-ico" aria-hidden="true"></span></button></h3>
+        <div class="st-p" id="st-p-10" role="region" aria-labelledby="st-b-10">
+          <div class="st-in">
+            <figure class="st-fig"><svg viewBox="0 0 320 200" role="img" aria-label="Техническое задание с чертежом, образцы материалов и готовое изделие"><g class="l1"><path class="p" d="M20 34h110v140H20z"/><text class="t" x="30" y="52">ТЗ</text><path class="dr" pathLength="1" d="M52 64h44v14c0 16-10 26-22 26s-22-10-22-26zM52 70h-8a8 8 0 0 0 0 16h10M96 70h8a8 8 0 0 1 0 16h-10M74 104v18M60 122h28v10H60z"/><path class="dr" pathLength="1" d="M48 148h52M48 144v8M100 144v8"/><text class="t" x="74" y="164" text-anchor="middle">80</text></g><g class="l2"><path class="hatch" d="M142 70h14v14h-14z"/><path class="p" d="M162 70h14v14h-14z"/><circle cx="169" cy="77" r="2" class="k"/><path class="k" d="M182 70h14v14h-14z"/><path class="dr" pathLength="1" d="M140 104h60M194 98l8 6-8 6"/></g><g class="l3"><g transform="translate(176 0)"><path class="y" d="M52 64h44v14c0 16-10 26-22 26s-22-10-22-26z"/><path class="dr" pathLength="1" d="M52 70h-8a8 8 0 0 0 0 16h10M96 70h8a8 8 0 0 1 0 16h-10M74 104v18"/><path class="k" d="M60 122h28v10H60z"/></g><path class="dr" pathLength="1" d="M206 142h88"/><path class="dr" pathLength="1" d="M286 48l4 8 8 2-8 3-3 8-3-8-8-2 8-3z"/></g></svg><figcaption>Кадр 10 / 13</figcaption></figure>
+            <div class="st-txt"><p>Организую взаимодействие с заводами, производствами, мастерскими, специализированными предприятиями и частными исполнителями. Формирую технические задания, согласовываю материалы, стоимость и сроки. Нахожу решения для нестандартных задач, когда обычных складов и мастерских недостаточно.</p><ul class="st-tags"><li>Технические задания</li><li>Материалы</li><li>Нестандартные задачи</li></ul></div>
+          </div>
+        </div>
+      </li>
+      <li class="st" data-part="prod">
+        <h3 class="st-h"><button class="st-btn" type="button" id="st-b-11" aria-expanded="false" aria-controls="st-p-11"><span class="st-n">11</span><span class="st-tt"><span class="st-title">Смета, бюджет и отчётность</span><span class="st-sub">Расчёты, согласование, контроль</span></span><span class="st-th" aria-hidden="true"></span><span class="st-ico" aria-hidden="true"></span></button></h3>
+        <div class="st-p" id="st-p-11" role="region" aria-labelledby="st-b-11">
+          <div class="st-in">
+            <figure class="st-fig"><svg viewBox="0 0 320 200" role="img" aria-label="Реквизитная смета со строками расходов, итогом и сравнением плана и факта"><g class="l1"><path class="p" d="M28 22h204v162H28z"/><path class="dr" pathLength="1" d="M28 46h204M118 22v162M168 22v162M28 64h204M28 82h204M28 100h204M28 118h204M28 136h204M28 154h204"/></g><g class="l2"><text class="t" x="36" y="38">статья</text><text class="t" x="126" y="38">кол.</text><text class="t" x="176" y="38">сумма</text><text class="t" x="36" y="78">аренда</text><text class="t" x="36" y="96">изготовление</text><text class="t" x="36" y="114">закупка</text><text class="t" x="36" y="132">доставка</text><text class="t" x="36" y="150">транспорт</text><path class="dr" pathLength="1" d="M132 72l4 4 8-8M132 90l4 4 8-8M132 108l4 4 8-8M132 126l4 4 8-8M132 144l4 4 8-8"/><path class="k" d="M178 72h44v6h-44z"/><path class="k" d="M178 90h30v6h-30z"/><path class="k" d="M178 108h22v6h-22z"/><path class="k" d="M178 126h14v6h-14z"/><path class="k" d="M178 144h26v6h-26z"/></g><g class="l3"><path class="y hl" d="M28 154h204v18H28z"/><text class="t" x="36" y="167">итого</text><path class="k" d="M178 160h48v6h-48z"/><path class="p" d="M246 120h14v54h-14z"/><path class="y" d="M282 134h14v40h-14z"/><text class="t" x="253" y="188" text-anchor="middle">план</text><text class="t" x="289" y="188" text-anchor="middle">факт</text><g transform="rotate(-8 276 60)"><path class="dash" d="M240 46h74v26h-74z"/><text class="t" x="277" y="63" text-anchor="middle">СОГЛАСОВАНО</text></g></g></svg><figcaption>Кадр 11 / 13</figcaption></figure>
+            <div class="st-txt"><p>Составляю сметы по реквизиту, рассчитываю затраты на аренду, закупки, изготовление, доставку и другие производственные задачи. Веду необходимую отчётность и согласовываю расходы с продюсерами. Контролирую бюджет, не теряя из виду художественные требования и сроки проекта.</p><ul class="st-tags"><li>Аренда и закупки</li><li>Изготовление и доставка</li><li>Отчётность</li></ul></div>
+          </div>
+        </div>
+      </li>
+      <li class="st" data-part="set">
+        <h3 class="st-h"><button class="st-btn" type="button" id="st-b-12" aria-expanded="false" aria-controls="st-p-12"><span class="st-n">12</span><span class="st-tt"><span class="st-title">Подготовка смены и работа на площадке</span><span class="st-sub">Готовность к каждому дублю</span></span><span class="st-th" aria-hidden="true"></span><span class="st-ico" aria-hidden="true"></span></button></h3>
+        <div class="st-p" id="st-p-12" role="region" aria-labelledby="st-b-12">
+          <div class="st-in">
+            <figure class="st-fig"><svg viewBox="0 0 320 200" role="img" aria-label="Реквизитный стол с подписанными предметами, хлопушка и лист КПП"><g class="l1"><g transform="rotate(-4 64 84)"><path class="p" d="M18 24h92v120H18z"/><text class="t" x="28" y="42">КПП</text><text class="t" x="28" y="56">СМЕНА 14</text><path d="M28 70h8v8h-8zM28 88h8v8h-8zM28 106h8v8h-8z"/><path class="dr" pathLength="1" d="M30 74l2 2 4-5M30 92l2 2 4-5"/><path class="dr" pathLength="1" d="M42 74h50M42 92h44M42 110h48"/></g></g><g class="l2"><path class="p" d="M60 146h244v8H60z"/><path class="dr" pathLength="1" d="M76 154v36M288 154v36"/><path class="p" d="M124 118h40v28h-40z"/><path class="p" d="M184 146v-30c0-6 4-8 4-14v-8h8v8c0 6 4 8 4 14v30z"/><path class="k" d="M210 138h34v8h-34z"/><path class="k" d="M256 106h46v40h-46z"/><path class="p" d="M256 104l46-8 2 8-46 8z"/><path class="k" d="M266 101l6-1-1 8-6 1zM282 98l6-1-1 8-6 1z"/><text class="t tw" x="262" y="128">14 / 3</text></g><g class="l3"><path class="y" d="M130 102h16v12h-16zM184 74h16v12h-16zM216 122h16v12h-16z"/><text class="t" x="138" y="111" text-anchor="middle">1</text><text class="t" x="192" y="83" text-anchor="middle">2</text><text class="t" x="224" y="131" text-anchor="middle">3</text><path class="dr" pathLength="1" d="M138 114v4M192 86v8M224 134v4"/></g></svg><figcaption>Кадр 12 / 13</figcaption></figure>
+            <div class="st-txt"><p>Готовлю реквизит к съёмочным сменам в соответствии с календарно-постановочным планом. Заранее проверяю наличие и готовность предметов, координирую работу реквизиторской группы, взаимодействую с режиссёром, художником-постановщиком и другими подразделениями. Контролирую соответствие реквизита утверждённым решениям и непрерывность между дублями.</p><ul class="st-tags"><li>Реквизиторская группа</li><li>Ракорд между дублями</li><li>Связь с цехами</li></ul></div>
+          </div>
+        </div>
+      </li>
+      <li class="st" data-part="set">
+        <h3 class="st-h"><button class="st-btn" type="button" id="st-b-13" aria-expanded="false" aria-controls="st-p-13"><span class="st-n">13</span><span class="st-tt"><span class="st-title">Сохранность и сдача проекта</span><span class="st-sub">Ремонт, дубли, возврат аренды</span></span><span class="st-th" aria-hidden="true"></span><span class="st-ico" aria-hidden="true"></span></button></h3>
+        <div class="st-p" id="st-p-13" role="region" aria-labelledby="st-b-13">
+          <div class="st-in">
+            <figure class="st-fig"><svg viewBox="0 0 320 200" role="img" aria-label="Упакованный и промаркированный ящик и лист возврата с отметками"><g class="l1"><path class="p" d="M40 92h120v88H40zM40 92l30-24h120l-30 24zM160 92l30-24v88l-30 24z"/></g><g class="l2"><path class="p" d="M54 128h60v30H54z"/><path class="dr" pathLength="1" d="M60 138h34M60 148h24"/><text class="t" x="100" y="152" text-anchor="middle">№ 13</text><path class="p" d="M208 26h92v132h-92z"/><text class="t" x="218" y="44">ВОЗВРАТ</text><path d="M218 58h10v10h-10zM218 80h10v10h-10zM218 102h10v10h-10zM218 124h10v10h-10z"/><path class="dr" pathLength="1" d="M236 63h52M236 85h44M236 107h48M236 129h40"/></g><g class="l3"><path class="y" d="M95 92l30-24h14l-30 24zM95 92h14v30H95z"/><path class="dr" pathLength="1" d="M220 63l3 3 5-6M220 85l3 3 5-6M220 107l3 3 5-6M220 129l3 3 5-6"/><g transform="rotate(-6 254 178)"><path class="y" d="M214 166h80v24h-80z"/><text class="t" x="254" y="182" text-anchor="middle">СДАНО</text></g></g></svg><figcaption>Кадр 13 / 13</figcaption></figure>
+            <div class="st-txt"><p>Контролирую состояние реквизита на протяжении всего проекта, организую ремонт, замену и изготовление дублей. Обеспечиваю бережное обращение с арендованными и собственными предметами. После съёмок организую возврат аренды и сдачу реквизита на склад продакшна. С исходящим реквизитом — продуктами и напитками — учитываю расход, подготовку и требования гигиены.</p><ul class="st-tags"><li>Бережное хранение</li><li>Возврат аренды</li><li>Исходящий реквизит</li></ul></div>
+          </div>
+        </div>
+      </li>
+    </ol>
   </div>
 </section>
 </main>
@@ -654,6 +861,7 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
     host.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); play(); } });
   })();
 </script>
-<script src="fx.js?v=20261009e" defer></script>
+<script src="fx.js?v=20261010a" defer></script>
+<script src="work.js?v=20261010a" defer></script>
 </body>
 </html>

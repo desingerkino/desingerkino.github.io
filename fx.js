@@ -1,6 +1,6 @@
 /* Анимации сайта на GSAP: появление шапки, заголовки через SplitText, появление блоков при прокрутке
    через ScrollTrigger, плавное обновление карточки проекта.
-   Постеры в шапке, киноплёнка, долли и «апельсиновый» эффект не затрагиваются.
+   Постеры в шапке, киноплёнка и «апельсиновый» эффект не затрагиваются.
    Если GSAP не загрузился или включено «уменьшить движение», сайт показывается как раньше
    (на html ставится класс fx-off, и работают прежние CSS-анимации). */
 (function () {
@@ -97,13 +97,23 @@
       revealOnScroll('.p-head .badge', { y: 14, duration: .7 });
       revealLines($('.p-head h2'), { trigger: true });
 
+      // Блок «Что я делаю на площадке»: заголовок, вступление, кадры плёнки по порядку, затем этапы
       revealLines($('.work h2'), { trigger: true });
-      gsap.set('.work .col', { y: 36, opacity: 0 });
-      ScrollTrigger.batch('.work .col', {
-        start: 'top 90%',
+      revealOnScroll('.w-lead', { y: 16, duration: .8 });
+      var reelFrames = $$('.w-reel li');
+      if (reelFrames.length) {
+        gsap.from(reelFrames, {
+          opacity: 0, y: 8, duration: .5, ease: EASE_OUT, stagger: .035, clearProps: 'transform,opacity',
+          scrollTrigger: { trigger: '.w-reel', start: 'top 92%', once: true }
+        });
+      }
+      revealOnScroll('.w-parts > div', { y: 14, duration: .7 });
+      gsap.set('.st', { y: 22, opacity: 0 });
+      ScrollTrigger.batch('.st', {
+        start: 'top 94%',
         once: true,
         onEnter: function (els) {
-          gsap.to(els, { y: 0, opacity: 1, duration: .9, ease: EASE_OUT, stagger: .12, overwrite: true, clearProps: 'transform' });
+          gsap.to(els, { y: 0, opacity: 1, duration: .8, ease: EASE_OUT, stagger: .06, overwrite: true, clearProps: 'transform,opacity' });
         }
       });
 
