@@ -71,7 +71,7 @@
   window.typo = typo;
 
   // Статичные тексты страницы
-  var sel = '.lead, .w-lead, .st-txt p, .st-sub, .st-tags li, .w-parts dd, .p-head h2, .work h2, footer h2';
+  var sel = '.lead, .w-lead, .st-txt p, .st-sub, .st-short, .st-tags li, .p-head h2, .work h2, footer h2';
   var justified = '.lead, .w-lead, .st-txt p';
   [].forEach.call(document.querySelectorAll(sel), function (el) {
     var doHyph = el.matches(justified);
