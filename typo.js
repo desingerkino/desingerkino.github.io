@@ -16,6 +16,7 @@
     s = s.replace(/[ \t]+(—|–)/g, NB + '$1');                  // тире остаётся в конце строки, а не в начале
     s = s.replace(/(\d)[ \t]+(?=[А-Яа-яЁёA-Za-z%])/g, '$1' + NB); // «1910 год», «30 дней»
     s = s.replace(/(№|§)[ \t]+/g, '$1' + NB);
+    s = s.replace(/([0-9A-Za-zА-Яа-яЁё])-(?=[0-9A-Za-zА-Яа-яЁё])/g, '$1\u2011');
     return s;
   }
 
@@ -64,7 +65,7 @@
     return s.split('\n').map(function (p) {
       if (!p.trim()) return p;
       p = widow(line(p));
-      return withHyph ? hyph(p) : p;
+      return p;
     }).join('\n');
   }
   window.typo = typo;
@@ -80,7 +81,6 @@
       var v = line(t.nodeValue);
       var isEnd = k === nodes.length - 1 || (t.nextSibling && t.nextSibling.nodeName === 'BR');
       if (isEnd) v = widow(v);
-      if (doHyph) v = isEnd ? hyph(v) : v.replace(/[А-Яа-яЁё]{5,}/g, hyphWord);
       if (v !== t.nodeValue) t.nodeValue = v;
     });
   });

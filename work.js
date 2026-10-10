@@ -42,10 +42,7 @@
     panel.hidden = false;
     if (!animOK()) { panel.style.height = ''; inner.style.opacity = ''; refreshST(); return; }
 
-    var fig = q(li, '.st-fig');
-    var layers = qa(li, '.st-fig .l1, .st-fig .l2, .st-fig .l3');
-    var lines = qa(li, '.st-fig .dr');
-    var text = qa(li, '.st-fig figcaption, .st-txt p, .st-tags li');
+    var text = qa(li, '.st-txt p, .st-tags li');
     gsap.set(inner, { clearProps: 'opacity' });
 
     var tl = gsap.timeline({
@@ -53,12 +50,7 @@
       onComplete: function () { gsap.set(panel, { clearProps: 'height' }); tls[i] = null; refreshST(); }
     });
     tl.fromTo(panel, { height: startH }, { height: 'auto', duration: .62, ease: 'power3.inOut' }, 0)
-      .fromTo(fig, { opacity: 0, y: 16, scale: .975 }, { opacity: 1, y: 0, scale: 1, duration: .75, ease: 'expo.out', clearProps: 'transform,opacity' }, .1)
-      .fromTo(layers, { opacity: 0, y: function (k) { return 8 + k * 9; } },
-        { opacity: 1, y: 0, duration: .85, ease: 'expo.out', stagger: .09, clearProps: 'transform,opacity' }, .18)
-      .fromTo(lines, { strokeDasharray: 1, strokeDashoffset: 1 },
-        { strokeDashoffset: 0, duration: 1.05, ease: 'power2.inOut', stagger: { amount: .35 }, clearProps: 'stroke-dasharray,stroke-dashoffset' }, .2)
-      .fromTo(text, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: .55, ease: 'power3.out', stagger: .05, clearProps: 'transform,opacity' }, .3);
+      .fromTo(text, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: .55, ease: 'power3.out', stagger: .05, clearProps: 'transform,opacity' }, .15);
     tls[i] = tl;
   }
 
@@ -112,16 +104,6 @@
 
   items.forEach(function (li, i) {
     var btn = q(li, '.st-btn'), panel = q(li, '.st-p');
-    var big = q(li, '.st-fig svg'), th = q(li, '.st-th');
-    // Миниатюра в строке — копия большой иллюстрации, без подписи для экранных чтецов
-    if (big && th && !th.firstChild) {
-      var c = big.cloneNode(true);
-      c.removeAttribute('role');
-      c.removeAttribute('aria-label');
-      c.setAttribute('aria-hidden', 'true');
-      c.setAttribute('focusable', 'false');
-      th.appendChild(c);
-    }
     panel.hidden = true;
     btn.addEventListener('click', function () { toggle(i); });
     btn.addEventListener('keydown', function (e) {

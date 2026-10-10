@@ -100,13 +100,6 @@
       // Блок «Что я делаю на площадке»: заголовок, вступление, кадры плёнки по порядку, затем этапы
       revealLines($('.work h2'), { trigger: true });
       revealOnScroll('.w-lead', { y: 16, duration: .8 });
-      var reelFrames = $$('.w-reel li');
-      if (reelFrames.length) {
-        gsap.from(reelFrames, {
-          opacity: 0, y: 8, duration: .5, ease: EASE_OUT, stagger: .035, clearProps: 'transform,opacity',
-          scrollTrigger: { trigger: '.w-reel', start: 'top 92%', once: true }
-        });
-      }
       revealOnScroll('.w-parts > div', { y: 14, duration: .7 });
       gsap.set('.st', { y: 22, opacity: 0 });
       ScrollTrigger.batch('.st', {
