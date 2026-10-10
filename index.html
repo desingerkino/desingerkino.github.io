@@ -8,7 +8,7 @@
 <script>document.documentElement.className+=" js";setTimeout(function(){if(!window.__fxReady)document.documentElement.classList.add("fx-off")},3000)</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Geist:wght@400;500&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Bricolage+Grotesque:wght@600;800&family=Geist:wght@400;500&family=Geist+Mono:wght@400;500&display=swap">
 <style>
 :root{
   --ground:#e8ecef;
@@ -163,102 +163,63 @@ body.modal-open{overflow:hidden}
 
 h2{margin:0;font-family:var(--display);font-weight:800;line-height:1.05;letter-spacing:-.02em;text-wrap:balance}
 
-/* Блок «Что я делаю на площадке»: шапка «Процесс / 01–13», три составляющие профессии
-   и 13 карточек этапов с номером, фото и раскрытием по «+». Номера и точки связаны линией. */
-.work{--wred:#c42f27;--nc:96px;--pw:280px;--ic:64px;--gap:16px;--wline:rgba(18,24,31,.4)}
+/* Блок «Что я делаю на площадке»: маршрут из 13 этапов змейкой. Карандашные рисунки (прозрачный фон),
+   номера с жёлтым маркером, стрелки рисует route.js поверх списка (SVG, от руки) */
+.work{--graphite:#2b3137;--rt-gap-y:clamp(56px,6vw,84px)}
 .work .wrap{padding-block:clamp(64px,8vw,112px)}
-.w-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 clamp(32px,5vw,72px);align-items:end;margin-bottom:clamp(40px,5vw,64px)}
-.w-eyebrow{grid-column:1/-1;display:flex;align-items:center;gap:14px;margin:0 0 clamp(24px,3vw,36px);font:500 13px/1 var(--mono);letter-spacing:.24em;text-transform:uppercase}
-.w-eyebrow .w-sl{opacity:.55;letter-spacing:0}
-.w-eyebrow i{flex:1;height:1px;background:var(--ink);margin-left:12px}
-.work h2{font-size:clamp(44px,6.6vw,96px);line-height:.94;letter-spacing:-.045em}
-.w-lead{margin:0;max-width:30ch;color:var(--muted);font-size:clamp(18px,1.6vw,22px);line-height:1.4;padding-bottom:6px}
-.w-parts{grid-column:1/-1;list-style:none;margin:clamp(28px,4vw,48px) 0 0;padding:20px 0 0;border-top:1px solid var(--ink);display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
-.w-parts li{display:flex;flex-direction:column;gap:6px;padding:0 20px;border-left:1px solid var(--wline)}
-.w-parts li:first-child{padding-left:0;border-left:0}
-.wp-n{font:500 13px/1 var(--mono);color:var(--wred);letter-spacing:.04em}
-.wp-name{font-weight:700;font-size:15px;letter-spacing:.04em;text-transform:uppercase}
-.wp-desc{color:var(--muted);font-size:14px}
+.rt-head{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:32px;align-items:end;margin-bottom:clamp(40px,6vw,80px)}
+.rt-badge{grid-column:1/-1;justify-self:start;margin-bottom:18px}
+.work h2{font-size:clamp(40px,6.4vw,92px);line-height:.94;letter-spacing:-.045em}
+.w-lead{grid-column:1;margin:clamp(18px,2vw,26px) 0 0;max-width:40ch;color:var(--muted);font-size:clamp(17px,1.5vw,20px);line-height:1.5}
+.rt-note{grid-column:2;grid-row:2/4;align-self:start;position:relative;margin:0;padding:6px 64px 0 0;font:600 clamp(24px,2.4vw,32px)/1.05 'Caveat',cursive;color:var(--graphite);transform:rotate(-7deg);white-space:nowrap}
+.rt-note em{font-style:normal;background:linear-gradient(transparent 62%,rgba(242,194,48,.85) 62%,rgba(242,194,48,.85) 88%,transparent 88%)}
+.rt-note svg{position:absolute;right:0;bottom:-58px;width:76px;height:58px;overflow:visible}
+.rt-note-a{fill:none;stroke:var(--graphite);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 
-.st-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:var(--gap);overflow-anchor:none}
-.st{position:relative;border:1px solid var(--wline);background:rgba(255,255,255,.32);transition:border-color .35s,background .35s}
-/* вертикальный разделитель колонки номера и линия, связывающая точки этапов */
-.st::after{content:"";position:absolute;left:var(--nc);top:0;bottom:0;width:1px;background:var(--wline);pointer-events:none}
-.st::before{content:"";position:absolute;left:calc(var(--nc)/2);top:64px;bottom:calc(-1 * var(--gap) - 16px);width:1px;background:var(--ink);pointer-events:none;z-index:1}
-.st:last-child::before{display:none}
-.st.is-open{background:#fff;border-color:var(--ink)}
-.st-h{margin:0;font:inherit}
-.st-btn{box-sizing:border-box;width:100%;margin:0;padding:22px 0;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer;display:grid;grid-template-columns:var(--nc) minmax(0,1fr) var(--pw) var(--ic);align-items:start;-webkit-tap-highlight-color:transparent}
-.st:not(.has-ph) .st-btn{grid-template-columns:var(--nc) minmax(0,1fr) var(--ic)}
-.st-btn:focus-visible{outline:2px solid var(--ink);outline-offset:4px}
-.st-n{display:flex;flex-direction:column;align-items:center;gap:22px;padding-top:4px;font:500 16px/1 var(--mono);color:var(--wred);letter-spacing:.04em}
-.st-n i{position:relative;z-index:2;width:8px;height:8px;border-radius:50%;background:var(--ink);box-shadow:0 0 0 4px #eff2f4;transition:background .35s,transform .35s}
-.st.is-open .st-n i,.st.is-part .st-n i{background:var(--wred);transform:scale(1.25)}
-.st.is-open .st-n i{box-shadow:0 0 0 4px #fff}
-.st-body{display:flex;flex-direction:column;min-width:0;padding:0 clamp(16px,3vw,40px)}
-.st-title{font-family:var(--display);font-weight:800;font-size:clamp(20px,2.3vw,30px);line-height:1.05;letter-spacing:-.025em;text-wrap:balance}
-.st-sub{margin-top:8px;color:var(--muted);font-size:clamp(14px,1.2vw,16px);line-height:1.35}
-.st-short{display:block;padding-top:18px;max-width:46ch;color:var(--muted);font-size:clamp(14px,1.15vw,16px);line-height:1.55}
-.st.is-open .st-short{display:none}
-.st-ph{display:block;aspect-ratio:257/210;overflow:hidden;background:#1a1f25}
-.st-ph img{display:block;width:100%;height:100%;object-fit:cover;filter:grayscale(.25) contrast(1.04);transition:transform .8s cubic-bezier(.2,.7,.2,1),filter .5s}
-@media (hover:hover){
-  .st:hover{border-color:var(--ink)}
-  .st:hover .st-ph img{transform:scale(1.04);filter:grayscale(0) contrast(1.04)}
+.rt-wrap{position:relative}
+.rt-list{position:relative;z-index:1;list-style:none;margin:0 auto;padding:0;max-width:1060px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:clamp(96px,11vw,170px);row-gap:var(--rt-gap-y)}
+.rt-arrows{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:0}
+.rt{display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-areas:"n img" ". t";column-gap:18px;row-gap:12px;align-items:start;min-width:0}
+.rt-n{grid-area:n;position:relative;justify-self:start;padding-top:2px;font:800 clamp(34px,3.4vw,46px)/1 var(--display);letter-spacing:-.03em}
+.rt-u{position:absolute;left:-2px;right:-3px;bottom:-9px;height:7px;background:var(--tag);border-radius:4px 2px 5px 3px;transform:rotate(-1.5deg);transform-origin:0 50%;transition:transform .45s cubic-bezier(.2,.7,.2,1)}
+.rt-img{grid-area:img;display:block;width:auto;height:clamp(118px,11vw,150px);max-width:100%;object-fit:contain;object-position:left bottom;transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.rt-t{grid-area:t;max-width:24ch;font-size:clamp(16px,1.35vw,19px);line-height:1.3;font-weight:500;letter-spacing:-.005em;text-wrap:balance}
+.rt-final{grid-column:1/-1;grid-template-columns:auto minmax(0,auto) minmax(0,1fr);grid-template-areas:"n img t";align-items:center;column-gap:clamp(18px,3vw,40px)}
+.rt-final .rt-img{height:clamp(150px,15vw,200px)}
+.rt-final .rt-t{max-width:16ch;font-size:clamp(20px,2vw,28px);font-weight:600;line-height:1.15}
+.rt-final .rt-t::after{content:"";display:block;width:72%;height:7px;margin-top:10px;background:var(--tag);border-radius:4px 2px 5px 3px;transform:rotate(-1deg)}
+@media (hover:hover) and (pointer:fine){
+  .rt:hover .rt-img{transform:translateY(-4px) rotate(-.8deg)}
+  .rt:hover .rt-u{transform:rotate(-1.5deg) scaleX(1.18)}
 }
-.st-ico{justify-self:center;position:relative;width:30px;height:30px;margin-top:2px}
-.st-ico::before,.st-ico::after{content:"";position:absolute;left:3px;right:3px;top:14px;height:1.5px;background:currentColor;transition:transform .45s cubic-bezier(.2,.7,.2,1)}
-.st-ico::after{transform:rotate(90deg)}
-.st.is-open .st-ico::after{transform:rotate(0)}
+.rt-arrows .ar-y{fill:none;stroke:var(--tag);stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
+.rt-arrows .ar-g{fill:none;stroke:var(--graphite);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;opacity:.78}
+.rt-arrows .ar-g2{fill:none;stroke:var(--graphite);stroke-width:.8;stroke-linecap:round;opacity:.28}
 
-.st-p{overflow:hidden}
-.js .st-list:not(.st-ready) .st-p{display:none}
-.st-in{padding:0 var(--ic) 26px calc(var(--nc) + clamp(16px,3vw,40px))}
-.st-txt p{margin:0 0 18px;max-width:62ch;font-size:clamp(15px,1.2vw,17px);line-height:1.6}
-.st-tags{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
-.st-tags li{padding:5px 12px;border:1px solid var(--wline);font-size:13px;line-height:1.4}
-
-@media (max-width:899px){
-  .work{--nc:64px;--pw:200px;--ic:48px}
-  .w-head{grid-template-columns:minmax(0,1fr)}
-  .w-lead{margin-top:20px;max-width:none}
+/* Телефон: одна колонка зигзагом — текст и рисунок меняются сторонами, стрелки ведут от этапа к этапу */
+@media (max-width:719px){
+  .rt-head{grid-template-columns:minmax(0,1fr)}
+  .rt-note{grid-column:1;grid-row:auto;justify-self:end;margin-top:22px;padding-right:46px;font-size:23px}
+  .rt-note svg{width:50px;height:44px;bottom:-40px}
+  .work h2{font-size:clamp(36px,10.5vw,46px)}
+  .w-lead{font-size:16.5px;max-width:none}
+  .rt-list{grid-template-columns:minmax(0,1fr);row-gap:58px}
+  .rt{grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);grid-template-areas:"n img" "t img";column-gap:20px;row-gap:10px;align-items:center}
+  .rt:nth-child(even){grid-template-columns:minmax(0,1.08fr) minmax(0,1fr);grid-template-areas:"img n" "img t"}
+  .rt-n{align-self:end;font-size:34px}
+  .rt-u{height:6px;bottom:-7px}
+  .rt-t{align-self:start;max-width:none;font-size:15.5px;line-height:1.28}
+  .rt-img{height:auto;width:100%;max-height:112px;object-position:center}
+  .rt-final{grid-column:auto;grid-template-columns:auto minmax(0,1fr);grid-template-areas:"n t" "img img";column-gap:16px;row-gap:18px}
+  .rt-final .rt-img{max-height:none;width:100%;max-width:420px}
+  .rt-final .rt-t{font-size:19px;max-width:none}
 }
-@media (max-width:640px){
-  .work{--nc:38px;--pw:104px;--ic:32px;--gap:12px}
-  .work .wrap{padding-inline:16px}
-  .w-eyebrow{font-size:11px;gap:10px;letter-spacing:.2em}
-  .work h2{font-size:clamp(38px,11vw,46px)}
-  .w-lead{font-size:17px}
-  .w-parts{padding-top:0;grid-template-columns:minmax(0,1fr)}
-  .w-parts li{display:grid;grid-template-columns:28px 142px minmax(0,1fr);align-items:baseline;gap:0;padding:12px 0;border-left:0;border-bottom:1px solid var(--wline)}
-  .w-parts li:first-child{padding-left:0}
-  .wp-n{font-size:11px}
-  .wp-name{font-size:13px;font-weight:600;letter-spacing:0;text-transform:none}
-  .wp-desc{font-size:13px;line-height:1.35}
-  .st::before{top:46px;bottom:calc(-1 * var(--gap) - 11px)}
-  .st-btn{padding:16px 0}
-  .st-n{font-size:12px;gap:18px;padding-top:3px}
-  .st-n i{width:6px;height:6px}
-  .st-btn{grid-template-columns:var(--nc) minmax(0,1fr) var(--pw) var(--ic);grid-template-areas:"n t ph ic" "n s ph ic" "n x x x";grid-template-rows:auto 1fr auto}
-  .st:not(.has-ph) .st-btn{grid-template-columns:var(--nc) minmax(0,1fr) var(--ic);grid-template-areas:"n t ic" "n s ic" "n x x"}
-  .st-body{display:contents}
-  .st-n{grid-area:n}
-  .st-title{grid-area:t;padding:0 10px 0 12px}
-  .st-sub{grid-area:s;padding:0 10px 0 12px}
-  .st-short{grid-area:x;padding:12px 14px 0 12px}
-  .st-ph{grid-area:ph;align-self:start}
-  .st-ico{grid-area:ic}
-  .st-title{font-size:17px;line-height:1.1}
-  .st-sub{margin-top:6px;font-size:12.5px}
-  .st-short{padding-top:10px;font-size:12.5px;line-height:1.45}
-  .st-ico{width:24px;height:24px;margin-top:0}
-  .st-ico::before,.st-ico::after{top:11px;left:3px;right:3px}
-  .st-in{padding:2px 14px 20px calc(var(--nc) + 12px)}
-  .st-txt p{font-size:14.5px}
-  .st-tags li{font-size:12px;padding:4px 9px}
+@media (max-width:359px){
+  .rt-t{font-size:14.5px}
+  .rt-n{font-size:30px}
 }
 @media (prefers-reduced-motion:reduce){
-  .st,.st-n i,.st-ph img,.st-ico::before,.st-ico::after{transition:none}
+  .rt-img,.rt-u{transition:none}
 }
 
 footer{background:var(--tag);padding:64px 0}
@@ -364,96 +325,30 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
 
 <section id="work" class="work" aria-labelledby="work-title">
   <div class="wrap">
-    <div class="w-head">
-      <p class="w-eyebrow"><span>Процесс</span><span class="w-sl">/</span><span>01–13</span><i aria-hidden="true"></i></p>
+    <div class="rt-head">
+      <span class="badge rt-badge">Как я работаю</span>
       <h2 id="work-title">Что я делаю<br>на площадке</h2>
-      <p class="w-lead">Реквизит проходит путь от первой страницы сценария до возврата на склад после последней смены.</p>
-      <ol class="w-parts">
-        <li data-part="art"><span class="wp-n">01</span><span class="wp-name">Художественная</span><span class="wp-desc">сценарий · эпоха · характер</span></li>
-        <li data-part="prod"><span class="wp-n">02</span><span class="wp-name">Производственная</span><span class="wp-desc">поиск · изготовление · бюджет</span></li>
-        <li data-part="set"><span class="wp-n">03</span><span class="wp-name">Съёмочная</span><span class="wp-desc">смена · сохранность · сдача</span></li>
-      </ol>
+      <p class="w-lead">Реквизит проходит путь от первой страницы сценария до возврата на склад после последней смены. Я веду его на каждом этапе.</p>
+      <p class="rt-note" aria-hidden="true"><span>От сценария<br>до <em>сдачи проекта</em></span><svg viewBox="0 0 120 90" focusable="false"><path class="rt-note-a" d="M8 6c34 4 70 22 92 62"/><path class="rt-note-a" d="M88 58l12 12 4-17"/></svg></p>
     </div>
-    <ol class="st-list">
-      <li class="st has-ph" data-part="art">
-        <h3 class="st-h"><button class="st-btn" type="button" id="st-b-01" aria-expanded="false" aria-controls="st-p-01"><span class="st-n"><span>01</span><i aria-hidden="true"></i></span><span class="st-body"><span class="st-title">Разбор сценария</span><span class="st-sub">Сцены, КПП и задачи группы</span><span class="st-short">Анализирую сценарий и КПП, выделяю сцены с реквизитом, определяю задачи, сроки и объём подготовки.</span></span><span class="st-ph"><img src="st-01-scenariy.webp" alt="Сценарий с пометками" width="257" height="210" loading="lazy" decoding="async"></span><span class="st-ico" aria-hidden="true"></span></button></h3>
-        <div class="st-p" id="st-p-01" role="region" aria-labelledby="st-b-01">
-          <div class="st-in"><div class="st-txt"><p>Изучаю сценарий, календарно-постановочный план и структуру съёмочного процесса. Определяю необходимый реквизит по сценам, обсуждаю задачи с режиссёром-постановщиком, художником-постановщиком и творческой группой. Согласовываю художественные решения, сроки и объём подготовки.</p><ul class="st-tags"><li>Реквизит по сценам</li><li>Календарно-постановочный план</li><li>Сроки и объём</li></ul></div></div>
-        </div>
-      </li>
-      <li class="st has-ph" data-part="art">
-        <h3 class="st-h"><button class="st-btn" type="button" id="st-b-02" aria-expanded="false" aria-controls="st-p-02"><span class="st-n"><span>02</span><i aria-hidden="true"></i></span><span class="st-body"><span class="st-title">Идея и утверждение</span><span class="st-sub">Референсы, варианты, согласование</span><span class="st-short">Собираю референсы и варианты решений, согласовываю их с режиссёром и творческой группой.</span></span><span class="st-ph"><img src="st-02-referensy.webp" alt="Доска с референсами" width="257" height="210" loading="lazy" decoding="async"></span><span class="st-ico" aria-hidden="true"></span></button></h3>
-        <div class="st-p" id="st-p-02" role="region" aria-labelledby="st-b-02">
-          <div class="st-in"><div class="st-txt"><p>Предлагаю предметы и визуальные решения, подбираю референсы, ищу варианты и объясняю выбор. Согласовываю реквизит с творческой группой и добиваюсь соответствия сценарию, характеру сцены и общему художественному решению проекта.</p><ul class="st-tags"><li>Референсы</li><li>Варианты на выбор</li><li>Утверждение</li></ul></div></div>
-        </div>
-      </li>
-      <li class="st" data-part="prod">
-        <h3 class="st-h"><button class="st-btn" type="button" id="st-b-03" aria-expanded="false" aria-controls="st-p-03"><span class="st-n"><span>03</span><i aria-hidden="true"></i></span><span class="st-body"><span class="st-title">Поиск и аренда</span><span class="st-sub">Склады, коллекционеры, галереи</span><span class="st-short">Нахожу редкие вещи на киноскладах, у коллекционеров и в галереях, договариваюсь об условиях аренды.</span></span><span class="st-ico" aria-hidden="true"></span></button></h3>
-        <div class="st-p" id="st-p-03" role="region" aria-labelledby="st-b-03">
-          <div class="st-in"><div class="st-txt"><p>Работаю с киноскладами, арендными компаниями, частными коллекционерами, галереями и другими владельцами предметов. Нахожу редкие и нестандартные вещи, договариваюсь об аренде и специальных условиях, учитывая стоимость, сроки и состояние реквизита.</p><ul class="st-tags"><li>Киносклады</li><li>Частные коллекции</li><li>Условия аренды</li></ul></div></div>
-        </div>
-      </li>
-      <li class="st has-ph" data-part="prod">
-        <h3 class="st-h"><button class="st-btn" type="button" id="st-b-04" aria-expanded="false" aria-controls="st-p-04"><span class="st-n"><span>04</span><i aria-hidden="true"></i></span><span class="st-body"><span class="st-title">Изготовление и бутафория</span><span class="st-sub">Мастерские, ТЗ, прототипы</span><span class="st-short">Организую изготовление в бутафорских мастерских и у мастеров, работаю с ТЗ, прототипами и 3D-печатью.</span></span><span class="st-ph"><img src="st-04-izgotovlenie.webp" alt="Металлический кубок в мастерской" width="257" height="210" loading="lazy" decoding="async"></span><span class="st-ico" aria-hidden="true"></span></button></h3>
-        <div class="st-p" id="st-p-04" role="region" aria-labelledby="st-b-04">
-          <div class="st-in"><div class="st-txt"><p>Организую индивидуальное изготовление реквизита в бутафорских мастерских, у профильных мастеров и на специализированных производствах. Работаю с материалами, техническими заданиями и прототипами. При необходимости использую 3D-печать и другие технологии, чтобы получить предмет, которого нет в готовом виде.</p><ul class="st-tags"><li>Проверенные бутафоры</li><li>Прототипы</li><li>3D-печать</li></ul></div></div>
-        </div>
-      </li>
-      <li class="st" data-part="art">
-        <h3 class="st-h"><button class="st-btn" type="button" id="st-b-05" aria-expanded="false" aria-controls="st-p-05"><span class="st-n"><span>05</span><i aria-hidden="true"></i></span><span class="st-body"><span class="st-title">Личный реквизит героя</span><span class="st-sub">Вещи, которые рассказывают о персонаже</span><span class="st-short">Подбираю личные вещи героя, которые раскрывают его характер, профессию и прошлое.</span></span><span class="st-ico" aria-hidden="true"></span></button></h3>
-        <div class="st-p" id="st-p-05" role="region" aria-labelledby="st-b-05">
-          <div class="st-in"><div class="st-txt"><p>Подбираю личные вещи персонажей, которые раскрывают их характер, привычки, профессию, социальное положение и прошлое. Работаю с предметными деталями, которые помогают актёру существовать в образе, а зрителю — лучше понимать героя через его окружение и действия.</p><ul class="st-tags"><li>Характер</li><li>Профессия и привычки</li><li>Прошлое героя</li></ul></div></div>
-        </div>
-      </li>
-      <li class="st" data-part="set">
-        <h3 class="st-h"><button class="st-btn" type="button" id="st-b-06" aria-expanded="false" aria-controls="st-p-06"><span class="st-n"><span>06</span><i aria-hidden="true"></i></span><span class="st-body"><span class="st-title">Игровой реквизит</span><span class="st-sub">Предметы в действии, дубли, ракорд</span><span class="st-short">Готовлю предметы, с которыми работают актёры: механика, безопасность, дубли и замены.</span></span><span class="st-ico" aria-hidden="true"></span></button></h3>
-        <div class="st-p" id="st-p-06" role="region" aria-labelledby="st-b-06">
-          <div class="st-in"><div class="st-txt"><p>Подготавливаю предметы, с которыми взаимодействуют актёры и которые участвуют в действии сцены. Проверяю их внешний вид, механику, безопасность и соответствие сценарию. Организую дублирование, ремонт и замену предметов, если этого требуют сложность сцены и съёмочный процесс.</p><ul class="st-tags"><li>Механика и безопасность</li><li>Дубли предмета</li><li>Ремонт и замена</li></ul></div></div>
-        </div>
-      </li>
-      <li class="st" data-part="art">
-        <h3 class="st-h"><button class="st-btn" type="button" id="st-b-07" aria-expanded="false" aria-controls="st-p-07"><span class="st-n"><span>07</span><i aria-hidden="true"></i></span><span class="st-body"><span class="st-title">Исторический реквизит</span><span class="st-sub">Эпоха, материалы, достоверность</span><span class="st-short">Изучаю эпоху и проверяю достоверность предметов, а если оригинала нет, заказываю точный аналог.</span></span><span class="st-ico" aria-hidden="true"></span></button></h3>
-        <div class="st-p" id="st-p-07" role="region" aria-labelledby="st-b-07">
-          <div class="st-in"><div class="st-txt"><p>Изучаю эпоху, год действия, предметную культуру, материалы и особенности быта. Подбираю исторически подходящие предметы и проверяю их достоверность. Если нужного оригинала нет на складах, организую изготовление соответствующего аналога.</p><ul class="st-tags"><li>Предметная культура</li><li>Проверка достоверности</li><li>Аналоги</li></ul></div></div>
-        </div>
-      </li>
-      <li class="st" data-part="prod">
-        <h3 class="st-h"><button class="st-btn" type="button" id="st-b-08" aria-expanded="false" aria-controls="st-p-08"><span class="st-n"><span>08</span><i aria-hidden="true"></i></span><span class="st-body"><span class="st-title">Цифровой реквизит</span><span class="st-sub">Телефоны, экраны, полиграфия</span><span class="st-short">Делаю игровые интерфейсы телефонов, переписки и экраны, а также этикетки, документы и упаковку.</span></span><span class="st-ico" aria-hidden="true"></span></button></h3>
-        <div class="st-p" id="st-p-08" role="region" aria-labelledby="st-b-08">
-          <div class="st-in"><div class="st-txt"><p>Самостоятельно создаю игровой цифровой реквизит: интерфейсы телефонов, переписки, звонки, уведомления, приложения, сайты и игровые экраны. Разрабатываю документы, этикетки, упаковку, вывески и полиграфию с учётом сценария, эпохи, визуального стиля и требований проекта.</p><ul class="st-tags"><li>Интерфейсы айфонов</li><li>Переписки и звонки</li><li>Этикетки и упаковка</li></ul></div></div>
-        </div>
-      </li>
-      <li class="st" data-part="prod">
-        <h3 class="st-h"><button class="st-btn" type="button" id="st-b-09" aria-expanded="false" aria-controls="st-p-09"><span class="st-n"><span>09</span><i aria-hidden="true"></i></span><span class="st-body"><span class="st-title">Игровой транспорт</span><span class="st-sub">Подбор, аренда, подача</span><span class="st-short">Подбираю и арендую машины для съёмок, согласовываю модели, состояние и время подачи.</span></span><span class="st-ico" aria-hidden="true"></span></button></h3>
-        <div class="st-p" id="st-p-09" role="region" aria-labelledby="st-b-09">
-          <div class="st-in"><div class="st-txt"><p>Подбираю и организую аренду автомобилей и других транспортных средств для съёмок. Взаимодействую с профильными компаниями и владельцами, согласовываю модели, внешний вид, техническое состояние и сроки подачи. Контролирую соответствие транспорта сценарию, эпохе и художественному решению проекта.</p><ul class="st-tags"><li>Модели и эпоха</li><li>Техническое состояние</li><li>Время подачи</li></ul></div></div>
-        </div>
-      </li>
-      <li class="st" data-part="prod">
-        <h3 class="st-h"><button class="st-btn" type="button" id="st-b-10" aria-expanded="false" aria-controls="st-p-10"><span class="st-n"><span>10</span><i aria-hidden="true"></i></span><span class="st-body"><span class="st-title">Подрядчики и производство</span><span class="st-sub">Заводы, мастерские, исполнители</span><span class="st-short">Работаю с заводами и мастерскими: пишу ТЗ, согласовываю материалы, стоимость и сроки.</span></span><span class="st-ico" aria-hidden="true"></span></button></h3>
-        <div class="st-p" id="st-p-10" role="region" aria-labelledby="st-b-10">
-          <div class="st-in"><div class="st-txt"><p>Организую взаимодействие с заводами, производствами, мастерскими, специализированными предприятиями и частными исполнителями. Формирую технические задания, согласовываю материалы, стоимость и сроки. Нахожу решения для нестандартных задач, когда обычных складов и мастерских недостаточно.</p><ul class="st-tags"><li>Технические задания</li><li>Материалы</li><li>Нестандартные задачи</li></ul></div></div>
-        </div>
-      </li>
-      <li class="st" data-part="prod">
-        <h3 class="st-h"><button class="st-btn" type="button" id="st-b-11" aria-expanded="false" aria-controls="st-p-11"><span class="st-n"><span>11</span><i aria-hidden="true"></i></span><span class="st-body"><span class="st-title">Смета и бюджет</span><span class="st-sub">Расчёты, согласование, отчётность</span><span class="st-short">Составляю сметы, веду отчётность и контролирую бюджет, не теряя художественной задачи.</span></span><span class="st-ico" aria-hidden="true"></span></button></h3>
-        <div class="st-p" id="st-p-11" role="region" aria-labelledby="st-b-11">
-          <div class="st-in"><div class="st-txt"><p>Составляю сметы по реквизиту, рассчитываю затраты на аренду, закупки, изготовление, доставку и другие производственные задачи. Веду необходимую отчётность и согласовываю расходы с продюсерами. Контролирую бюджет, не теряя из виду художественные требования и сроки проекта.</p><ul class="st-tags"><li>Аренда и закупки</li><li>Изготовление и доставка</li><li>Отчётность</li></ul></div></div>
-        </div>
-      </li>
-      <li class="st has-ph" data-part="set">
-        <h3 class="st-h"><button class="st-btn" type="button" id="st-b-12" aria-expanded="false" aria-controls="st-p-12"><span class="st-n"><span>12</span><i aria-hidden="true"></i></span><span class="st-body"><span class="st-title">Подготовка к съёмке</span><span class="st-sub">Комплектация, маркировка, проверка</span><span class="st-short">Комплектую реквизит к смене, маркирую, проверяю состояние и слежу за ракордом между дублями.</span></span><span class="st-ph"><img src="st-12-smena.webp" alt="Кофры с маркировкой «Реквизит»" width="257" height="210" loading="lazy" decoding="async"></span><span class="st-ico" aria-hidden="true"></span></button></h3>
-        <div class="st-p" id="st-p-12" role="region" aria-labelledby="st-b-12">
-          <div class="st-in"><div class="st-txt"><p>Готовлю реквизит к съёмочным сменам в соответствии с календарно-постановочным планом. Заранее проверяю наличие и готовность предметов, координирую работу реквизиторской группы, взаимодействую с режиссёром, художником-постановщиком и другими подразделениями. Контролирую соответствие реквизита утверждённым решениям и непрерывность между дублями.</p><ul class="st-tags"><li>Реквизиторская группа</li><li>Ракорд между дублями</li><li>Связь с цехами</li></ul></div></div>
-        </div>
-      </li>
-      <li class="st" data-part="set">
-        <h3 class="st-h"><button class="st-btn" type="button" id="st-b-13" aria-expanded="false" aria-controls="st-p-13"><span class="st-n"><span>13</span><i aria-hidden="true"></i></span><span class="st-body"><span class="st-title">Сохранность и сдача</span><span class="st-sub">Ремонт, дубли, возврат аренды</span><span class="st-short">Слежу за сохранностью, организую ремонт, возврат аренды и сдачу реквизита на склад.</span></span><span class="st-ico" aria-hidden="true"></span></button></h3>
-        <div class="st-p" id="st-p-13" role="region" aria-labelledby="st-b-13">
-          <div class="st-in"><div class="st-txt"><p>Контролирую состояние реквизита на протяжении всего проекта, организую ремонт, замену и изготовление дублей. Обеспечиваю бережное обращение с арендованными и собственными предметами. После съёмок организую возврат аренды и сдачу реквизита на склад продакшна. С исходящим реквизитом — продуктами и напитками — учитываю расход, подготовку и требования гигиены.</p><ul class="st-tags"><li>Бережное хранение</li><li>Возврат аренды</li><li>Исходящий реквизит</li></ul></div></div>
-        </div>
-      </li>
-    </ol>
+    <div class="rt-wrap">
+      <ol class="rt-list">
+        <li class="rt"><span class="rt-n">01<i class="rt-u" aria-hidden="true"></i></span><img class="rt-img" src="rt-01-scenariy.webp" alt="" width="205" height="92" loading="lazy" decoding="async"><span class="rt-t">Разбор сценария и подготовка проекта</span></li>
+        <li class="rt"><span class="rt-n">02<i class="rt-u" aria-hidden="true"></i></span><img class="rt-img" src="rt-02-referensy.webp" alt="" width="188" height="134" loading="lazy" decoding="async"><span class="rt-t">Идея, подбор и утверждение</span></li>
+        <li class="rt"><span class="rt-n">03<i class="rt-u" aria-hidden="true"></i></span><img class="rt-img" src="rt-03-arenda.webp" alt="" width="189" height="93" loading="lazy" decoding="async"><span class="rt-t">Поиск и аренда реквизита</span></li>
+        <li class="rt"><span class="rt-n">04<i class="rt-u" aria-hidden="true"></i></span><img class="rt-img" src="rt-04-butaforiya.webp" alt="" width="224" height="140" loading="lazy" decoding="async"><span class="rt-t">Изготовление и бутафория</span></li>
+        <li class="rt"><span class="rt-n">05<i class="rt-u" aria-hidden="true"></i></span><img class="rt-img" src="rt-05-lichnyy.webp" alt="" width="227" height="101" loading="lazy" decoding="async"><span class="rt-t">Персонажный и личный реквизит</span></li>
+        <li class="rt"><span class="rt-n">06<i class="rt-u" aria-hidden="true"></i></span><img class="rt-img" src="rt-06-igrovoy.webp" alt="" width="135" height="113" loading="lazy" decoding="async"><span class="rt-t">Игровой и сюжетно значимый реквизит</span></li>
+        <li class="rt"><span class="rt-n">07<i class="rt-u" aria-hidden="true"></i></span><img class="rt-img" src="rt-07-istoricheskiy.webp" alt="" width="204" height="128" loading="lazy" decoding="async"><span class="rt-t">Исторический реквизит</span></li>
+        <li class="rt"><span class="rt-n">08<i class="rt-u" aria-hidden="true"></i></span><img class="rt-img" src="rt-08-cifrovoy.webp" alt="" width="229" height="128" loading="lazy" decoding="async"><span class="rt-t">Цифровой реквизит и полиграфия</span></li>
+        <li class="rt"><span class="rt-n">09<i class="rt-u" aria-hidden="true"></i></span><img class="rt-img" src="rt-09-transport.webp" alt="" width="220" height="96" loading="lazy" decoding="async"><span class="rt-t">Игровой транспорт</span></li>
+        <li class="rt"><span class="rt-n">10<i class="rt-u" aria-hidden="true"></i></span><img class="rt-img" src="rt-10-proizvodstvo.webp" alt="" width="220" height="102" loading="lazy" decoding="async"><span class="rt-t">Внешние подрядчики и производство</span></li>
+        <li class="rt"><span class="rt-n">11<i class="rt-u" aria-hidden="true"></i></span><img class="rt-img" src="rt-11-smeta.webp" alt="" width="206" height="103" loading="lazy" decoding="async"><span class="rt-t">Смета, бюджет и отчётность</span></li>
+        <li class="rt"><span class="rt-n">12<i class="rt-u" aria-hidden="true"></i></span><img class="rt-img" src="rt-12-smena.webp" alt="" width="159" height="116" loading="lazy" decoding="async"><span class="rt-t">Подготовка смены и работа на площадке</span></li>
+        <li class="rt rt-final"><span class="rt-n">13<i class="rt-u" aria-hidden="true"></i></span><img class="rt-img" src="rt-13-sdacha.webp" alt="" width="336" height="147" loading="lazy" decoding="async"><span class="rt-t">Сохранность и сдача проекта</span></li>
+      </ol>
+      <svg class="rt-arrows" aria-hidden="true" focusable="false"></svg>
+    </div>
   </div>
 </section>
 </main>
@@ -470,7 +365,7 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/SplitText.min.js"></script>
-<script src="typo.js?v=20261010i"></script>
+<script src="typo.js?v=20261010j"></script>
 <script src="projects.js?v=20261010a"></script>
 <script>
   (function () {
@@ -833,8 +728,8 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
     host.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); play(); } });
   })();
 </script>
-<script src="fx.js?v=20261010b" defer></script>
+<script src="fx.js?v=20261010c" defer></script>
 <script src="justify.js?v=20261010g" defer></script>
-<script src="work.js?v=20261010d" defer></script>
+<script src="route.js?v=20261010a" defer></script>
 </body>
 </html>

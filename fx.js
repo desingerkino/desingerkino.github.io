@@ -97,19 +97,11 @@
       revealOnScroll('.p-head .badge', { y: 14, duration: .7 });
       revealLines($('.p-head h2'), { trigger: true });
 
-      // Блок «Что я делаю на площадке»: заголовок, вступление, кадры плёнки по порядку, затем этапы
+      // Блок «Что я делаю на площадке»: шапка; этапы и стрелки анимирует route.js
+      revealOnScroll('.rt-badge', { y: 10, duration: .7 });
       revealLines($('.work h2'), { trigger: true });
       revealOnScroll('.w-lead', { y: 16, duration: .8 });
-      revealOnScroll('.w-eyebrow', { y: 10, duration: .7 });
-      revealOnScroll('.w-parts > li', { y: 14, duration: .7 });
-      gsap.set('.st', { y: 22, opacity: 0 });
-      ScrollTrigger.batch('.st', {
-        start: 'top 94%',
-        once: true,
-        onEnter: function (els) {
-          gsap.to(els, { y: 0, opacity: 1, duration: .8, ease: EASE_OUT, stagger: .06, overwrite: true, clearProps: 'transform,opacity' });
-        }
-      });
+      revealOnScroll('.rt-note', { y: 12, duration: .9, delay: .2 });
 
       revealLines($('footer h2'), { trigger: true });
       revealOnScroll('footer .contacts', { y: 16, duration: .8 });
