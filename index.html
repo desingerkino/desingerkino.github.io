@@ -40,9 +40,11 @@ h1{margin:0;font-family:var(--display);font-weight:800;font-size:clamp(44px,6.4v
 @media (max-width:340px){h1{font-size:38px}}
 .lead{margin:0;max-width:520px;font-size:18px;color:var(--muted)}
 /* Описания: по ширине, с переносами слов, без коротких хвостов в последней строке */
-.lead,.st-txt p,.m-desc{text-align:justify;-webkit-hyphens:none;hyphens:none;text-wrap:wrap}
+.lead,.w-lead,.st-txt p,.st-short,.m-desc{text-align:justify;text-align-last:left;-webkit-hyphens:none;hyphens:none;text-wrap:wrap}
+/* Строки, подобранные justify.js: каждая строка — отдельный блок, растянутый на всю ширину */
+.jl{display:block;white-space:nowrap;text-align:justify;text-align-last:justify}
+.jl-last{text-align-last:left}
 /* На узком экране без переносов по ширине получаются дыры между словами: там ровный левый край */
-@media (max-width:600px){.lead,.st-txt p,.m-desc{text-align:left;text-wrap:pretty}}
 .buttons{display:flex;flex-wrap:wrap;gap:12px}
 .btn{display:inline-flex;align-items:center;min-height:48px;padding:0 22px;border-radius:4px;font-weight:500;border:1.5px solid var(--ink)}
 .btn.solid{background:var(--ink);color:#fff}
@@ -237,7 +239,15 @@ h2{margin:0;font-family:var(--display);font-weight:800;line-height:1.05;letter-s
   .st-btn{padding:16px 0}
   .st-n{font-size:12px;gap:18px;padding-top:3px}
   .st-n i{width:6px;height:6px}
-  .st-body{padding:0 10px 0 12px}
+  .st-btn{grid-template-columns:var(--nc) minmax(0,1fr) var(--pw) var(--ic);grid-template-areas:"n t ph ic" "n s ph ic" "n x x x";grid-template-rows:auto 1fr auto}
+  .st:not(.has-ph) .st-btn{grid-template-columns:var(--nc) minmax(0,1fr) var(--ic);grid-template-areas:"n t ic" "n s ic" "n x x"}
+  .st-body{display:contents}
+  .st-n{grid-area:n}
+  .st-title{grid-area:t;padding:0 10px 0 12px}
+  .st-sub{grid-area:s;padding:0 10px 0 12px}
+  .st-short{grid-area:x;padding:12px 14px 0 12px}
+  .st-ph{grid-area:ph;align-self:start}
+  .st-ico{grid-area:ic}
   .st-title{font-size:17px;line-height:1.1}
   .st-sub{margin-top:6px;font-size:12.5px}
   .st-short{padding-top:10px;font-size:12.5px;line-height:1.45}
@@ -372,7 +382,7 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
         </div>
       </li>
       <li class="st has-ph" data-part="art">
-        <h3 class="st-h"><button class="st-btn" type="button" id="st-b-02" aria-expanded="false" aria-controls="st-p-02"><span class="st-n"><span>02</span><i aria-hidden="true"></i></span><span class="st-body"><span class="st-title">Идея и утверждение</span><span class="st-sub">Референсы, варианты, согласование</span><span class="st-short">Собираю референсы, предлагаю варианты и согласовываю их с художником-постановщиком и режиссёром.</span></span><span class="st-ph"><img src="st-02-referensy.webp" alt="Доска с референсами" width="257" height="210" loading="lazy" decoding="async"></span><span class="st-ico" aria-hidden="true"></span></button></h3>
+        <h3 class="st-h"><button class="st-btn" type="button" id="st-b-02" aria-expanded="false" aria-controls="st-p-02"><span class="st-n"><span>02</span><i aria-hidden="true"></i></span><span class="st-body"><span class="st-title">Идея и утверждение</span><span class="st-sub">Референсы, варианты, согласование</span><span class="st-short">Собираю референсы и варианты решений, согласовываю их с режиссёром и творческой группой.</span></span><span class="st-ph"><img src="st-02-referensy.webp" alt="Доска с референсами" width="257" height="210" loading="lazy" decoding="async"></span><span class="st-ico" aria-hidden="true"></span></button></h3>
         <div class="st-p" id="st-p-02" role="region" aria-labelledby="st-b-02">
           <div class="st-in"><div class="st-txt"><p>Предлагаю предметы и визуальные решения, подбираю референсы, ищу варианты и объясняю выбор. Согласовываю реквизит с творческой группой и добиваюсь соответствия сценарию, характеру сцены и общему художественному решению проекта.</p><ul class="st-tags"><li>Референсы</li><li>Варианты на выбор</li><li>Утверждение</li></ul></div></div>
         </div>
@@ -587,6 +597,7 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
       var d = el('m-desc');
       d.textContent = p.description ? (window.typo ? window.typo(p.description, true) : p.description) : 'Описание проекта скоро появится.';
       d.className = 'm-desc' + (p.description ? '' : ' empty');
+      if (window.justifyText) window.justifyText(d, true);
       if (window.fxModalIn) window.fxModalIn();
     }
     function openModal(i, from) {
@@ -823,6 +834,7 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
   })();
 </script>
 <script src="fx.js?v=20261010b" defer></script>
-<script src="work.js?v=20261010c" defer></script>
+<script src="justify.js?v=20261010g" defer></script>
+<script src="work.js?v=20261010d" defer></script>
 </body>
 </html>

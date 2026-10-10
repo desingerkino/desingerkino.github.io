@@ -40,6 +40,7 @@
     li.classList.add('is-open');
     btn.setAttribute('aria-expanded', 'true');
     panel.hidden = false;
+    if (window.justifyText) window.justifyText(li);
     if (!animOK()) { panel.style.height = ''; inner.style.opacity = ''; refreshST(); return; }
 
     var text = qa(li, '.st-txt p, .st-tags li');
@@ -67,6 +68,7 @@
     kill(i);
     li.classList.remove('is-open');
     btn.setAttribute('aria-expanded', 'false');
+    if (window.justifyText && short) window.justifyText(short);
     if (!animOK() || panel.hidden) { panel.hidden = true; panel.style.height = ''; if (short) short.style.cssText = ''; refreshST(); return; }
 
     var tl = gsap.timeline({
