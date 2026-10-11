@@ -65,8 +65,9 @@
       x1 = mobile ? B.l + B.w * (i % 2 ? 0.73 : 0.27) : bN.cx;  y1 = B.t - 10;
       if (b.classList.contains('rt-final') && !mobile) x1 = bN.cx;
       var dy = Math.max(y1 - y0, 20);
-      c1x = x0 + jit(i, 3) * 10; c1y = y0 + dy * 0.85;
-      c2x = x1 + jit(i, 4) * 10; c2y = y1 - dy * 0.85;
+      // выходит вниз, приходит под наклоном по ходу движения — наконечник совпадает с направлением линии
+      c1x = x0 + (x1 - x0) * 0.04 + jit(i, 3) * 4; c1y = y0 + dy * 0.9;
+      c2x = x1 + (x0 - x1) * 0.3 + jit(i, 4) * 4; c2y = y1 - dy * 0.55;
       yellow = mobile ? i % 2 === 0 : false;
     }
     var d = 'M' + x0.toFixed(1) + ' ' + y0.toFixed(1) + 'C' + c1x.toFixed(1) + ' ' + c1y.toFixed(1) + ' ' +
