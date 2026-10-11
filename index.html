@@ -171,10 +171,8 @@ h2{margin:0;font-family:var(--display);font-weight:800;line-height:1.05;letter-s
 .rt-badge{grid-column:1/-1;justify-self:start;margin-bottom:18px}
 .work h2{font-size:clamp(40px,6.4vw,92px);line-height:.94;letter-spacing:-.045em}
 .w-lead{grid-column:1;margin:clamp(18px,2vw,26px) 0 0;max-width:40ch;color:var(--muted);font-size:clamp(17px,1.5vw,20px);line-height:1.5}
-.rt-note{grid-column:2;grid-row:2/4;align-self:start;position:relative;margin:0;padding:6px 64px 0 0;font:600 clamp(24px,2.4vw,32px)/1.05 'Caveat',cursive;color:var(--graphite);transform:rotate(-7deg);white-space:nowrap}
+.rt-note{grid-column:2;grid-row:2/4;align-self:start;position:relative;margin:0;padding:6px 0 0 0;font:600 clamp(24px,2.4vw,32px)/1.05 'Caveat',cursive;color:var(--graphite);transform:rotate(-7deg);white-space:nowrap}
 .rt-note em{font-style:normal;background:linear-gradient(transparent 62%,rgba(242,194,48,.85) 62%,rgba(242,194,48,.85) 88%,transparent 88%)}
-.rt-note svg{position:absolute;right:0;bottom:-58px;width:76px;height:58px;overflow:visible}
-.rt-note-a{fill:none;stroke:var(--graphite);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 
 .rt-wrap{position:relative}
 .rt-list{position:relative;z-index:1;list-style:none;margin:0 auto;padding:0;max-width:1060px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:clamp(96px,11vw,170px);row-gap:var(--rt-gap-y)}
@@ -199,8 +197,7 @@ h2{margin:0;font-family:var(--display);font-weight:800;line-height:1.05;letter-s
 /* Телефон: одна колонка зигзагом — текст и рисунок меняются сторонами, стрелки ведут от этапа к этапу */
 @media (max-width:719px){
   .rt-head{grid-template-columns:minmax(0,1fr)}
-  .rt-note{grid-column:1;grid-row:auto;justify-self:end;margin-top:22px;padding-right:46px;font-size:23px}
-  .rt-note svg{width:50px;height:44px;bottom:-40px}
+  .rt-note{grid-column:1;grid-row:auto;justify-self:end;margin-top:22px;padding-right:0;font-size:23px}
   .work h2{font-size:clamp(36px,10.5vw,46px)}
   .w-lead{font-size:16.5px;max-width:none}
   .rt-list{grid-template-columns:minmax(0,1fr);row-gap:58px}
@@ -329,7 +326,7 @@ footer h2{flex:1 1 320px;min-width:0;font-size:clamp(36px,5vw,64px);line-height:
       <span class="badge rt-badge">Как я работаю</span>
       <h2 id="work-title">Что я делаю<br>на площадке</h2>
       <p class="w-lead">Реквизит проходит путь от первой страницы сценария до возврата на склад после последней смены. Я веду его на каждом этапе.</p>
-      <p class="rt-note" aria-hidden="true"><span>От сценария<br>до <em>сдачи проекта</em></span><svg viewBox="0 0 120 90" focusable="false"><path class="rt-note-a" d="M8 6c34 4 70 22 92 62"/><path class="rt-note-a" d="M88 58l12 12 4-17"/></svg></p>
+      <p class="rt-note" aria-hidden="true"><span>От сценария<br>до <em>сдачи проекта</em></span></p>
     </div>
     <div class="rt-wrap">
       <ol class="rt-list">
